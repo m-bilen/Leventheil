@@ -1,0 +1,11 @@
+﻿.godot/
+/android/
+/build/
+*.exe
+*.pck
+*.zip
+Thumbs.db
+
+# Mixamo source files - too large, re-downloadable from mixamo.com
+*.fbx
+romero/*.png
