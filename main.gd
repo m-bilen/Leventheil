@@ -17,8 +17,5 @@ func spawn_enemy() -> void:
 	else: 
 		enemy = EnemyScene.instantiate()
 	add_child(enemy)
-	enemy.died.connect(_on_enemy_died)
 	var angle = randf() * TAU
 	enemy.position = Vector3(cos(angle) * SPAWN_RADIUS ,1.0, sin(angle) * SPAWN_RADIUS)
-func _on_enemy_died() -> void:
-	$Player/SpikeSkill.gain_spikes(1)

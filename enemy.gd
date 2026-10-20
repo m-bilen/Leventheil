@@ -1,6 +1,5 @@
 extends CharacterBody3D
 @onready var mesh = $MeshInstance3D
-signal died
 var flash_timer = 0.0
 var base_color = Color.WHITE
 const KNOCKBACK_FORCE = 8.0
@@ -29,7 +28,7 @@ func take_damage(amount: int) -> void:
 	knockback_dir.y = 0
 	knockback_timer = KNOCKBACK_TIME
 	if health <= 0:
-		died.emit()
+		Events.enemy_died.emit(self)
 		set_physics_process(false)
 		queue_free()
 func _physics_process(delta: float) -> void:

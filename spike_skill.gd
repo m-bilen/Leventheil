@@ -22,6 +22,7 @@ func _ready() -> void:
 	get_parent().dash_ended.connect(_on_dash_ended)
 	get_parent().spikes_toggled.connect(_on_spikes_toggled)
 	get_parent().jump_started.connect(_on_jump_started)
+	Events.enemy_died.connect(_on_enemy_died)
 func _on_dash_started() -> void:
 	if not is_active:
 		return
@@ -100,3 +101,5 @@ func gain_spikes(amount: int) -> void:
 	position_spikes(SPIKE_RADIUS)
 	update_weight()
 	update_label()
+func _on_enemy_died(_enemy: Node3D) -> void:
+	gain_spikes(1)

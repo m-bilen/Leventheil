@@ -10,7 +10,6 @@ const MAX_HEALTH = 30
 const STUN_TIME = 2.0
 const PARRIES_TO_KILL = 3
 var parry_count = 0
-signal died
 var state: State = State.CHASE
 var state_timer = 0.0
 var health = MAX_HEALTH
@@ -79,7 +78,7 @@ func take_damage(amount:int) -> void:
 		return
 	health -= amount
 	if health <= 0:
-		died.emit()
+		Events.enemy_died.emit(self)
 		set_physics_process(false)
 		queue_free()
 var base_color = Color.WHITE
