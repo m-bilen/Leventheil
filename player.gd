@@ -222,7 +222,7 @@ func finisher(target) -> void:
 	if is_instance_valid(target):
 		target.set_physics_process(false)
 	Engine.time_scale = 0.1
-	Events.camera_focus_requested.emit(0.9)
+	Events.camera_focus_requested.emit(target.global_position, 0.9)
 	Events.camera_shake_requested.emit(1.0)
 	await get_tree().create_timer(0.6,true,false,true).timeout
 	Engine.time_scale = 1.0
