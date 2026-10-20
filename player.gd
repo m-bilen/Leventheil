@@ -53,7 +53,7 @@ var cooldown_timer = 0
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-	if is_on_floor() and Input.is_action_just_pressed("ui_accept"):
+	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		velocity.y = 5.0
 		model.scale = Vector3(0.7,1.3,0.7)
 		jump_started.emit(get_aim_direction())
@@ -172,9 +172,9 @@ func update_animation() -> void:
 		play_anim(ANIM_RUN)
 	else:
 		play_anim(ANIM_IDLE)
-func play_anim(name: String, blend: float = 0.25) -> void:
-	if anim.current_animation != name:
-		anim.play(name)
+func play_anim(anim_name: String) -> void:
+	if anim.current_animation != anim_name:
+		anim.play(anim_name)
 func get_aim_direction() -> Vector3:
 	var mouse_pos = get_viewport().get_mouse_position()
 	var cam = get_viewport().get_camera_3d()

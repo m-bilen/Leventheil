@@ -11,7 +11,7 @@ const STUN_TIME = 2.0
 const PARRIES_TO_KILL = 3
 var parry_count = 0
 signal died
-var state = State.CHASE
+var state: State = State.CHASE
 var state_timer = 0.0
 var health = MAX_HEALTH
 @onready var player = get_parent().get_node("Player")
@@ -23,7 +23,7 @@ func _physics_process(delta: float) -> void:
 	state_timer -= delta
 	match state:
 		State.CHASE:
-			do_chase(delta)
+			do_chase()
 		State.WINDUP:
 			do_windup()
 		State.ATTACK:
@@ -33,7 +33,7 @@ func _physics_process(delta: float) -> void:
 		State.STUNNED:
 			do_stunned()
 	move_and_slide()
-func do_chase(delta: float) -> void:
+func do_chase() -> void:
 	var dist = global_position.distance_to(player.global_position)
 	if dist < ATTACK_RANGE:
 		enter_state(State.WINDUP)
@@ -52,7 +52,7 @@ func do_attack() -> void:
 func do_recover() -> void:
 	if state_timer <= 0.0:
 		enter_state(State.CHASE)
-func enter_state(new_state: int) -> void:
+func enter_state(new_state: State) -> void:
 	state = new_state 
 	match new_state:
 		State.WINDUP:
