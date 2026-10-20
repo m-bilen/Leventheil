@@ -17,7 +17,7 @@ func _ready() -> void:
 		position_spikes(SPIKE_RADIUS)
 		current_spikes = SPIKE_COUNT
 		update_weight()
-		update_label()
+		broadcast_spikes.call_deferred()
 	get_parent().dash_started.connect(_on_dash_started)
 	get_parent().dash_ended.connect(_on_dash_ended)
 	get_parent().spikes_toggled.connect(_on_spikes_toggled)
@@ -45,7 +45,7 @@ func _on_spikes_toggled() -> void:
 		update_weight()
 	else:
 		get_parent().weight = 0.0
-	update_label()
+	broadcast_spikes()
 func _on_jump_started(aim_dir: Vector3) -> void:
 	if not is_active:
 		return
@@ -58,7 +58,7 @@ func _on_jump_started(aim_dir: Vector3) -> void:
 	spike.launch(aim_dir)
 	current_spikes -=1
 	update_weight()
-	update_label()
+	broadcast_spikes()
 	position_spikes(SPIKE_RADIUS) 
 
 func _process(delta:float) -> void:
@@ -78,12 +78,12 @@ func lose_spikes(amount: int) -> void:
 		current_spikes -=1
 	print("kalan diken",current_spikes)
 	update_weight()
-	update_label()
+	broadcast_spikes()
 	position_spikes(SPIKE_RADIUS)
 func update_weight() -> void:
 	get_parent().weight = current_spikes * WEIGHT_PER_SPIKE
-func update_label() -> void:
-	get_tree().current_scene.get_node("CanvasLayer/SpikeLabel").text = "Spike " + str(current_spikes)
+func broadcast_spikes() -> void:
+	Events.spikes_changed.emit(current_spikes)
 func position_spikes(radius: float) -> void:
 	var children = get_children()
 	for i in children.size():
@@ -100,6 +100,6 @@ func gain_spikes(amount: int) -> void:
 		current_spikes += 1
 	position_spikes(SPIKE_RADIUS)
 	update_weight()
-	update_label()
+	broadcast_spikes()
 func _on_enemy_died(_enemy: Node3D) -> void:
 	gain_spikes(1)

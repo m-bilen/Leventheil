@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_h2yge"]
 [ext_resource type="PackedScene" uid="uid://bts4blx0hl4nn" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://sjtltymubbwm" path="res://camera_shake.gd" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://cupane50xenw0" path="res://hud.gd" id="4_1bvp3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(50, 0.5, 50)
@@ -64,9 +65,10 @@ shape = SubResource("BoxShape3D_ig7tw")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=211006853]
 mesh = SubResource("BoxMesh_0xm2m")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=446614191]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=446614191]
+script = ExtResource("4_1bvp3")
 
-[node name="HealthBar" type="ProgressBar" parent="CanvasLayer" unique_id=10520525]
+[node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=10520525]
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 220.0
@@ -74,7 +76,7 @@ offset_bottom = 44.0
 max_value = 5.0
 show_percentage = false
 
-[node name="SpikeLabel" type="Label" parent="CanvasLayer" unique_id=1224576832]
+[node name="SpikeLabel" type="Label" parent="HUD" unique_id=1224576832]
 offset_left = 20.0
 offset_top = 55.0
 offset_right = 60.0

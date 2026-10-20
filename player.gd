@@ -130,7 +130,7 @@ func _physics_process(delta: float) -> void:
 	was_on_floor = is_on_floor() 
 func take_damage(amount: int) -> void:
 	health -= amount
-	get_parent().get_node("CanvasLayer/HealthBar").value = health
+	Events.player_health_changed.emit(health, MAX_HEALTH)
 	Events.camera_shake_requested.emit(0.6)
 	print("oyuncu can :",health)
 	if health <= 0:
@@ -232,3 +232,5 @@ func finisher(target) -> void:
 	print("FINISHER!")
 func get_weight_ratio() -> float:
 	return clamp(weight / MAX_WEIGHT, 0.0, 1.0)
+func _ready() -> void:
+	Events.player_health_changed.emit.call_deferred(health, MAX_HEALTH)
