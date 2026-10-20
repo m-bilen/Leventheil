@@ -76,7 +76,6 @@ func lose_spikes(amount: int) -> void:
 		remove_child(spike)
 		spike.queue_free()
 		current_spikes -=1
-	print("kalan diken",current_spikes)
 	update_weight()
 	broadcast_spikes()
 	position_spikes(SPIKE_RADIUS)

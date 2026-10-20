@@ -91,7 +91,6 @@ func can_be_parried() -> bool:
 	return state == State.WINDUP
 func on_parried() -> bool:
 	parry_count += 1
-	print("parry sayisi: ", parry_count, " | can: ", health)
 	enter_state(State.STUNNED)
 	return parry_count >= PARRIES_TO_KILL
 func do_stunned() -> void:

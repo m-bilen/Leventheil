@@ -132,7 +132,6 @@ func take_damage(amount: int) -> void:
 	health -= amount
 	Events.player_health_changed.emit(health, MAX_HEALTH)
 	Events.camera_shake_requested.emit(0.6)
-	print("oyuncu can :",health)
 	if health <= 0:
 		print("ÖLDÜN")
 		get_tree().reload_current_scene.call_deferred()
@@ -229,7 +228,6 @@ func finisher(target) -> void:
 	in_finisher = false
 	if is_instance_valid(target):
 		target.die()
-	print("FINISHER!")
 func get_weight_ratio() -> float:
 	return clamp(weight / MAX_WEIGHT, 0.0, 1.0)
 func _ready() -> void:
