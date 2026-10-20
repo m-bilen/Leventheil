@@ -225,7 +225,7 @@ func finisher(target) -> void:
 	Engine.time_scale = 1.0
 	in_finisher = false
 	if is_instance_valid(target):
-		target.queue_free()
+		target.die()
 	print("FINISHER!")
 func get_weight_ratio() -> float:
 	return clamp(weight / MAX_WEIGHT, 0.0, 1.0)

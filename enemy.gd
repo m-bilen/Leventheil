@@ -20,7 +20,7 @@ func _ready()-> void:
 	base_color = mesh.mesh.material.albedo_color
 func take_damage(amount: int) -> void:
 	if health <= 0:
-		return
+		die()
 	flash_timer = 0.1
 	mesh.mesh.material.albedo_color = Color.WHITE
 	health -= amount
@@ -53,3 +53,10 @@ func _physics_process(delta: float) -> void:
 		if dist < 1.5 :
 			player.take_damage(ATTACK_DAMAGE)
 			attack_timer = ATTACK_COOLDOWN
+func die() -> void:
+	if is_queued_for_deletion():
+		return
+	health = 0
+	Events.enemy_died.emit(self)
+	set_physics_process(false)
+	queue_free()

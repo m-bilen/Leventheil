@@ -75,7 +75,7 @@ func hit_player() -> void:
 		player.take_damage(ATTACK_DAMAGE)
 func take_damage(amount:int) -> void:
 	if health <= 0:
-		return
+		die()
 	health -= amount
 	if health <= 0:
 		Events.enemy_died.emit(self)
@@ -99,3 +99,10 @@ func do_stunned() -> void:
 	velocity.z = 0
 	if state_timer <= 0.0:
 		enter_state(State.CHASE)
+func die() -> void:
+	if is_queued_for_deletion():
+		return
+	health = 0
+	Events.enemy_died.emit(self)
+	set_physics_process(false)
+	queue_free()
