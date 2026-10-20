@@ -67,7 +67,7 @@ func _process(delta:float) -> void:
 func _on_spike_hit()-> void:
 	hit_something = true
 	get_parent().hit_stop(0.2)
-	get_tree().current_scene.get_node("Camera3D").shake(0.4)
+	Events.camera_shake_requested.emit(0.4)
 func lose_spikes(amount: int) -> void:
 	for i in amount:
 		if current_spikes <= 0:

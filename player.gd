@@ -86,7 +86,7 @@ func _physics_process(delta: float) -> void:
 			parried.emit()
 			cooldown_timer = 0.0
 			hit_stop(0.15)
-			get_parent().get_node("Camera3D").shake(0.5)
+			Events.camera_shake_requested.emit(0.5)
 		dash_timer = DASH_TIME
 		dash_direction = direction
 		
@@ -131,7 +131,7 @@ func _physics_process(delta: float) -> void:
 func take_damage(amount: int) -> void:
 	health -= amount
 	get_parent().get_node("CanvasLayer/HealthBar").value = health
-	get_parent().get_node("Camera3D").shake(0.6)
+	Events.camera_shake_requested.emit(0.6)
 	print("oyuncu can :",health)
 	if health <= 0:
 		print("ÖLDÜN")
@@ -158,7 +158,7 @@ func attack() -> void:
 		if body.has_method("take_damage"):
 			body.take_damage(ATTACK_DAMAGE)
 			hit_stop(0.15)
-			get_parent().get_node("Camera3D").shake(0.15)
+			Events.camera_shake_requested.emit(0.15)
 
 func update_animation() -> void:
 	if action_timer > 0:
@@ -221,10 +221,9 @@ func finisher(target) -> void:
 	in_finisher = true
 	if is_instance_valid(target):
 		target.set_physics_process(false)
-	var cam = get_parent().get_node("Camera3D")
 	Engine.time_scale = 0.1
-	cam.focus_zoom(0.9)
-	cam.shake(1.0)
+	Events.camera_focus_requested.emit(0.9)
+	Events.camera_shake_requested.emit(1.0)
 	await get_tree().create_timer(0.6,true,false,true).timeout
 	Engine.time_scale = 1.0
 	in_finisher = false

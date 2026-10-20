@@ -1,5 +1,4 @@
 extends Camera3D
-var zoom_amount =  0.0
 var base_fov = 75.0
 var shake_amount = 0.0
 var base_position = Vector3.ZERO
@@ -7,6 +6,8 @@ var base_position = Vector3.ZERO
 func _ready() -> void:
 	base_position = position
 	base_fov = fov
+	Events.camera_shake_requested.connect(shake)
+	Events.camera_focus_requested.connect(focus_zoom)
 
 func _process(delta: float) -> void:
 	if shake_amount <= 0.0:
