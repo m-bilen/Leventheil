@@ -38,8 +38,10 @@ var action_anim = false
 @onready var anim = $Model/AnimationPlayer
 var bob_time = 0.0
 var was_on_floor = true 
-const SPEED = 5.0
-const RUN_SPEED = 9.0
+const SPEED_LIGHT = 6.0
+const SPEED_HEAVY = 4.0
+const RUN_SPEED_LIGHT = 10.5
+const RUN_SPEED_HEAVY = 7.0
 const DASH_SPEED = 20.0
 const DASH_TIME = 0.2
 var is_dashing = false 
@@ -72,7 +74,9 @@ func _physics_process(delta: float) -> void:
 	action_timer = max(action_timer - delta, 0.0)
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
-	var current_speed = SPEED
+	var t = get_weight_ratio()
+	var walk_speed = lerp(SPEED_LIGHT, SPEED_HEAVY, t)
+	var current_speed = walk_speed
 	if Input.is_action_just_pressed("dash") and not is_dashing and direction and cooldown_timer <=0 :
 		is_dashing = true
 		anim.play(ANIM_DASH)
@@ -87,7 +91,7 @@ func _physics_process(delta: float) -> void:
 		dash_direction = direction
 		
 	if Input.is_action_pressed("run"):
-		current_speed = RUN_SPEED
+		current_speed = lerp(RUN_SPEED_LIGHT, RUN_SPEED_HEAVY, t)
 	if is_dashing:
 		var dash_speed = DASH_SPEED - weight
 		velocity.x = dash_direction.x * dash_speed
@@ -112,7 +116,7 @@ func _physics_process(delta: float) -> void:
 		model.rotation.y = lerp_angle(model.rotation.y, target_angle, ROT_SPEED * delta)
 
 	# --- Procedural canlılık: yürürken zıplama (bob) + eğilme (tilt) ---
-	var speed_ratio = Vector2(velocity.x, velocity.z).length() / SPEED
+	var speed_ratio = Vector2(velocity.x, velocity.z).length() / walk_speed
 	if speed_ratio > 0.1:
 		bob_time += delta * 12.0
 		model.position.y = abs(sin(bob_time)) * 0.08 * speed_ratio
