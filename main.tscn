@@ -7,8 +7,6 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(50, 0.5, 50)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
-
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_h2yge"]
 frequency = 0.02
 
@@ -63,7 +61,6 @@ collision_mask = 0
 shape = SubResource("BoxShape3D_ig7tw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=211006853]
-material_override = SubResource("StandardMaterial3D_h2yge")
 mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=446614191]

@@ -20,6 +20,8 @@ func _ready()-> void:
 	mesh.mesh.material = mesh.mesh.material.duplicate()
 	base_color = mesh.mesh.material.albedo_color
 func take_damage(amount: int) -> void:
+	if health <= 0:
+		return
 	flash_timer = 0.1
 	mesh.mesh.material.albedo_color = Color.WHITE
 	health -= amount

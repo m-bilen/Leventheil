@@ -20,8 +20,6 @@ func _process(delta:float) -> void:
 func _ready() -> void:
 	$Area3D.body_entered.connect(_on_body_entered)
 func _on_body_entered(body :Node3D) -> void:
-	if body.name == "Player" :
-		return
 	if not is_flying and not is_damaging :
 		return 
 	if body.has_method("take_damage"):

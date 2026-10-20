@@ -75,6 +75,8 @@ func hit_player() -> void:
 	if dist< ATTACK_RANGE:
 		player.take_damage(ATTACK_DAMAGE)
 func take_damage(amount:int) -> void:
+	if health <= 0:
+		return
 	health -= amount
 	if health <= 0:
 		died.emit()

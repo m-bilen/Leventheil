@@ -22,7 +22,7 @@ const ATTACK_START_HEAVY = 0.0
 const ATTACK_TIME_LIGHT = 0.5
 const ATTACK_TIME_HEAVY = 1.2
 const MAX_WEIGHT = 8.0
-var hit_stop_count = 0.0
+var hit_stop_count = 0
 var in_finisher = false
 var action_timer = 0.0
 var attack_timer = 0.0
@@ -197,7 +197,6 @@ func hit_stop(duration: float) -> void:
 	hit_stop_count -= 1
 	if hit_stop_count <= 0:
 		Engine.time_scale = 1.0
-	Engine.time_scale = 1.0
 
 
 func try_parry() -> bool:
