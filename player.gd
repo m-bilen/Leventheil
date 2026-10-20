@@ -131,7 +131,7 @@ func take_damage(amount: int) -> void:
 	print("oyuncu can :",health)
 	if health <= 0:
 		print("ÖLDÜN")
-		get_tree().reload_current_scene()
+		get_tree().reload_current_scene.call_deferred()
 func attack() -> void:
 	var aim = get_aim_direction()
 	if aim != Vector3.ZERO:
