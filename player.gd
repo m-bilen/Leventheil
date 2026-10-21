@@ -22,6 +22,10 @@ const ATTACK_START_HEAVY = 0.0
 const ATTACK_TIME_LIGHT = 0.5
 const ATTACK_TIME_HEAVY = 1.2
 const MAX_WEIGHT = 8.0
+const SWAP_LOCK_TIME = 0.5
+const SWAP_COOLDOWN = 1.0
+var swap_lock_timer = 0.0
+var swap_cooldown_timer = 0.0
 var hit_stop_count = 0
 var in_finisher = false
 var action_timer = 0.0
@@ -59,14 +63,19 @@ func _physics_process(delta: float) -> void:
 		model.scale = Vector3(0.7,1.3,0.7)
 		jump_started.emit(get_aim_direction())
 	var target_scale = Vector3.ONE
-	if Input.is_action_just_pressed("toggle_spikes"):
+	swap_lock_timer = max(swap_lock_timer - delta, 0.0)
+	swap_cooldown_timer = max(swap_cooldown_timer - delta, 0.0)
+	if Input.is_action_just_pressed("toggle_spikes") and swap_cooldown_timer <= 0.0 and not is_dashing:
 		spikes_toggled.emit()
+		swap_lock_timer = SWAP_LOCK_TIME 
+		swap_cooldown_timer = SWAP_COOLDOWN
+		model.scale = Vector3(1.15, 0.85, 1.15)
 	if is_dashing:
 		target_scale = Vector3(1.3,0.5,1.3)
 	model.scale = model.scale.lerp(target_scale, 10.0 * delta)
 	cooldown_timer = max(cooldown_timer - delta, 0.0)
 	attack_timer = max(attack_timer - delta, 0.0)
-	if Input.is_action_just_pressed("attack") and attack_timer <= 0.0:
+	if Input.is_action_just_pressed("attack") and attack_timer <= 0.0 and swap_lock_timer <= 0.0:
 		attack()
 		attack_timer = lerp(ATTACK_COOLDOWN_LIGHT, ATTACK_COOLDOWN_HEAVY,get_weight_ratio())
 
@@ -76,7 +85,7 @@ func _physics_process(delta: float) -> void:
 	var t = get_weight_ratio()
 	var walk_speed = lerp(SPEED_LIGHT, SPEED_HEAVY, t)
 	var current_speed = walk_speed
-	if Input.is_action_just_pressed("dash") and not is_dashing and direction and cooldown_timer <=0 :
+	if Input.is_action_just_pressed("dash") and not is_dashing and direction and cooldown_timer <=0 and swap_lock_timer <= 0:
 		is_dashing = true
 		anim.play(ANIM_DASH)
 		cooldown_timer = DASH_COOLDOWN
