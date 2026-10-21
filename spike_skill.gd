@@ -5,6 +5,8 @@ const SPIKE_RADIUS = 0.5
 const SPIN_SPEED = 15.0
 const WEIGHT_PER_SPIKE = 0.5
 const DASH_RADIUS = 1.5
+const SHIELD_COST_PER_DAMAGE = 3
+const SHIELD_MIN_SPIKES = 4
 var is_spinning = false
 var current_spikes = 0
 const DASH_HIT_RADIUS = 1.9
@@ -16,15 +18,16 @@ func _ready() -> void:
 	for i in SPIKE_COUNT:
 		var spike = SpikeScene.instantiate()
 		add_child(spike)
-		position_spikes(SPIKE_RADIUS)
-		current_spikes = SPIKE_COUNT
-		update_weight()
-		broadcast_spikes.call_deferred()
+	position_spikes(SPIKE_RADIUS)
+	current_spikes = SPIKE_COUNT
+	update_weight()
+	broadcast_spikes.call_deferred()
 	get_parent().dash_started.connect(_on_dash_started)
 	get_parent().dash_ended.connect(_on_dash_ended)
 	get_parent().spikes_toggled.connect(_on_spikes_toggled)
 	get_parent().jump_started.connect(_on_jump_started)
 	Events.enemy_died.connect(_on_enemy_died)
+	get_parent().finisher_landed.connect(_on_finisher_landed)
 func _on_dash_started() -> void:
 	if not is_active or current_spikes <= 0:
 		return
@@ -42,10 +45,7 @@ func _on_dash_ended() -> void:
 func _on_spikes_toggled() -> void:
 	is_active = not is_active
 	visible = is_active
-	if is_active:
-		update_weight()
-	else:
-		get_parent().weight = 0.0
+	update_weight()
 	broadcast_spikes()
 func _on_jump_started(aim_dir: Vector3) -> void:
 	if not is_active:
@@ -65,9 +65,6 @@ func _on_jump_started(aim_dir: Vector3) -> void:
 func _process(delta:float) -> void:
 	if is_spinning:
 		rotate_y(SPIN_SPEED * delta)
-func _on_spike_hit()-> void:
-	get_parent().hit_stop(0.2)
-	Events.camera_shake_requested.emit(0.4)
 func lose_spikes(amount: int) -> void:
 	for i in amount:
 		if current_spikes <= 0:
@@ -80,7 +77,10 @@ func lose_spikes(amount: int) -> void:
 	broadcast_spikes()
 	position_spikes(SPIKE_RADIUS)
 func update_weight() -> void:
-	get_parent().weight = current_spikes * WEIGHT_PER_SPIKE
+	if is_active: 
+		get_parent().weight = current_spikes * WEIGHT_PER_SPIKE
+	else:
+		get_parent().weight = 0.0
 func broadcast_spikes() -> void:
 	Events.spikes_changed.emit(current_spikes)
 func position_spikes(radius: float) -> void:
@@ -100,9 +100,10 @@ func gain_spikes(amount: int) -> void:
 	update_weight()
 	broadcast_spikes()
 func _on_enemy_died(_enemy: Node3D) -> void:
-	gain_spikes(1)
+	if not is_active:
+		gain_spikes(1)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not is_spinning:
 		return
 	for enemy in get_tree().get_nodes_in_group("enemies"):
@@ -115,3 +116,12 @@ func _physics_process(delta: float) -> void:
 			enemy.take_damage(dash_damage)
 			Events.camera_shake_requested.emit(0.4)
 			get_parent().hit_stop(0.2)
+func _on_finisher_landed() -> void:
+# Light stance already got +1 from the kill itself in _on_enemy_died.
+	if is_active:
+		gain_spikes(1)
+func absorb_damage(amount: int) -> bool:
+	if not is_active or current_spikes <= SHIELD_MIN_SPIKES:
+		return false
+	lose_spikes(amount * SHIELD_COST_PER_DAMAGE)
+	return true

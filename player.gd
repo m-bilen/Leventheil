@@ -4,6 +4,7 @@ signal dash_ended
 signal spikes_toggled
 signal jump_started(aim_dir: Vector3)
 signal parried
+signal finisher_landed
 const ANIM_IDLE = "mixamo_com"
 const ANIM_RUN = "Running/mixamo_com"
 const ANIM_JUMP = "Jumping Up/mixamo_com"
@@ -11,7 +12,6 @@ const ANIM_ATTACK = "Stable Sword Outward Slash/mixamo_com"
 const ANIM_DASH = "Standing Dodge Forward/mixamo_com"
 const ANIM_FALL = "falling/mixamo_com"
 const ATTACK_DAMAGE = 1
-const ATTACK_COOLDOWN = 0.15
 const PARRY_RANGE = 3.0
 const ATTACK_COOLDOWN_HEAVY = 0.55
 const ATTACK_COOLDOWN_LIGHT = 0.22
@@ -32,7 +32,6 @@ const ROT_SPEED = 10.0
 const MAX_HEALTH = 5
 var health = MAX_HEALTH
 var weight = 0.0
-var action_anim = false
 @onready var model = $Model
 @onready var attack_area = $Model/AttackArea
 @onready var anim = $Model/AnimationPlayer
@@ -129,6 +128,10 @@ func _physics_process(delta: float) -> void:
 		model.scale = Vector3(1.3,0.7,1.3)
 	was_on_floor = is_on_floor() 
 func take_damage(amount: int) -> void:
+	for child in get_children():
+		if child.has_method("absorb_damage") and child.absorb_damage(amount):
+			Events.camera_shake_requested.emit(0.3)
+			return
 	health -= amount
 	Events.player_health_changed.emit(health, MAX_HEALTH)
 	Events.camera_shake_requested.emit(0.6)
@@ -227,6 +230,7 @@ func finisher(target) -> void:
 	in_finisher = false
 	if is_instance_valid(target):
 		target.die()
+		finisher_landed.emit()
 func get_weight_ratio() -> float:
 	return clamp(weight / MAX_WEIGHT, 0.0, 1.0)
 func _ready() -> void:
