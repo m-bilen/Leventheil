@@ -4,6 +4,10 @@ var flash_timer = 0.0
 var base_color = Color.WHITE
 const KNOCKBACK_FORCE = 8.0
 const KNOCKBACK_TIME = 0.2
+const FLANK_DISTANCE = 4.0
+const SEPARATION_RADIUS = 1.6
+const SEPARATION_FORCE = 1.5
+var flank_dir = Vector3.ZERO
 var knockback_timer = 0
 var knockback_dir = Vector3.ZERO
 const ATTACK_DAMAGE = 1
@@ -31,6 +35,8 @@ func take_damage(amount: int) -> void:
 		Events.enemy_died.emit(self)
 		set_physics_process(false)
 		queue_free()
+	var angle = randf() * TAU
+	flank_dir = Vector3(cos(angle), 0, sin(angle))
 func _physics_process(delta: float) -> void:
 	if flash_timer > 0.0:
 		flash_timer -= delta
@@ -43,7 +49,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = knockback_dir.x * KNOCKBACK_FORCE
 		velocity.z = knockback_dir.z * KNOCKBACK_FORCE
 	else :
-		var direction = (player.global_position - global_position).normalized()
+		var direction = get_chase_direction()
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 	move_and_slide()
@@ -60,3 +66,24 @@ func die() -> void:
 	Events.enemy_died.emit(self)
 	set_physics_process(false)
 	queue_free()
+func get_chase_direction() -> Vector3:
+	var to_player = player.global_position - global_position
+	to_player.y = 0
+	var dist = to_player.length()
+	var flank = flank_dir * min(dist * 0.5, FLANK_DISTANCE)
+	var target = player.global_position + flank
+	var dir = target - global_position
+	dir.y = 0
+	dir = dir.normalized() + get_separation() * SEPARATION_FORCE
+	return dir.normalized()
+func get_separation() -> Vector3:
+	var push = Vector3.ZERO
+	for other in get_tree().get_nodes_in_group("enemies"):
+		if other == self:
+			continue
+		var away = global_position - other.global_position
+		away.y = 0
+		var d = away.length()
+		if d > 0.0 and d < SEPARATION_RADIUS:	
+			push += away.normalized() * (1.0 -d / SEPARATION_RADIUS)
+	return push

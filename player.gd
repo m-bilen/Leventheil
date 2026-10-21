@@ -133,7 +133,6 @@ func take_damage(amount: int) -> void:
 	Events.player_health_changed.emit(health, MAX_HEALTH)
 	Events.camera_shake_requested.emit(0.6)
 	if health <= 0:
-		print("ÖLDÜN")
 		get_tree().reload_current_scene.call_deferred()
 func attack() -> void:
 	var aim = get_aim_direction()
