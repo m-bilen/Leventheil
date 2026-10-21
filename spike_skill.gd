@@ -7,13 +7,15 @@ const WEIGHT_PER_SPIKE = 0.5
 const DASH_RADIUS = 1.5
 var is_spinning = false
 var current_spikes = 0
-var hit_something = false
+const DASH_HIT_RADIUS = 1.9
+const SPIKES_PER_DAMAGE = 6.0
+var dash_damage = 0
+var enemies_hit: Array = []
 var is_active = true
 func _ready() -> void:
 	for i in SPIKE_COUNT:
 		var spike = SpikeScene.instantiate()
 		add_child(spike)
-		spike.hit_enemy.connect(_on_spike_hit)
 		position_spikes(SPIKE_RADIUS)
 		current_spikes = SPIKE_COUNT
 		update_weight()
@@ -24,19 +26,18 @@ func _ready() -> void:
 	get_parent().jump_started.connect(_on_jump_started)
 	Events.enemy_died.connect(_on_enemy_died)
 func _on_dash_started() -> void:
-	if not is_active:
+	if not is_active or current_spikes <= 0:
 		return
-	for spike in get_children():
-		spike.set_damaging(true)
 	is_spinning = true
 	position_spikes(DASH_RADIUS)
-	hit_something = false
+	dash_damage = ceili(current_spikes / SPIKES_PER_DAMAGE)
+	enemies_hit.clear()
 func _on_dash_ended() -> void:
-	for spike in get_children():
-		spike.set_damaging(false)
-	is_spinning = false 
+	if not is_spinning:
+		return
+	is_spinning = false
 	position_spikes(SPIKE_RADIUS)
-	if hit_something:
+	if not enemies_hit.is_empty():
 		lose_spikes(2)
 func _on_spikes_toggled() -> void:
 	is_active = not is_active
@@ -65,7 +66,6 @@ func _process(delta:float) -> void:
 	if is_spinning:
 		rotate_y(SPIN_SPEED * delta)
 func _on_spike_hit()-> void:
-	hit_something = true
 	get_parent().hit_stop(0.2)
 	Events.camera_shake_requested.emit(0.4)
 func lose_spikes(amount: int) -> void:
@@ -95,10 +95,23 @@ func gain_spikes(amount: int) -> void:
 			return
 		var spike = SpikeScene.instantiate()
 		add_child(spike)
-		spike.hit_enemy.connect(_on_spike_hit)
 		current_spikes += 1
 	position_spikes(SPIKE_RADIUS)
 	update_weight()
 	broadcast_spikes()
 func _on_enemy_died(_enemy: Node3D) -> void:
 	gain_spikes(1)
+
+func _physics_process(delta: float) -> void:
+	if not is_spinning:
+		return
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if enemy in enemies_hit:
+			continue
+		var offset = enemy.global_position - global_position
+		offset.y = 0
+		if offset.length() <= DASH_HIT_RADIUS:
+			enemies_hit.append(enemy)
+			enemy.take_damage(dash_damage)
+			Events.camera_shake_requested.emit(0.4)
+			get_parent().hit_stop(0.2)
