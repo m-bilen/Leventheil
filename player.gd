@@ -231,3 +231,7 @@ func get_weight_ratio() -> float:
 	return clamp(weight / MAX_WEIGHT, 0.0, 1.0)
 func _ready() -> void:
 	Events.player_health_changed.emit.call_deferred(health, MAX_HEALTH)
+	Events.wave_started.connect(_on_wave_started)
+func _on_wave_started(_number: int) -> void:
+	health = MAX_HEALTH 
+	Events.player_health_changed.emit(health, MAX_HEALTH)

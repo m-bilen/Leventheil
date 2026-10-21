@@ -2,6 +2,7 @@ extends Node3D
 const EnemyScene = preload("res://enemy.tscn")
 const SPAWN_RADIUS = 12.0
 const HeavyEnemyScene = preload("res://heavy_enemy.tscn")
+const WAVE_BREAK = 4.0
 const WAVES = [
 	{"basic": 5, "heavy": 0, "interval": 1.2},
 	{"basic": 12, "heavy": 0, "interval": 0.6},
@@ -15,8 +16,11 @@ var spawn_timer = 0.0
 var enemies_alive = 0
 func _ready() -> void:
 	Events.enemy_died.connect(_on_enemy_died)
+	wave_index = GameState.current_wave
 	start_wave()
 func start_wave() -> void:
+	GameState.current_wave = wave_index
+	Events.wave_started.emit(wave_index + 1)
 	var wave = WAVES[wave_index]
 	spawn_queue.clear()
 	for i in wave["basic"]:
@@ -46,4 +50,5 @@ func wave_cleared() -> void:
 	wave_index += 1
 	if wave_index >= WAVES.size():
 		return
+	await get_tree().create_timer(WAVE_BREAK).timeout
 	start_wave()

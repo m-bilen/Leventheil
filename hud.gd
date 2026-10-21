@@ -1,10 +1,12 @@
 extends CanvasLayer
 @onready var  health_bar = $HealthBar
 @onready var spike_label = $SpikeLabel
+@onready var wave_label = $WaveLabel
 
 func _ready() -> void:
 	Events.player_health_changed.connect(_on_player_health_changed)
 	Events.spikes_changed.connect(_on_spikes_changed)
+	Events.wave_started.connect(_on_wave_started)
 
 func _on_player_health_changed(health: int, max_health: int) -> void:
 	health_bar.max_value = max_health
@@ -12,3 +14,10 @@ func _on_player_health_changed(health: int, max_health: int) -> void:
 
 func _on_spikes_changed(count: int) -> void:
 	spike_label.text = "Spikes: " + str(count)
+
+func _on_wave_started(number: int) -> void:
+	wave_label.text = "Wave " + str(number)
+	wave_label.modulate.a = 1.0
+	var tween = create_tween()
+	tween.tween_interval(1.5)
+	tween.tween_property(wave_label, "modulate:a", 0.0, 0.8)

@@ -83,5 +83,15 @@ offset_right = 60.0
 offset_bottom = 78.0
 text = "Spike : 16"
 
+[node name="WaveLabel" type="Label" parent="HUD" unique_id=1330718086]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 48
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=826577118]
 environment = SubResource("Environment_lquwl")
