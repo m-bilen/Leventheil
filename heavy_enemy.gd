@@ -1,4 +1,4 @@
-extends CharacterBody3D
+extends EnemyBase
 enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
 const SPEED = 1.5
 const ATTACK_RANGE = 2.5
@@ -6,15 +6,11 @@ const WINDUP_TIME = 0.8
 const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
 const ATTACK_DAMAGE = 2
-const MAX_HEALTH = 30
 const STUN_TIME = 2.0
 const PARRIES_TO_KILL = 3
 var parry_count = 0
 var state: State = State.CHASE
 var state_timer = 0.0
-var health = MAX_HEALTH
-@onready var player = get_parent().get_node("Player")
-@onready var mesh = $MeshInstance3D
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -56,37 +52,24 @@ func enter_state(new_state: State) -> void:
 	match new_state:
 		State.WINDUP:
 			state_timer = WINDUP_TIME
-			mesh.mesh.material.albedo_color = Color.YELLOW
+			set_color(Color.YELLOW)
 		State.ATTACK:
 			state_timer = ATTACK_TIME
-			mesh.mesh.material.albedo_color = Color.RED
+			set_color(Color.RED)
 			hit_player()
 		State.RECOVER:
 			state_timer = RECOVER_TIME
-			mesh.mesh.material.albedo_color = Color.GRAY
+			set_color(Color.GRAY)
 		State.CHASE:
-			mesh.mesh.material.albedo_color = base_color
+			set_color(base_color)
 		State.STUNNED:
 			state_timer = STUN_TIME
-			mesh.mesh.material.albedo_color = Color.CYAN
+			set_color(Color.CYAN)
 func hit_player() -> void:
 	var dist = global_position.distance_to(player.global_position)
 	if dist< ATTACK_RANGE:
 		player.take_damage(ATTACK_DAMAGE)
-func take_damage(amount:int) -> void:
-	if health <= 0:
-		die()
-	health -= amount
-	if health <= 0:
-		Events.enemy_died.emit(self)
-		set_physics_process(false)
-		queue_free()
-var base_color = Color.WHITE
-func _ready() -> void:
-	add_to_group("enemies")
-	mesh.mesh = mesh.mesh.duplicate()
-	mesh.mesh.material = mesh.mesh.material.duplicate()
-	base_color = mesh.mesh.material.albedo_color
+
 func can_be_parried() -> bool:
 	return state == State.WINDUP
 func on_parried() -> bool:
@@ -98,10 +81,3 @@ func do_stunned() -> void:
 	velocity.z = 0
 	if state_timer <= 0.0:
 		enter_state(State.CHASE)
-func die() -> void:
-	if is_queued_for_deletion():
-		return
-	health = 0
-	Events.enemy_died.emit(self)
-	set_physics_process(false)
-	queue_free()
