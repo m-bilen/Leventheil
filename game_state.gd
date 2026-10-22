@@ -1,2 +1,2 @@
 extends Node
-var current_wave = 2
+var current_wave = 4

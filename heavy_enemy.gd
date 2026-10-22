@@ -1,13 +1,14 @@
 extends EnemyBase
 enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
-const SPEED = 1.5
+@export var speed: float = 1.5
+@export var windup_time: float = 0.8
+@export var attack_damage: int = 2
+@export var parries_to_kill: int = 3
+@export var parry_only: bool = false
 const ATTACK_RANGE = 2.5
-const WINDUP_TIME = 0.8
 const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
-const ATTACK_DAMAGE = 2
 const STUN_TIME = 2.0
-const PARRIES_TO_KILL = 3
 var parry_count = 0
 var state: State = State.CHASE
 var state_timer = 0.0
@@ -34,8 +35,8 @@ func do_chase() -> void:
 		enter_state(State.WINDUP)
 		return
 	var dir = (player.global_position - global_position).normalized()
-	velocity.x = dir.x * SPEED
-	velocity.z = dir.z * SPEED
+	velocity.x = dir.x * speed
+	velocity.z = dir.z * speed
 func do_windup() -> void:
 	velocity.x = 0
 	velocity.z = 0
@@ -51,7 +52,7 @@ func enter_state(new_state: State) -> void:
 	state = new_state 
 	match new_state:
 		State.WINDUP:
-			state_timer = WINDUP_TIME
+			state_timer = windup_time
 			set_color(Color.YELLOW)
 		State.ATTACK:
 			state_timer = ATTACK_TIME
@@ -68,16 +69,21 @@ func enter_state(new_state: State) -> void:
 func hit_player() -> void:
 	var dist = global_position.distance_to(player.global_position)
 	if dist< ATTACK_RANGE:
-		player.take_damage(ATTACK_DAMAGE)
+		player.take_damage(attack_damage)
 
 func can_be_parried() -> bool:
 	return state == State.WINDUP
 func on_parried() -> bool:
 	parry_count += 1
 	enter_state(State.STUNNED)
-	return parry_count >= PARRIES_TO_KILL
+	return parry_count >= parries_to_kill
 func do_stunned() -> void:
 	velocity.x = 0
 	velocity.z = 0
 	if state_timer <= 0.0:
 		enter_state(State.CHASE)
+func take_damage(amount: int) -> void:
+	if parry_only:
+		flash()
+		return
+	super(amount)

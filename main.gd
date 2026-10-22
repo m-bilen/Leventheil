@@ -1,14 +1,15 @@
 extends Node3D
 const EnemyScene = preload("res://enemy.tscn")
-const SPAWN_RADIUS = 12.0
+const BossScene = preload("res://boss.tscn")
 const HeavyEnemyScene = preload("res://heavy_enemy.tscn")
+const SPAWN_RADIUS = 12.0
 const WAVE_BREAK = 4.0
 const WAVES = [
 	{"basic": 5, "heavy": 0, "interval": 1.2},
 	{"basic": 12, "heavy": 0, "interval": 0.6},
 	{"basic": 0, "heavy": 1, "interval": 0.0},
 	{"basic": 14, "heavy": 2, "interval": 0.5},
-	{"basic": 6, "heavy": 3, "interval": 1.0},
+	{"basic": 4, "heavy": 0, "boss": 1, "interval": 1.5},
 ]
 var wave_index = 0
 var spawn_queue: Array = []
@@ -27,6 +28,8 @@ func start_wave() -> void:
 		spawn_queue.append(EnemyScene)
 	for i in wave["heavy"]:
 		spawn_queue.append(HeavyEnemyScene)
+	for i in wave.get("boss", 0):
+		spawn_queue.append(BossScene)
 	spawn_queue.shuffle()
 	spawn_timer = 0.0
 func _process(delta: float) -> void:
@@ -40,7 +43,7 @@ func spawn_enemy(scene: PackedScene) -> void:
 	var enemy = scene.instantiate()
 	add_child(enemy)
 	var angle = randf() * TAU
-	enemy.position = Vector3(cos(angle) * SPAWN_RADIUS, 1.0, sin(angle) * SPAWN_RADIUS)
+	enemy.position = Vector3(cos(angle) * SPAWN_RADIUS, 2.5, sin(angle) * SPAWN_RADIUS)
 	enemies_alive += 1
 func _on_enemy_died(_enemy: Node3D) -> void:
 	enemies_alive -= 1
