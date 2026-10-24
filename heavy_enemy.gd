@@ -5,6 +5,9 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
 @export var attack_damage: int = 2
 @export var parries_to_kill: int = 3
 @export var parry_only: bool = false
+@export var enrage_windup_multiplier: float = 1.0
+var is_enraged = false 
+@onready var parry_pips : Label3D = $ParryPips
 const ATTACK_RANGE = 2.5
 const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
@@ -75,6 +78,11 @@ func can_be_parried() -> bool:
 	return state == State.WINDUP
 func on_parried() -> bool:
 	parry_count += 1
+	update_parry_pips()
+	if not is_enraged and enrage_windup_multiplier < 1.0 and parry_count * 2 >= parries_to_kill:
+		is_enraged = true
+		windup_time *= enrage_windup_multiplier
+		base_color = Color(0.55, 0.0, 0.1)
 	enter_state(State.STUNNED)
 	return parry_count >= parries_to_kill
 func do_stunned() -> void:
@@ -87,3 +95,9 @@ func take_damage(amount: int) -> void:
 		flash()
 		return
 	super(amount)
+func update_parry_pips() -> void:
+	var remaining = parries_to_kill - parry_count
+	parry_pips.text = "• ".repeat(remaining).strip_edges()
+func _ready() -> void:
+	super()
+	update_parry_pips()

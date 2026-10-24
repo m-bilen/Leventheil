@@ -21,6 +21,7 @@ windup_time = 1.2
 attack_damage = 4
 parries_to_kill = 5
 parry_only = true
+enrage_windup_multiplier = 0.65
 max_health = 30
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1548163718]
@@ -28,3 +29,9 @@ mesh = SubResource("BoxMesh_7k104")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=216324921]
 shape = SubResource("BoxShape3D_4gyqm")
+
+[node name="ParryPips" type="Label3D" parent="." unique_id=347780787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+billboard = 1
+no_depth_test = true
+font_size = 64
