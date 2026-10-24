@@ -87,10 +87,11 @@ func _physics_process(delta: float) -> void:
 	var current_speed = walk_speed
 	if Input.is_action_just_pressed("dash") and not is_dashing and direction and cooldown_timer <=0 and swap_lock_timer <= 0:
 		is_dashing = true
-		anim.play(ANIM_DASH)
+		anim.play(ANIM_DASH, -1.0, 3.0)
+		action_timer = DASH_TIME
 		cooldown_timer = DASH_COOLDOWN
 		dash_started.emit()
-		if try_parry():
+		if can_parry() and  try_parry():
 			parried.emit()
 			cooldown_timer = 0.0
 			hit_stop(0.15)
@@ -249,3 +250,8 @@ func _ready() -> void:
 func _on_wave_started(_number: int) -> void:
 	health = MAX_HEALTH 
 	Events.player_health_changed.emit(health, MAX_HEALTH)
+func can_parry() -> bool:
+	for child in get_children():
+		if child.has_method("enables_parry") and child.enables_parry():
+			return true
+	return false

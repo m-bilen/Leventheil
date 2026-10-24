@@ -125,3 +125,5 @@ func absorb_damage(amount: int) -> bool:
 		return false
 	lose_spikes(amount * SHIELD_COST_PER_DAMAGE)
 	return true
+func enables_parry() -> bool:
+	return is_active and current_spikes > 0
