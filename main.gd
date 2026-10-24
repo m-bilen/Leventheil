@@ -3,6 +3,7 @@ const EnemyScene = preload("res://enemy.tscn")
 const BossScene = preload("res://boss.tscn")
 const HeavyEnemyScene = preload("res://heavy_enemy.tscn")
 const SPAWN_RADIUS = 12.0
+const FIRST_SPAWN_DELAY = 1.5
 const WAVE_BREAK = 4.0
 const WAVES = [
 	{"basic": 5, "heavy": 0, "interval": 1.2},
@@ -28,10 +29,10 @@ func start_wave() -> void:
 		spawn_queue.append(EnemyScene)
 	for i in wave["heavy"]:
 		spawn_queue.append(HeavyEnemyScene)
+	spawn_queue.shuffle()
 	for i in wave.get("boss", 0):
 		spawn_queue.append(BossScene)
-	spawn_queue.shuffle()
-	spawn_timer = 0.0
+	spawn_timer = FIRST_SPAWN_DELAY
 func _process(delta: float) -> void:
 	if spawn_queue.is_empty():
 		return

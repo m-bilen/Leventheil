@@ -6,6 +6,7 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
 @export var parries_to_kill: int = 3
 @export var parry_only: bool = false
 @export var enrage_windup_multiplier: float = 1.0
+@export var display_name: String = ""
 var is_enraged = false 
 @onready var parry_pips : Label3D = $ParryPips
 const ATTACK_RANGE = 2.5
@@ -101,3 +102,7 @@ func update_parry_pips() -> void:
 func _ready() -> void:
 	super()
 	update_parry_pips()
+	if display_name != "":
+		Events.boss_spawned.emit(display_name)
+		Events.camera_focus_requested.emit(global_position, 1.0)
+		Events.camera_shake_requested.emit(0.8)
