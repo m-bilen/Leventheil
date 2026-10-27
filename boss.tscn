@@ -23,6 +23,7 @@ parries_to_kill = 5
 parry_only = true
 enrage_windup_multiplier = 0.65
 max_health = 30
+pullable = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1548163718]
 mesh = SubResource("BoxMesh_7k104")

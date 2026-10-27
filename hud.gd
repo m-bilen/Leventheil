@@ -26,7 +26,8 @@ func _on_boss_spawned(boss_name: String) -> void:
 func show_banner(text: String) -> void:
 	if banner_tween:
 		banner_tween.kill()
+	wave_label.text = text
 	wave_label.modulate.a = 1.0
 	banner_tween = create_tween()
 	banner_tween.tween_interval(1.5)
-	banner_tween.tween_property(wave_label, "modulate: a", 0.0, 0.8)
+	banner_tween.tween_property(wave_label, "modulate:a", 0.0, 0.8)

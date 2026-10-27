@@ -32,6 +32,7 @@ func _physics_process(delta: float) -> void:
 			do_recover()
 		State.STUNNED:
 			do_stunned()
+	apply_status_effects()
 	move_and_slide()
 func do_chase() -> void:
 	var dist = global_position.distance_to(player.global_position)

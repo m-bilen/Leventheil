@@ -11,6 +11,7 @@
 [ext_resource type="AnimationLibrary" uid="uid://dbvi2gum0xf3d" path="res://romero/Stable Sword Outward Slash.fbx" id="9_n7ghd"]
 [ext_resource type="AnimationLibrary" uid="uid://thge4fws3uig" path="res://romero/Standing Dodge Forward.fbx" id="9_nvl01"]
 [ext_resource type="AnimationLibrary" uid="uid://cm3o7vt7yrq0" path="res://romero/falling.fbx" id="11_nvl01"]
+[ext_resource type="Script" uid="uid://chrtwp8ua2r7x" path="res://vine_skill.gd" id="12_ivps1"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hqtel"]
 
@@ -1531,3 +1532,6 @@ collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Model/AttackArea" unique_id=1526908534]
 shape = SubResource("BoxShape3D_i3pqv")
+
+[node name="VineSkill" type="Node3D" parent="." unique_id=164055156]
+script = ExtResource("12_ivps1")

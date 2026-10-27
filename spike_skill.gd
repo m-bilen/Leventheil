@@ -24,8 +24,8 @@ func _ready() -> void:
 	broadcast_spikes.call_deferred()
 	get_parent().dash_started.connect(_on_dash_started)
 	get_parent().dash_ended.connect(_on_dash_ended)
-	get_parent().spikes_toggled.connect(_on_spikes_toggled)
-	get_parent().jump_started.connect(_on_jump_started)
+	get_parent().stance_toggled.connect(_on_stance_toggled)
+	get_parent().jump_pressed.connect(_on_jump_pressed)
 	Events.enemy_died.connect(_on_enemy_died)
 	get_parent().finisher_landed.connect(_on_finisher_landed)
 func _on_dash_started() -> void:
@@ -42,12 +42,12 @@ func _on_dash_ended() -> void:
 	position_spikes(SPIKE_RADIUS)
 	if not enemies_hit.is_empty():
 		lose_spikes(2)
-func _on_spikes_toggled() -> void:
+func _on_stance_toggled() -> void:
 	is_active = not is_active
 	visible = is_active
 	update_weight()
 	broadcast_spikes()
-func _on_jump_started(aim_dir: Vector3) -> void:
+func _on_jump_pressed(aim_dir: Vector3) -> void:
 	if not is_active:
 		return
 	if current_spikes <= 0:

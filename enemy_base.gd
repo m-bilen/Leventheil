@@ -4,7 +4,11 @@ extends CharacterBody3D
 const FLASH_TIME = 0.1
 
 @export var max_health: int = 3
+@export var pullable: bool = true
 
+var pull_timer = 0.0
+var pull_velocity = Vector3.ZERO
+var root_timer = 0.0
 var health: int
 var player: Node3D
 var base_color = Color.WHITE
@@ -25,6 +29,8 @@ func _ready() -> void:
 func take_damage(amount: int) -> void:
 	if health <= 0:
 		return
+	if is_rooted():
+		amount *= 2
 	health -= amount
 	flash()
 	_on_damaged()
@@ -52,8 +58,36 @@ func flash() -> void:
 	mesh.mesh.material.albedo_color = Color.WHITE
 
 func _process(delta: float) -> void:
+	if pull_timer > 0.0:
+		pull_timer -= delta
+	if root_timer > 0.0:
+		root_timer -= delta
+	if root_timer <= 0.0:
+		mesh.mesh.material.emission_enabled = false
 	if flash_timer <= 0.0:
 		return
 	flash_timer -= delta 
 	if flash_timer <= 0.0:
 		mesh.mesh.material.albedo_color = current_color
+
+func root(duration: float) -> void:
+	root_timer = max(root_timer, duration)
+	mesh.mesh.material.emission_enabled = true
+	mesh.mesh.material.emission = Color(0.1, 0.7, 0.2)
+
+func is_rooted() -> bool:
+	return root_timer > 0.0
+
+func pull(to: Vector3, duration: float) -> void:
+	var offset = to - global_position
+	offset.y = 0
+	pull_velocity = offset / duration
+	pull_timer = duration
+
+func apply_status_effects() -> void:
+	if pull_timer > 0.0:
+		velocity.x = pull_velocity.x
+		velocity.z = pull_velocity.z
+	elif is_rooted():
+		velocity.x = 0
+		velocity.z = 0

@@ -1,10 +1,11 @@
 extends CharacterBody3D
 signal dash_started
 signal dash_ended
-signal spikes_toggled
-signal jump_started(aim_dir: Vector3)
+signal stance_toggled
+signal jump_pressed(aim_dir: Vector3)
 signal parried
 signal finisher_landed
+signal attack_landed(target: Node3D)
 const ANIM_IDLE = "mixamo_com"
 const ANIM_RUN = "Running/mixamo_com"
 const ANIM_JUMP = "Jumping Up/mixamo_com"
@@ -59,14 +60,15 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
-		velocity.y = 5.0
-		model.scale = Vector3(0.7,1.3,0.7)
-		jump_started.emit(get_aim_direction())
+		if not is_jump_replaced():
+			velocity.y = 5.0
+			model.scale = Vector3(0.7, 1.3, 0.7)
+		jump_pressed.emit(get_aim_direction())
 	var target_scale = Vector3.ONE
 	swap_lock_timer = max(swap_lock_timer - delta, 0.0)
 	swap_cooldown_timer = max(swap_cooldown_timer - delta, 0.0)
 	if Input.is_action_just_pressed("toggle_spikes") and swap_cooldown_timer <= 0.0 and not is_dashing:
-		spikes_toggled.emit()
+		stance_toggled.emit()
 		swap_lock_timer = SWAP_LOCK_TIME 
 		swap_cooldown_timer = SWAP_COOLDOWN
 		model.scale = Vector3(1.15, 0.85, 1.15)
@@ -119,12 +121,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	update_animation()
 
-	# --- Modeli hareket yönüne döndür ---
+
 	if direction:
 		var target_angle = atan2(direction.x, direction.z)
 		model.rotation.y = lerp_angle(model.rotation.y, target_angle, ROT_SPEED * delta)
 
-	# --- Procedural canlılık: yürürken zıplama (bob) + eğilme (tilt) ---
 	var speed_ratio = Vector2(velocity.x, velocity.z).length() / walk_speed
 	if speed_ratio > 0.1:
 		bob_time += delta * 12.0
@@ -168,6 +169,7 @@ func attack() -> void:
 			continue
 		if body.has_method("take_damage"):
 			body.take_damage(ATTACK_DAMAGE)
+			attack_landed.emit(body)
 			hit_stop(0.15)
 			Events.camera_shake_requested.emit(0.15)
 
@@ -253,5 +255,10 @@ func _on_wave_started(_number: int) -> void:
 func can_parry() -> bool:
 	for child in get_children():
 		if child.has_method("enables_parry") and child.enables_parry():
+			return true
+	return false
+func is_jump_replaced() -> bool:
+	for child in get_children():
+		if child.has_method("replaces_jump") and child.replaces_jump():
 			return true
 	return false

@@ -27,6 +27,7 @@ func _physics_process(delta: float) -> void:
 		var direction = get_chase_direction()
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
+	apply_status_effects()
 	move_and_slide()
 	attack_timer -= delta
 	if attack_timer <= 0:
