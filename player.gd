@@ -119,12 +119,10 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	update_animation()
 
-	# --- Modeli hareket yönüne döndür ---
 	if direction:
 		var target_angle = atan2(direction.x, direction.z)
 		model.rotation.y = lerp_angle(model.rotation.y, target_angle, ROT_SPEED * delta)
 
-	# --- Procedural canlılık: yürürken zıplama (bob) + eğilme (tilt) ---
 	var speed_ratio = Vector2(velocity.x, velocity.z).length() / walk_speed
 	if speed_ratio > 0.1:
 		bob_time += delta * 12.0
