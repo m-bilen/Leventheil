@@ -8,6 +8,9 @@ const PULL_TIME = 0.2
 const TETHER_TIME = 1.0
 const PULL_STOP_DISTANCE = 1.2
 const AIM_CONE = 0.85
+const UNLOCK_WAVE = 4
+var light_stance = false
+var unlocked = false
 
 var is_active = false
 var charges = {}
@@ -17,10 +20,12 @@ func _ready() -> void:
 	get_parent().attack_landed.connect(_on_attack_landed)
 	get_parent().jump_pressed.connect(_on_jump_pressed)
 	Events.enemy_died.connect(_on_enemy_died)
+	Events.wave_started.connect(_on_wave_started)
 
 func _on_stance_toggled() -> void:
-	is_active = not is_active
+	light_stance = not light_stance
 	charges.clear()
+	refresh_active()
 	if is_active:
 		sprout_seeds()
 
@@ -72,10 +77,21 @@ func find_aimed_enemy(aim_dir: Vector3) -> Node3D:
 func replaces_jump() -> bool:
 	return is_active
 
+func refresh_active() -> void:
+	is_active = light_stance and unlocked
+
 func sprout_seeds() -> void:
-	for seed in get_tree().get_nodes_in_group("seeds"):
-		var trap = VineTrapScene .instantiate()
+	for planted in get_tree().get_nodes_in_group("seeds"):
+		var trap = VineTrapScene.instantiate()
 		get_tree().current_scene.add_child(trap)
-		trap.global_position = seed.global_position
+		trap.global_position = planted.global_position
 		trap.global_position.y = 0.3
-		seed.queue_free()
+		planted.queue_free()
+
+func _on_wave_started(number: int) -> void:
+	if unlocked or number < UNLOCK_WAVE:
+		return
+	unlocked = true
+	refresh_active()
+	await get_tree().create_timer(2.5).timeout
+	Events.ability_unlocked.emit("Vines awakened (Q)")

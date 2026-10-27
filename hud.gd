@@ -9,6 +9,7 @@ func _ready() -> void:
 	Events.spikes_changed.connect(_on_spikes_changed)
 	Events.wave_started.connect(_on_wave_started)
 	Events.boss_spawned.connect(_on_boss_spawned)
+	Events.ability_unlocked.connect(show_banner)
 
 func _on_player_health_changed(health: int, max_health: int) -> void:
 	health_bar.max_value = max_health
