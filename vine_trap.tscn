@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://drjqmq5i6mkfo"]
+
+[ext_resource type="Script" uid="uid://og1lb3bmavsq" path="res://vine_trap.gd" id="1_jpoai"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dqu6m"]
+radius = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jpoai"]
+albedo_color = Color(0.18039216, 0.49019608, 0.19607843, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_xsko8"]
+material = SubResource("StandardMaterial3D_jpoai")
+height = 0.1
+
+[node name="VineTrap" type="Area3D" unique_id=1022705449]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_jpoai")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=815444848]
+shape = SubResource("SphereShape3D_dqu6m")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1631589341]
+mesh = SubResource("CylinderMesh_xsko8")

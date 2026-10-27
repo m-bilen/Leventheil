@@ -1,5 +1,6 @@
 extends Node3D
 
+const VineTrapScene = preload("res://vine_trap.tscn")
 const HITS_TO_ROOT = 3
 const ROOT_DURATION = 2.0
 const PULL_RANGE = 8.0
@@ -20,6 +21,8 @@ func _ready() -> void:
 func _on_stance_toggled() -> void:
 	is_active = not is_active
 	charges.clear()
+	if is_active:
+		sprout_seeds()
 
 func _on_attack_landed(target: Node3D) -> void:
 	if not is_active:
@@ -68,3 +71,11 @@ func find_aimed_enemy(aim_dir: Vector3) -> Node3D:
 
 func replaces_jump() -> bool:
 	return is_active
+
+func sprout_seeds() -> void:
+	for seed in get_tree().get_nodes_in_group("seeds"):
+		var trap = VineTrapScene .instantiate()
+		get_tree().current_scene.add_child(trap)
+		trap.global_position = seed.global_position
+		trap.global_position.y = 0.3
+		seed.queue_free()
