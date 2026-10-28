@@ -22,6 +22,7 @@ func _ready() -> void:
 	current_spikes = SPIKE_COUNT
 	update_weight()
 	broadcast_spikes.call_deferred()
+	Events.wave_started.connect(_on_wave_started)
 	get_parent().dash_started.connect(_on_dash_started)
 	get_parent().dash_ended.connect(_on_dash_ended)
 	get_parent().stance_toggled.connect(_on_stance_toggled)
@@ -68,7 +69,7 @@ func _process(delta:float) -> void:
 func lose_spikes(amount: int) -> void:
 	for i in amount:
 		if current_spikes <= 0:
-			return
+			break
 		var spike = get_children()[0]
 		remove_child(spike)
 		spike.queue_free()
@@ -92,7 +93,7 @@ func position_spikes(radius: float) -> void:
 func gain_spikes(amount: int) -> void:
 	for i in amount:
 		if current_spikes >= SPIKE_COUNT:
-			return
+			break
 		var spike = SpikeScene.instantiate()
 		add_child(spike)
 		current_spikes += 1
@@ -127,3 +128,5 @@ func absorb_damage(amount: int) -> bool:
 	return true
 func enables_parry() -> bool:
 	return is_active and current_spikes > 0
+func _on_wave_started(_number: int) -> void:
+	gain_spikes(SPIKE_COUNT)

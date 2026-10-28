@@ -8,7 +8,7 @@ const PULL_TIME = 0.2
 const TETHER_TIME = 1.0
 const PULL_STOP_DISTANCE = 1.2
 const AIM_CONE = 0.85
-const UNLOCK_WAVE = 4
+const UNLOCK_WAVE = 2
 var light_stance = false
 var unlocked = false
 
