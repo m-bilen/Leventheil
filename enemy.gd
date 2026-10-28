@@ -10,6 +10,10 @@ var knockback_timer = 0
 var knockback_dir = Vector3.ZERO
 const ATTACK_DAMAGE = 1
 const ATTACK_COOLDOWN = 1.0
+const ATTACK_RANGE = 1.5
+const WINDUP_TIME = 0.4
+const WINDUP_COLOR = Color(1.0, 0.55, 0.0)
+var windup_timer = 0.0
 var attack_timer = 0.0
 const SPEED = 2.0
 func _ready()-> void:
@@ -27,14 +31,18 @@ func _physics_process(delta: float) -> void:
 		var direction = get_chase_direction()
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
+	if windup_timer > 0.0:
+		velocity.x = 0
+		velocity.z = 0
 	apply_status_effects()
 	move_and_slide()
-	attack_timer -= delta
-	if attack_timer <= 0:
-		var dist = global_position.distance_to(player.global_position)
-		if dist < 1.5 :
-			player.take_damage(ATTACK_DAMAGE)
-			attack_timer = ATTACK_COOLDOWN
+	attack_timer = max(attack_timer - delta, 0.0)
+	if windup_timer > 0.0:
+		windup_timer -= delta
+		if windup_timer <= 0.0:
+			strike()
+	elif attack_timer <= 0.0 and global_position.distance_to(player.global_position) < ATTACK_RANGE: 
+		start_windup()
 func get_chase_direction() -> Vector3:
 	var to_player = player.global_position - global_position
 	to_player.y = 0
@@ -60,3 +68,21 @@ func _on_damaged() -> void:
 	knockback_dir = (global_position - player.global_position).normalized()
 	knockback_dir.y = 0
 	knockback_timer = KNOCKBACK_TIME
+	interrupt()
+
+func start_windup() -> void:
+	windup_timer = WINDUP_TIME
+	set_color(WINDUP_COLOR)
+
+func strike() -> void:
+	set_color(base_color)
+	attack_timer = ATTACK_COOLDOWN
+	if global_position.distance_to(player.global_position) < ATTACK_RANGE and player.is_on_floor():
+		player.take_damage(ATTACK_DAMAGE)
+
+func interrupt() -> void:
+	if windup_timer <= 0.0:
+		return
+	windup_timer = 0.0
+	attack_timer = ATTACK_COOLDOWN
+	set_color(base_color)

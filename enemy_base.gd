@@ -40,6 +40,9 @@ func take_damage(amount: int) -> void:
 func _on_damaged() -> void:
 	pass
 
+func interrupt() -> void:
+	pass
+
 func die() -> void:
 	if is_queued_for_deletion():
 		return 
@@ -83,6 +86,7 @@ func pull(to: Vector3, duration: float) -> void:
 	offset.y = 0
 	pull_velocity = offset / duration
 	pull_timer = duration
+	interrupt()
 
 func apply_status_effects() -> void:
 	if pull_timer > 0.0:
