@@ -2,6 +2,7 @@ extends Node3D
 const EnemyScene = preload("res://enemy.tscn")
 const BossScene = preload("res://boss.tscn")
 const HeavyEnemyScene = preload("res://heavy_enemy.tscn")
+const CasterScene = preload("res://caster.tscn")
 const SPAWN_RADIUS = 12.0
 const FIRST_SPAWN_DELAY = 1.5
 const WAVE_BREAK = 4.0
@@ -9,8 +10,8 @@ const WAVES = [
 	{"basic": 5, "heavy": 0, "interval": 1.2},
 	{"basic": 12, "heavy": 0, "interval": 0.6},
 	{"basic": 0, "heavy": 1, "interval": 0.0},
-	{"basic": 14, "heavy": 2, "interval": 0.5},
-	{"basic": 4, "heavy": 0, "boss": 1, "interval": 1.5},
+	{"basic": 14, "heavy": 2, "caster": 2, "interval": 0.5},
+	{"basic": 4, "heavy": 0, "boss": 1, "caster": 2, "interval": 1.5},
 ]
 var wave_index = 0
 var spawn_queue: Array = []
@@ -30,6 +31,8 @@ func start_wave() -> void:
 		spawn_queue.append(EnemyScene)
 	for i in wave["heavy"]:
 		spawn_queue.append(HeavyEnemyScene)
+	for i in wave.get("caster", 0):
+		spawn_queue.append(CasterScene)
 	spawn_queue.shuffle()
 	for i in wave.get("boss", 0):
 		spawn_queue.append(BossScene)

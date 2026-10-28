@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://d2vyekk87bmfx"]
+
+[ext_resource type="Script" uid="uid://bt6cixd3f4wo5" path="res://ground_wave.gd" id="1_xoan8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_psfag"]
+size = Vector3(3, 0.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xoan8"]
+albedo_color = Color(0.7058824, 0.3019608, 1, 1)
+emission_enabled = true
+emission = Color(0.7058824, 0.3019608, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tpvg7"]
+material = SubResource("StandardMaterial3D_xoan8")
+
+[node name="GroundWave" type="Area3D" unique_id=1532206371]
+collision_layer = 0
+script = ExtResource("1_xoan8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1837159656]
+shape = SubResource("BoxShape3D_psfag")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=986510170]
+mesh = SubResource("BoxMesh_tpvg7")
