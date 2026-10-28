@@ -42,8 +42,8 @@ func _physics_process(delta: float) -> void:
 		start_windup()
 
 func start_windup() -> void:
-	windup_timer = WINDUP_TIME 
-	set_color(base_color)
+	windup_timer = WINDUP_TIME
+	set_color(WINDUP_COLOR)
 
 func cast() -> void:
 	set_color(base_color)
