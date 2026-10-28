@@ -17,6 +17,7 @@ var spawn_queue: Array = []
 var spawn_timer = 0.0
 var enemies_alive = 0
 func _ready() -> void:
+	Engine.time_scale = 1.0
 	Events.enemy_died.connect(_on_enemy_died)
 	wave_index = GameState.current_wave
 	start_wave()
