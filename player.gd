@@ -12,16 +12,16 @@ const ANIM_JUMP = "Jumping Up/mixamo_com"
 const ANIM_ATTACK = "Stable Sword Outward Slash/mixamo_com"
 const ANIM_DASH = "Standing Dodge Forward/mixamo_com"
 const ANIM_FALL = "falling/mixamo_com"
-const ATTACK_DAMAGE = 1
+const ATTACK_DAMAGE_LIGHT = 1
+const ATTACK_DAMAGE_HEAVY = 2
+const ATTACK_IMPACT_TIME = 0.7
 const PARRY_RANGE = 3.0
-const ATTACK_COOLDOWN_HEAVY = 0.55
-const ATTACK_COOLDOWN_LIGHT = 0.22
 const ATTACK_SPEED_HEAVY = 0.8
 const ATTACK_SPEED_LIGHT = 1.6
 const ATTACK_START_LIGHT = 0.7
 const ATTACK_START_HEAVY = 0.0
 const ATTACK_TIME_LIGHT = 0.5
-const ATTACK_TIME_HEAVY = 1.2
+const ATTACK_TIME_HEAVY = 0.9
 const MAX_WEIGHT = 8.0
 const SWAP_LOCK_TIME = 0.5
 const SWAP_COOLDOWN = 1.0
@@ -79,7 +79,6 @@ func _physics_process(delta: float) -> void:
 	attack_timer = max(attack_timer - delta, 0.0)
 	if Input.is_action_just_pressed("attack") and attack_timer <= 0.0 and swap_lock_timer <= 0.0:
 		attack()
-		attack_timer = lerp(ATTACK_COOLDOWN_LIGHT, ATTACK_COOLDOWN_HEAVY,get_weight_ratio())
 
 	action_timer = max(action_timer - delta, 0.0)
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
@@ -122,7 +121,7 @@ func _physics_process(delta: float) -> void:
 	update_animation()
 
 
-	if direction:
+	if direction and action_timer <= 0.0:
 		var target_angle = atan2(direction.x, direction.z)
 		model.rotation.y = lerp_angle(model.rotation.y, target_angle, ROT_SPEED * delta)
 
@@ -152,23 +151,29 @@ func attack() -> void:
 	var aim = get_aim_direction()
 	if aim != Vector3.ZERO:
 		model.rotation.y = atan2(aim.x, aim.z)
-	
+
 	var t = get_weight_ratio()
 	var anim_speed = lerp(ATTACK_SPEED_LIGHT, ATTACK_SPEED_HEAVY, t)
 	var anim_start = lerp(ATTACK_START_LIGHT, ATTACK_START_HEAVY, t)
 	var anim_dur = lerp(ATTACK_TIME_LIGHT, ATTACK_TIME_HEAVY, t)
-	
+	var damage = roundi(lerp(float(ATTACK_DAMAGE_LIGHT), float(ATTACK_DAMAGE_HEAVY), t))
+
 	anim.play(ANIM_ATTACK, -1.0, anim_speed)
 	anim.seek(anim_start, true)
 	action_timer = anim_dur / anim_speed
-	
+	attack_timer = action_timer
+
+	var impact_delay = max(ATTACK_IMPACT_TIME - anim_start, 0.0) / anim_speed
+	await get_tree().create_timer(impact_delay).timeout
 	await get_tree().physics_frame
-	
+	if is_dashing:
+		return
+
 	for body in attack_area.get_overlapping_bodies():
 		if body == self:
 			continue
 		if body.has_method("take_damage"):
-			body.take_damage(ATTACK_DAMAGE)
+			body.take_damage(damage)
 			attack_landed.emit(body)
 			hit_stop(0.15)
 			Events.camera_shake_requested.emit(0.15)
