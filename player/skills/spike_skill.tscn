@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://40if34jn7dni"]
 
-[ext_resource type="Script" uid="uid://d06idjn5vhy40" path="res://spike_skill.gd" id="1_tpaen"]
+[ext_resource type="Script" uid="uid://d06idjn5vhy40" path="res://player/skills/spike_skill.gd" id="1_tpaen"]
 
 [node name="SpikeSkill" type="Node3D" unique_id=2044933655]
 script = ExtResource("1_tpaen")

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://crppambdbq5hl"]
 
-[ext_resource type="Script" uid="uid://sonmvy4k4gk8" path="res://caster.gd" id="1_hmqsl"]
+[ext_resource type="Script" uid="uid://sonmvy4k4gk8" path="res://enemies/caster.gd" id="1_rll85"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k104"]
 albedo_color = Color(0.16862746, 0.22745098, 0.54901963, 1)
@@ -15,7 +15,7 @@ size = Vector3(0.6, 2.2, 0.6)
 [node name="Caster" type="CharacterBody3D" unique_id=220612844]
 collision_layer = 2
 collision_mask = 5
-script = ExtResource("1_hmqsl")
+script = ExtResource("1_rll85")
 max_health = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1548163718]

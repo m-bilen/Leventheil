@@ -1,22 +1,29 @@
-[gd_scene format=3 uid="uid://b1dga0mimfern"]
+[gd_scene format=3 uid="uid://7dqshnncdadx"]
 
-[ext_resource type="Script" uid="uid://80cruu7qtrv2" path="res://heavy_enemy.gd" id="1_f5y7r"]
+[ext_resource type="Script" uid="uid://80cruu7qtrv2" path="res://enemies/heavy_enemy.gd" id="1_0bnu1"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k104"]
 albedo_color = Color(1, 0, 0.9607843, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_7k104"]
 material = SubResource("StandardMaterial3D_7k104")
-size = Vector3(1.2, 2.5, 1.2)
+size = Vector3(1.9, 4, 1.9)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
-size = Vector3(1.2, 2.5, 1.2)
+size = Vector3(1.9, 4, 1.9)
 
-[node name="HeavyEnemy" type="CharacterBody3D" unique_id=220612844]
+[node name="Zimbrok" type="CharacterBody3D" unique_id=220612844]
 collision_layer = 2
 collision_mask = 5
-script = ExtResource("1_f5y7r")
+script = ExtResource("1_0bnu1")
+speed = 1.2
+windup_time = 1.2
+attack_damage = 4
+parries_to_kill = 5
+parry_only = true
+enrage_windup_multiplier = 0.65
 max_health = 30
+pullable = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1548163718]
 mesh = SubResource("BoxMesh_7k104")
@@ -24,8 +31,8 @@ mesh = SubResource("BoxMesh_7k104")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=216324921]
 shape = SubResource("BoxShape3D_4gyqm")
 
-[node name="ParryPips" type="Label3D" parent="." unique_id=651298954]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+[node name="ParryPips" type="Label3D" parent="." unique_id=347780787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
 billboard = 1
 no_depth_test = true
 font_size = 64

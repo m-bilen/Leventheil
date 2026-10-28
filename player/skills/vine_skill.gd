@@ -1,6 +1,6 @@
 extends Node3D
 
-const VineTrapScene = preload("res://vine_trap.tscn")
+const VineTrapScene = preload("res://player/skills/vine_trap.tscn")
 const HITS_TO_ROOT = 3
 const ROOT_DURATION = 2.0
 const PULL_RANGE = 8.0

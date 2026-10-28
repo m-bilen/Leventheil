@@ -1,8 +1,8 @@
 extends Node3D
-const EnemyScene = preload("res://enemy.tscn")
-const BossScene = preload("res://boss.tscn")
-const HeavyEnemyScene = preload("res://heavy_enemy.tscn")
-const CasterScene = preload("res://caster.tscn")
+const EnemyScene = preload("res://enemies/enemy.tscn")
+const BossScene = preload("res://enemies/boss.tscn")
+const HeavyEnemyScene = preload("res://enemies/heavy_enemy.tscn")
+const CasterScene = preload("res://enemies/caster.tscn")
 const SPAWN_RADIUS = 12.0
 const FIRST_SPAWN_DELAY = 1.5
 const WAVE_BREAK = 4.0

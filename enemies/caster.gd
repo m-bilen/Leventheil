@@ -1,6 +1,6 @@
 extends EnemyBase
 
-const GroundBurstScene = preload("res://ground_burst.tscn")
+const GroundBurstScene = preload("res://enemies/ground_burst.tscn")
 const SPEED = 4
 const KEEP_MIN = 6.0
 const KEEP_MAX = 10.0

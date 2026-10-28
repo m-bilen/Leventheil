@@ -1,5 +1,5 @@
 extends Node3D
-const SpikeScene = preload("res://spike.tscn")
+const SpikeScene = preload("res://player/skills/spike.tscn")
 const SPIKE_COUNT = 16
 const SPIKE_RADIUS = 0.5
 const SPIN_SPEED = 15.0

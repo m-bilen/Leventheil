@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b1ji8b8t3gl63"]
 
-[ext_resource type="Script" uid="uid://cmf6lvw6dwbfq" path="res://spike.gd" id="1_8ryga"]
+[ext_resource type="Script" uid="uid://cmf6lvw6dwbfq" path="res://player/skills/spike.gd" id="1_gu2ra"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ryga"]
 
@@ -15,7 +15,7 @@ radius = 0.2
 
 [node name="MeshInstance3D" type="MeshInstance3D" unique_id=2050980731]
 mesh = SubResource("CylinderMesh_pe76i")
-script = ExtResource("1_8ryga")
+script = ExtResource("1_gu2ra")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1610591725]
 collision_layer = 0

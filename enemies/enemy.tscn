@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bl15dv38xgrij"]
 
-[ext_resource type="Script" uid="uid://be1t0gjhpgh62" path="res://enemy.gd" id="1_7k104"]
+[ext_resource type="Script" uid="uid://be1t0gjhpgh62" path="res://enemies/enemy.gd" id="1_7k104"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k104"]
 albedo_color = Color(1, 0, 0, 1)

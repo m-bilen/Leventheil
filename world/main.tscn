@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bonmonio1csdd"]
 
-[ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_h2yge"]
-[ext_resource type="PackedScene" uid="uid://bts4blx0hl4nn" path="res://player.tscn" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://sjtltymubbwm" path="res://camera_shake.gd" id="2_h2yge"]
-[ext_resource type="Script" uid="uid://cupane50xenw0" path="res://hud.gd" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://world/main.gd" id="1_spvjk"]
+[ext_resource type="Script" uid="uid://sjtltymubbwm" path="res://world/game_camera.gd" id="2_cmo1i"]
+[ext_resource type="PackedScene" uid="uid://bts4blx0hl4nn" path="res://player/player.tscn" id="3_i1eo7"]
+[ext_resource type="Script" uid="uid://cupane50xenw0" path="res://ui/hud.gd" id="4_gu74f"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(50, 0.5, 50)
@@ -38,7 +38,7 @@ tonemap_white = 6.0
 glow_enabled = true
 
 [node name="Node3D" type="Node3D" unique_id=301908995]
-script = ExtResource("1_h2yge")
+script = ExtResource("1_spvjk")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1922559620]
 transform = Transform3D(0.81915206, -0.43938506, 0.36868784, 0, 0.64278764, 0.76604444, -0.57357645, -0.62750685, 0.5265408, 0, -0.3599621, 0.020208359)
@@ -49,10 +49,10 @@ directional_shadow_max_distance = 50.0
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=490802686 node_paths=PackedStringArray("target")]
 transform = Transform3D(1, 0, 0, 0, 0.9063077, 0.42261824, 0, -0.42261824, 0.9063077, 0, 4, 6)
-script = ExtResource("2_h2yge")
+script = ExtResource("2_cmo1i")
 target = NodePath("../Player")
 
-[node name="Player" parent="." unique_id=1820987218 instance=ExtResource("1_ig7tw")]
+[node name="Player" parent="." unique_id=1820987218 instance=ExtResource("3_i1eo7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.084)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=413776213]
@@ -66,7 +66,7 @@ shape = SubResource("BoxShape3D_ig7tw")
 mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=446614191]
-script = ExtResource("4_1bvp3")
+script = ExtResource("4_gu74f")
 
 [node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=10520525]
 offset_left = 20.0
