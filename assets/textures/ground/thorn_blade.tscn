@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://d2gehvh78h7te"]
+
+[ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://assets/textures/bark/thorn_material.tres" id="1_obcjb"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_eydl1"]
+top_radius = 0.035
+bottom_radius = 0.035
+height = 0.3
+radial_segments = 8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_p8blj"]
+top_radius = 0.0
+bottom_radius = 0.07
+height = 0.9
+radial_segments = 4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rr8eg"]
+top_radius = 0.0
+bottom_radius = 0.025
+height = 0.15
+radial_segments = 6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ool0u"]
+top_radius = 0.0
+bottom_radius = 0.025
+height = 0.15
+radial_segments = 6
+
+[node name="ThornBlade" type="Node3D" unique_id=5397843]
+
+[node name="Grip" type="MeshInstance3D" parent="." unique_id=1140944368]
+material_override = ExtResource("1_obcjb")
+mesh = SubResource("CylinderMesh_eydl1")
+
+[node name="Blade" type="MeshInstance3D" parent="." unique_id=1226610099]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.35, 0, 0.6, 0)
+material_override = ExtResource("1_obcjb")
+mesh = SubResource("CylinderMesh_p8blj")
+
+[node name="Thorn1" type="MeshInstance3D" parent="." unique_id=28092397]
+transform = Transform3D(0.34202015, 0.9396926, 0, -0.9396926, 0.34202015, 0, 0, 0, 1, 0.05, 0.45, 0)
+material_override = ExtResource("1_obcjb")
+mesh = SubResource("CylinderMesh_rr8eg")
+
+[node name="Thorn2" type="MeshInstance3D" parent="." unique_id=1120030622]
+transform = Transform3D(0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, 0, 0, 0, 1, -0.05, 0.75, 0)
+material_override = ExtResource("1_obcjb")
+mesh = SubResource("CylinderMesh_ool0u")

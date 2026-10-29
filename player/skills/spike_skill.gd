@@ -1,5 +1,8 @@
 extends Node3D
 const SpikeScene = preload("res://player/skills/spike.tscn")
+var spike_material = preload("res://player/skills/spike_material.tres")
+const GLOW_IDLE = 0.4
+const GLOW_DASH = 3.0
 const SPIKE_COUNT = 16
 const SPIKE_RADIUS = 0.5
 const SPIN_SPEED = 15.0
@@ -29,10 +32,12 @@ func _ready() -> void:
 	get_parent().jump_pressed.connect(_on_jump_pressed)
 	Events.enemy_died.connect(_on_enemy_died)
 	get_parent().finisher_landed.connect(_on_finisher_landed)
+	spike_material.emission_energy_multiplier = GLOW_IDLE
 func _on_dash_started() -> void:
 	if not is_active or current_spikes <= 0:
 		return
 	is_spinning = true
+	spike_material.emission_energy_multiplier = GLOW_DASH
 	position_spikes(DASH_RADIUS)
 	dash_damage = ceili(current_spikes / SPIKES_PER_DAMAGE)
 	enemies_hit.clear()
@@ -40,6 +45,7 @@ func _on_dash_ended() -> void:
 	if not is_spinning:
 		return
 	is_spinning = false
+	spike_material.emission_energy_multiplier = GLOW_IDLE
 	position_spikes(SPIKE_RADIUS)
 	if not enemies_hit.is_empty():
 		lose_spikes(2)

@@ -1,0 +1,25 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://rhr8s02djhl6"]
+
+[ext_resource type="Texture2D" uid="uid://d0n45pajxlvv8" path="res://assets/textures/bark/bark_brown_02_diff_1k.jpg" id="1_05flk"]
+[ext_resource type="Texture2D" uid="uid://bnr2qohegpfgc" path="res://assets/textures/bark/bark_brown_02_nor_gl_1k.jpg" id="2_k1og5"]
+[ext_resource type="Texture2D" uid="uid://dhekwxvn6w2c6" path="res://assets/textures/bark/bark_brown_02_rough_1k.jpg" id="3_a8cac"]
+
+[sub_resource type="Gradient" id="Gradient_yspjw"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_t3qdr"]
+gradient = SubResource("Gradient_yspjw")
+fill_to = Vector2(0, 1)
+
+[resource]
+albedo_color = Color(0.41960785, 0.35686275, 0.2901961, 1)
+albedo_texture = ExtResource("1_05flk")
+roughness_texture = ExtResource("3_a8cac")
+emission_enabled = true
+emission = Color(0.4862745, 1, 0.41960785, 1)
+emission_energy_multiplier = 0.4
+emission_texture = SubResource("GradientTexture2D_t3qdr")
+normal_enabled = true
+normal_texture = ExtResource("2_k1og5")
+rim_enabled = true
+rim = 0.5
+uv1_scale = Vector3(1, 2, 1)
