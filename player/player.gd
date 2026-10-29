@@ -25,6 +25,8 @@ const ATTACK_TIME_HEAVY = 0.9
 const MAX_WEIGHT = 8.0
 const SWAP_LOCK_TIME = 0.5
 const SWAP_COOLDOWN = 1.0
+const ATTACK_MOVE_HEAVY = 0.2 
+
 var swap_lock_timer = 0.0
 var swap_cooldown_timer = 0.0
 var hit_stop_count = 0
@@ -102,6 +104,8 @@ func _physics_process(delta: float) -> void:
 		
 	if Input.is_action_pressed("run"):
 		current_speed = lerp(RUN_SPEED_LIGHT, RUN_SPEED_HEAVY, t)
+	if action_timer > 0.0 and not is_dashing:
+		current_speed *= lerp(1.0, ATTACK_MOVE_HEAVY, t)
 	if is_dashing:
 		var dash_speed = DASH_SPEED - weight
 		velocity.x = dash_direction.x * dash_speed
