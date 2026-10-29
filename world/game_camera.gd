@@ -2,6 +2,7 @@ extends Camera3D
 @export var target: Node3D
 const FOLLOW_SPEED = 5.0
 const FOCUS_FOV_DROP = 25.0
+
 var base_fov = 75.0
 var shake_amount = 0.0
 var offset = Vector3.ZERO

@@ -19,4 +19,7 @@ func _ready() -> void:
 		tree.position = Vector3(cos(angle) * dist, 0.0, sin(angle) * dist)
 		tree.rotation.y = rng.randf() * TAU
 		var s = rng.randf_range(min_scale, max_scale)
-		tree.scale = Vector3(s, 1.0 + rng.randf_range(0.0, 0.3), s)
+		var height = 1.0 + rng.randf_range(0.0, 0.3)
+		if tree.position.z > radius * 0.35:
+			height = 0.12
+		tree.scale = Vector3(s, height, s)
