@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://sjtltymubbwm" path="res://world/game_camera.gd" id="2_cmo1i"]
 [ext_resource type="PackedScene" uid="uid://bts4blx0hl4nn" path="res://player/player.tscn" id="3_i1eo7"]
 [ext_resource type="Script" uid="uid://cupane50xenw0" path="res://ui/hud.gd" id="4_gu74f"]
+[ext_resource type="Material" uid="uid://blk3uu4vwhwex" path="res://world/light_shaft_material.tres" id="5_cmo1i"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(50, 0.5, 50)
@@ -29,20 +30,44 @@ size = Vector3(50, 0.5, 50)
 sky_material = SubResource("ProceduralSkyMaterial_h2yge")
 
 [sub_resource type="Environment" id="Environment_lquwl"]
-background_mode = 2
+background_mode = 1
+background_color = Color(0.10980392, 0.16862746, 0.13725491, 1)
 sky = SubResource("Sky_1bvp3")
-ambient_light_source = 3
+ambient_light_source = 2
+ambient_light_color = Color(0.22745098, 0.32156864, 0.27058825, 1)
 ambient_light_sky_contribution = 0.4
+ambient_light_energy = 0.7
 tonemap_mode = 3
 tonemap_white = 6.0
 glow_enabled = true
+glow_intensity = 0.6
+fog_enabled = true
+fog_light_color = Color(0.10980392, 0.16862746, 0.13725491, 1)
+fog_sun_scatter = 0.2
+fog_density = 0.035
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spvjk"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(1, 0.9019608, 0.72156864, 0.05882353)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cmo1i"]
+material = SubResource("StandardMaterial3D_spvjk")
+top_radius = 0.6
+bottom_radius = 1.0
+height = 30.0
+cap_top = false
+cap_bottom = false
 
 [node name="Node3D" type="Node3D" unique_id=301908995]
 script = ExtResource("1_spvjk")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1922559620]
-transform = Transform3D(0.81915206, -0.43938506, 0.36868784, 0, 0.64278764, 0.76604444, -0.57357645, -0.62750685, 0.5265408, 0, -0.3599621, 0.020208359)
-light_energy = 0.8
+transform = Transform3D(0.8660254, -0.40957603, 0.28678823, 0, 0.57357645, 0.81915206, -0.5, -0.7094065, 0.49673176, 0, -0.3599621, 0.020208359)
+light_color = Color(1, 0.9019608, 0.72156864, 1)
+light_energy = 1.1
 shadow_enabled = true
 directional_shadow_mode = 0
 directional_shadow_max_distance = 50.0
@@ -95,3 +120,35 @@ theme_override_font_sizes/font_size = 48
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=826577118]
 environment = SubResource("Environment_lquwl")
+
+[node name="LightShafts" type="Node3D" parent="." unique_id=1817477614]
+
+[node name="Shaft" type="MeshInstance3D" parent="LightShafts" unique_id=1756971182]
+transform = Transform3D(0.8660254, -0.28678823, 0.40957603, 0, 0.81915206, 0.57357645, -0.5, -0.49673176, 0.7094065, -4.7, 12.3, -6)
+material_override = ExtResource("5_cmo1i")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_cmo1i")
+
+[node name="Shaft5" type="MeshInstance3D" parent="LightShafts" unique_id=666129578]
+transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 7.3, 12.3, 4.4)
+material_override = ExtResource("5_cmo1i")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_cmo1i")
+
+[node name="Shaft4" type="MeshInstance3D" parent="LightShafts" unique_id=2017316951]
+transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, -7.7, 12.3, 13.4)
+material_override = ExtResource("5_cmo1i")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_cmo1i")
+
+[node name="Shaft3" type="MeshInstance3D" parent="LightShafts" unique_id=62641460]
+transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 16.3, 12.3, 10.4)
+material_override = ExtResource("5_cmo1i")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_cmo1i")
+
+[node name="Shaft2" type="MeshInstance3D" parent="LightShafts" unique_id=1966922098]
+transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 12.3, 12.3, -1.6)
+material_override = ExtResource("5_cmo1i")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_cmo1i")

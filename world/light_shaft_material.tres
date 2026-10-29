@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://blk3uu4vwhwex"]
+
+[ext_resource type="Shader" uid="uid://ccmd0kb0ego6q" path="res://world/light_shaft.gdshader" id="1_k3rl6"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_k3rl6")
+shader_parameter/color = Color(1, 0.9, 0.72, 1)
+shader_parameter/strength = 0.12
