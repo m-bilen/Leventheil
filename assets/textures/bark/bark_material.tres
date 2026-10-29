@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cdc7mih5nbtp8"]
+
+[ext_resource type="Texture2D" uid="uid://d0n45pajxlvv8" path="res://assets/textures/bark/bark_brown_02_diff_1k.jpg" id="1_1pn0w"]
+[ext_resource type="Texture2D" uid="uid://bnr2qohegpfgc" path="res://assets/textures/bark/bark_brown_02_nor_gl_1k.jpg" id="2_w6odi"]
+[ext_resource type="Texture2D" uid="uid://dhekwxvn6w2c6" path="res://assets/textures/bark/bark_brown_02_rough_1k.jpg" id="3_7gtm7"]
+
+[resource]
+albedo_texture = ExtResource("1_1pn0w")
+roughness_texture = ExtResource("3_7gtm7")
+normal_enabled = true
+normal_texture = ExtResource("2_w6odi")
+uv1_scale = Vector3(3, 4, 1)

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bts4blx0hl4nn" path="res://player/player.tscn" id="3_i1eo7"]
 [ext_resource type="Script" uid="uid://cupane50xenw0" path="res://ui/hud.gd" id="4_gu74f"]
 [ext_resource type="Material" uid="uid://blk3uu4vwhwex" path="res://world/light_shaft_material.tres" id="5_cmo1i"]
+[ext_resource type="Script" uid="uid://du7idj6bnunkl" path="res://world/tree_ring.gd" id="6_i1eo7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(50, 0.5, 50)
@@ -124,7 +125,7 @@ environment = SubResource("Environment_lquwl")
 [node name="LightShafts" type="Node3D" parent="." unique_id=1817477614]
 
 [node name="Shaft" type="MeshInstance3D" parent="LightShafts" unique_id=1756971182]
-transform = Transform3D(0.8660254, -0.28678823, 0.40957603, 0, 0.81915206, 0.57357645, -0.5, -0.49673176, 0.7094065, -4.7, 12.3, -6)
+transform = Transform3D(0.8660254, -0.28678823, 0.40957603, 0, 0.81915206, 0.57357645, -0.5, -0.49673176, 0.7094065, -4.7, 12.3, 1.4)
 material_override = ExtResource("5_cmo1i")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cmo1i")
@@ -152,3 +153,7 @@ transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.573
 material_override = ExtResource("5_cmo1i")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cmo1i")
+
+[node name="TreeRing" type="Node3D" parent="." unique_id=556481411]
+script = ExtResource("6_i1eo7")
+radius = 24.0
