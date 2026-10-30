@@ -28,7 +28,7 @@ ambient_light_source = 2
 ambient_light_color = Color(0.22745098, 0.32156864, 0.27058825, 1)
 ambient_light_sky_contribution = 0.4
 ambient_light_energy = 0.7
-tonemap_mode = 3
+tonemap_mode = 4
 tonemap_white = 6.0
 glow_enabled = true
 glow_intensity = 0.6
@@ -120,11 +120,25 @@ material_override = ExtResource("5_cmo1i")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cmo1i")
 
+[node name="ShaftLight" type="SpotLight3D" parent="LightShafts/Shaft" unique_id=1921111398]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -5, 0)
+light_color = Color(1, 0.9019608, 0.72156864, 1)
+light_energy = 2.0
+spot_range = 14.0
+spot_angle = 8.0
+
 [node name="Shaft5" type="MeshInstance3D" parent="LightShafts" unique_id=666129578]
 transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 7.3, 12.3, 4.4)
 material_override = ExtResource("5_cmo1i")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cmo1i")
+
+[node name="ShaftLight" type="SpotLight3D" parent="LightShafts/Shaft5" unique_id=898669360]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -5, 0)
+light_color = Color(1, 0.9019608, 0.72156864, 1)
+light_energy = 2.0
+spot_range = 14.0
+spot_angle = 8.0
 
 [node name="Shaft4" type="MeshInstance3D" parent="LightShafts" unique_id=2017316951]
 transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, -7.7, 12.3, 13.4)
@@ -132,17 +146,38 @@ material_override = ExtResource("5_cmo1i")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cmo1i")
 
+[node name="ShaftLight" type="SpotLight3D" parent="LightShafts/Shaft4" unique_id=1625093803]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -5, 0)
+light_color = Color(1, 0.9019608, 0.72156864, 1)
+light_energy = 2.0
+spot_range = 14.0
+spot_angle = 8.0
+
 [node name="Shaft3" type="MeshInstance3D" parent="LightShafts" unique_id=62641460]
 transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 16.3, 12.3, 10.4)
 material_override = ExtResource("5_cmo1i")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cmo1i")
 
+[node name="ShaftLight" type="SpotLight3D" parent="LightShafts/Shaft3" unique_id=1976982466]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -5, 0)
+light_color = Color(1, 0.9019608, 0.72156864, 1)
+light_energy = 2.0
+spot_range = 14.0
+spot_angle = 8.0
+
 [node name="Shaft2" type="MeshInstance3D" parent="LightShafts" unique_id=1966922098]
 transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 12.3, 12.3, -1.6)
 material_override = ExtResource("5_cmo1i")
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_cmo1i")
+
+[node name="ShaftLight" type="SpotLight3D" parent="LightShafts/Shaft2" unique_id=902115592]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -5, 0)
+light_color = Color(1, 0.9019608, 0.72156864, 1)
+light_energy = 2.0
+spot_range = 14.0
+spot_angle = 8.0
 
 [node name="TreeRing" type="Node3D" parent="." unique_id=556481411]
 script = ExtResource("6_i1eo7")
