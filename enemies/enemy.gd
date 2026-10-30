@@ -1,4 +1,10 @@
 extends EnemyBase
+const FlashMaterial = preload("res://enemies/flash_material.tres")
+const TURN_SPEED = 10.0
+@onready var body: Node3D = $Body
+@onready var eyes = [$Body/EyeL, $Body/EyeR]
+@onready var root_vines: Node3D = $Body/RootVines
+var eye_material: StandardMaterial3D
 const KNOCKBACK_FORCE = 8.0
 const KNOCKBACK_TIME = 0.2
 const FLANK_DISTANCE = 4.0
@@ -18,6 +24,11 @@ var attack_timer = 0.0
 const SPEED = 2.0
 func _ready()-> void:
 	super()
+	eye_material = $Body/EyeL.material_override.duplicate()
+	for eye in eyes:
+		eye.material_override = eye_material
+	base_color = eye_material.emission
+	current_color = base_color
 	var angle = randf() * TAU
 	flank_dir = Vector3(cos(angle), 0, sin(angle))
 func _physics_process(delta: float) -> void:
@@ -86,3 +97,21 @@ func interrupt() -> void:
 	windup_timer = 0.0
 	attack_timer = ATTACK_COOLDOWN
 	set_color(base_color)
+
+func face_player(delta: float) -> void:
+	var to_player = player.global_position - global_position
+	var target = atan2(to_player.x, to_player.z)
+	body.rotation.y = lerp_angle(body.rotation.y, target, TURN_SPEED * delta)
+
+func _apply_color(color: Color) -> void:
+	eye_material.albedo_color = color
+	eye_material.emission = color
+
+func _apply_flash(on: bool) -> void:
+	var overlay = FlashMaterial if on else null
+	for part in body.get_children():
+		if part is MeshInstance3D:
+			part.material_overlay = overlay
+
+func _apply_rooted(on: bool) -> void:
+	root_vines.visible = on

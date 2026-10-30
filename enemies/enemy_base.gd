@@ -54,12 +54,11 @@ func die() -> void:
 
 func set_color(color: Color) -> void:
 	current_color = color
-	if flash_timer <= 0.0:
-		_apply_color(color)
+	_apply_color(color)
 
 func flash() -> void:
 	flash_timer = FLASH_TIME
-	_apply_color(Color.WHITE)
+	_apply_flash(true)
 
 
 func _process(delta: float) -> void:
@@ -72,7 +71,7 @@ func _process(delta: float) -> void:
 	if flash_timer > 0.0:
 		flash_timer -= delta
 		if flash_timer <= 0.0:
-			_apply_color(current_color)
+			_apply_flash(false)
 
 
 func root(duration: float) -> void:
@@ -98,9 +97,14 @@ func apply_status_effects() -> void:
 		velocity.z = 0
 
 func _apply_color(color: Color) -> void:
+	if flash_timer > 0.0:
+		return
 	mesh.mesh.material.albedo_color = color
 
 func _apply_rooted(on: bool) -> void:
 	mesh.mesh.material.emission_enabled = on
 	if on:
 		mesh.mesh.material.emission = Color(0.1, 0.7, 0.2)
+
+func _apply_flash(on: bool) -> void:
+	mesh.mesh.material.albedo_color = Color.WHITE if on else current_color
