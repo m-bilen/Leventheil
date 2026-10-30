@@ -15,15 +15,16 @@ var base_color = Color.WHITE
 var current_color = Color.WHITE
 var flash_timer = 0.0
 
-@onready var mesh: MeshInstance3D = $MeshInstance3D
+@onready var mesh: MeshInstance3D = get_node_or_null("MeshInstance3D")
 
 func _ready() -> void:
 	add_to_group("enemies")
 	health = max_health 
 	player = get_tree().get_first_node_in_group("player")
-	mesh.mesh = mesh.mesh.duplicate()
-	mesh.mesh.material = mesh.mesh.material.duplicate()
-	base_color = mesh.mesh.material.albedo_color
+	if mesh:
+		mesh.mesh = mesh.mesh.duplicate()
+		mesh.mesh.material = mesh.mesh.material.duplicate()
+		base_color = mesh.mesh.material.albedo_color
 	current_color = base_color
 
 func take_damage(amount: int) -> void:
@@ -54,29 +55,29 @@ func die() -> void:
 func set_color(color: Color) -> void:
 	current_color = color
 	if flash_timer <= 0.0:
-		mesh.mesh.material.albedo_color = color
+		_apply_color(color)
 
 func flash() -> void:
-	flash_timer = FLASH_TIME 
-	mesh.mesh.material.albedo_color = Color.WHITE
+	flash_timer = FLASH_TIME
+	_apply_color(Color.WHITE)
+
 
 func _process(delta: float) -> void:
-	if pull_timer > 0.0:
-		pull_timer -= delta
 	if root_timer > 0.0:
 		root_timer -= delta
-	if root_timer <= 0.0:
-		mesh.mesh.material.emission_enabled = false
-	if flash_timer <= 0.0:
-		return
-	flash_timer -= delta 
-	if flash_timer <= 0.0:
-		mesh.mesh.material.albedo_color = current_color
+		if root_timer <= 0.0:
+			_apply_rooted(false)
+	if pull_timer > 0.0:
+		pull_timer -= delta
+	if flash_timer > 0.0:
+		flash_timer -= delta
+		if flash_timer <= 0.0:
+			_apply_color(current_color)
+
 
 func root(duration: float) -> void:
 	root_timer = max(root_timer, duration)
-	mesh.mesh.material.emission_enabled = true
-	mesh.mesh.material.emission = Color(0.1, 0.7, 0.2)
+	_apply_rooted(true)
 
 func is_rooted() -> bool:
 	return root_timer > 0.0
@@ -95,3 +96,11 @@ func apply_status_effects() -> void:
 	elif is_rooted():
 		velocity.x = 0
 		velocity.z = 0
+
+func _apply_color(color: Color) -> void:
+	mesh.mesh.material.albedo_color = color
+
+func _apply_rooted(on: bool) -> void:
+	mesh.mesh.material.emission_enabled = on
+	if on:
+		mesh.mesh.material.emission = Color(0.1, 0.7, 0.2)
