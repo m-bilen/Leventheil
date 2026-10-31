@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cupane50xenw0" path="res://ui/hud.gd" id="4_gu74f"]
 [ext_resource type="Material" uid="uid://blk3uu4vwhwex" path="res://world/light_shaft_material.tres" id="5_cmo1i"]
 [ext_resource type="Script" uid="uid://du7idj6bnunkl" path="res://world/tree_ring.gd" id="6_i1eo7"]
+[ext_resource type="PackedScene" uid="uid://b35vsv3fx4cen" path="res://world/shaft_dust.tscn" id="7_op3e8"]
 [ext_resource type="Script" uid="uid://dnov2tri1cv8x" path="res://world/scatter.gd" id="8_04q08"]
 [ext_resource type="Texture2D" uid="uid://blc4rbcebboh3" path="res://assets/textures/ground/forest_ground_06_diff_1k.jpg" id="8_vrojb"]
 [ext_resource type="ArrayMesh" uid="uid://b8ttlj4sl6k8g" path="res://world/mushroom_mesh.tres" id="10_qnd6n"]
@@ -83,7 +84,7 @@ albedo_texture = SubResource("GradientTexture2D_op3e8")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_tp5tb"]
 material = SubResource("StandardMaterial3D_vid1e")
-size = Vector2(2.2, 3)
+size = Vector2(2.2, 2.2)
 
 [node name="Node3D" type="Node3D" unique_id=301908995]
 script = ExtResource("1_spvjk")
@@ -160,6 +161,9 @@ light_energy = 2.0
 spot_range = 14.0
 spot_angle = 8.0
 
+[node name="ShaftDust" parent="LightShafts/Shaft" unique_id=1682964225 instance=ExtResource("7_op3e8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
+
 [node name="Shaft5" type="MeshInstance3D" parent="LightShafts" unique_id=666129578]
 transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 7.3, 12.3, 4.4)
 material_override = ExtResource("5_cmo1i")
@@ -172,6 +176,9 @@ light_color = Color(1, 0.9019608, 0.72156864, 1)
 light_energy = 2.0
 spot_range = 14.0
 spot_angle = 8.0
+
+[node name="ShaftDust" parent="LightShafts/Shaft5" unique_id=760010708 instance=ExtResource("7_op3e8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
 [node name="Shaft4" type="MeshInstance3D" parent="LightShafts" unique_id=2017316951]
 transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, -7.7, 12.3, 13.4)
@@ -186,6 +193,9 @@ light_energy = 2.0
 spot_range = 14.0
 spot_angle = 8.0
 
+[node name="ShaftDust" parent="LightShafts/Shaft4" unique_id=1311900517 instance=ExtResource("7_op3e8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
+
 [node name="Shaft3" type="MeshInstance3D" parent="LightShafts" unique_id=62641460]
 transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 16.3, 12.3, 10.4)
 material_override = ExtResource("5_cmo1i")
@@ -199,6 +209,9 @@ light_energy = 2.0
 spot_range = 14.0
 spot_angle = 8.0
 
+[node name="ShaftDust" parent="LightShafts/Shaft3" unique_id=1908192761 instance=ExtResource("7_op3e8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
+
 [node name="Shaft2" type="MeshInstance3D" parent="LightShafts" unique_id=1966922098]
 transform = Transform3D(0.8660254, 0.28678823, 0.40957603, 0, 0.81915206, -0.57357645, -0.5, 0.49673176, 0.7094065, 12.3, 12.3, -1.6)
 material_override = ExtResource("5_cmo1i")
@@ -211,6 +224,9 @@ light_color = Color(1, 0.9019608, 0.72156864, 1)
 light_energy = 2.0
 spot_range = 14.0
 spot_angle = 8.0
+
+[node name="ShaftDust" parent="LightShafts/Shaft2" unique_id=543704321 instance=ExtResource("7_op3e8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12, 0)
 
 [node name="TreeRing" type="Node3D" parent="." unique_id=556481411]
 script = ExtResource("6_i1eo7")
