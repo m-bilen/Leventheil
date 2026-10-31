@@ -17,6 +17,7 @@ extends MultiMeshInstance3D
 @export var cluster_min_radius: float = 15.0
 @export var cluster_max_radius: float = 21.0
 @export var cluster_spread: float = 1.5
+@export var center_mesh: Mesh
 func _ready() -> void:
 	var rng = RandomNumberGenerator.new()
 	rng.seed = scatter_seed
@@ -49,3 +50,14 @@ func _ready() -> void:
 		mm.set_instance_transform(i, Transform3D(b, pos))
 		mm.set_instance_transform(i, Transform3D(b, pos))
 	multimesh = mm
+	if center_mesh and not centers.is_empty():
+		var glow = MultiMeshInstance3D.new()
+		var gm = MultiMesh.new()
+		gm.transform_format = MultiMesh.TRANSFORM_3D
+		gm.mesh = center_mesh
+		gm.instance_count = centers.size()
+		for c in centers.size():
+			gm.set_instance_transform(c, Transform3D(Basis(), centers[c] + Vector3(0, y_offset + 0.01, 0)))
+		glow.multimesh = gm
+		glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(glow)

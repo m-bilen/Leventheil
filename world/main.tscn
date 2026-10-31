@@ -65,6 +65,26 @@ height = 0.8
 radial_segments = 8
 rings = 4
 
+[sub_resource type="Gradient" id="Gradient_qnd6n"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_op3e8"]
+gradient = SubResource("Gradient_qnd6n")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vid1e"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(0.24705882, 0.6901961, 0.6901961, 0.13725491)
+albedo_texture = SubResource("GradientTexture2D_op3e8")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tp5tb"]
+material = SubResource("StandardMaterial3D_vid1e")
+size = Vector2(2.2, 3)
+
 [node name="Node3D" type="Node3D" unique_id=301908995]
 script = ExtResource("1_spvjk")
 
@@ -222,6 +242,7 @@ max_scale = 1.1
 max_tilt = 0.25
 scatter_seed = 2.0
 cluster_count = 9
-clustered_ratio = 0.9
+clustered_ratio = 1.0
 cluster_min_radius = 16.0
 cluster_spread = 0.7
+center_mesh = SubResource("PlaneMesh_tp5tb")
