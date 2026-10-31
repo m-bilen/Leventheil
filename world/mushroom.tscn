@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://tap4cqi2rlqy"]
+
+[ext_resource type="ArrayMesh" uid="uid://b8ttlj4sl6k8g" path="res://world/mushroom_mesh.tres" id="1_63ba3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gbl88"]
+albedo_color = Color(0.8117647, 0.78431374, 0.7058824, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ngtqm"]
+albedo_color = Color(0.18039216, 0.43137255, 0.41568628, 1)
+emission_enabled = true
+emission = Color(0.24705882, 0.6901961, 0.6901961, 1)
+emission_energy_multiplier = 0.8
+
+[node name="MushroomModel" type="Node3D" unique_id=747959625]
+
+[node name="Mushroom" type="CSGCombiner3D" parent="." unique_id=392411004]
+
+[node name="Stem" type="CSGCylinder3D" parent="Mushroom" unique_id=1480017045]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+radius = 0.035
+height = 0.22
+material = SubResource("StandardMaterial3D_gbl88")
+
+[node name="Cap" type="CSGSphere3D" parent="Mushroom" unique_id=1086415968]
+transform = Transform3D(1, 0, 0, 0, 0.55, 0, 0, 0, 1, 0, 0.22, 0)
+radius = 0.12
+material = SubResource("StandardMaterial3D_ngtqm")
+
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="." unique_id=169139704]
+mesh = ExtResource("1_63ba3")
