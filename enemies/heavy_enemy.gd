@@ -35,7 +35,7 @@ func _physics_process(delta: float) -> void:
 	apply_status_effects()
 	move_and_slide()
 func do_chase() -> void:
-	var dist = global_position.distance_to(player.global_position)
+	var dist = distance_to_player()
 	if dist < ATTACK_RANGE:
 		enter_state(State.WINDUP)
 		return
@@ -72,7 +72,7 @@ func enter_state(new_state: State) -> void:
 			state_timer = STUN_TIME
 			set_color(Color.CYAN)
 func hit_player() -> void:
-	var dist = global_position.distance_to(player.global_position)
+	var dist = distance_to_player()
 	if dist< ATTACK_RANGE:
 		player.take_damage(attack_damage)
 

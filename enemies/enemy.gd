@@ -65,7 +65,7 @@ func _physics_process(delta: float) -> void:
 		windup_timer -= delta
 		if windup_timer <= 0.0:
 			strike()
-	elif attack_timer <= 0.0 and global_position.distance_to(player.global_position) < ATTACK_RANGE: 
+	elif attack_timer <= 0.0 and distance_to_player() < ATTACK_RANGE: 
 		start_windup()
 	animate_body(delta)
 func get_chase_direction() -> Vector3:
@@ -104,7 +104,7 @@ func strike() -> void:
 	strike_pose_timer = STRIKE_POSE_TIME 
 	set_color(base_color)
 	attack_timer = ATTACK_COOLDOWN
-	if global_position.distance_to(player.global_position) < ATTACK_RANGE and player.is_on_floor():
+	if distance_to_player() < ATTACK_RANGE and player.is_on_floor():
 		player.take_damage(ATTACK_DAMAGE)
 
 func interrupt() -> void:

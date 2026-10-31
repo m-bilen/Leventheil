@@ -108,3 +108,8 @@ func _apply_rooted(on: bool) -> void:
 
 func _apply_flash(on: bool) -> void:
 	mesh.mesh.material.albedo_color = Color.WHITE if on else current_color
+
+func distance_to_player() -> float:
+	var offset = player.global_position - global_position
+	offset.y = 0
+	return offset.length()

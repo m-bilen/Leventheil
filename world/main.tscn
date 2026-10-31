@@ -69,7 +69,7 @@ script = ExtResource("2_cmo1i")
 target = NodePath("../Player")
 
 [node name="Player" parent="." unique_id=1820987218 instance=ExtResource("3_i1eo7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.084)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.084)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=413776213]
 collision_layer = 4
