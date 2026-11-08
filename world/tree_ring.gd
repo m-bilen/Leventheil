@@ -21,5 +21,5 @@ func _ready() -> void:
 		var s = rng.randf_range(min_scale, max_scale)
 		var height = 1.0 + rng.randf_range(0.0, 0.3)
 		if tree.position.z > radius * 0.35:
-			height = 0.12
+			height = 0.07
 		tree.scale = Vector3(s, height, s)
