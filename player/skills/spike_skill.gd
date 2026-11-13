@@ -10,6 +10,7 @@ const WEIGHT_PER_SPIKE = 0.5
 const DASH_RADIUS = 1.5
 const SHIELD_COST_PER_DAMAGE = 3
 const SHIELD_MIN_SPIKES = 4
+const SPIN_DASH_BONUS = 0.15
 var is_spinning = false
 var current_spikes = 0
 const DASH_HIT_RADIUS = 1.9
@@ -134,5 +135,11 @@ func absorb_damage(amount: int) -> bool:
 	return true
 func enables_parry() -> bool:
 	return is_active and current_spikes > 0
+
+func dash_time_bonus() -> float:
+	if is_active and current_spikes > 0:
+		return SPIN_DASH_BONUS
+	return 0.0
+
 func _on_wave_started(_number: int) -> void:
 	gain_spikes(SPIKE_COUNT)

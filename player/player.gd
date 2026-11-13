@@ -26,6 +26,7 @@ const MAX_WEIGHT = 8.0
 const SWAP_LOCK_TIME = 0.5
 const SWAP_COOLDOWN = 1.0
 const ATTACK_MOVE_HEAVY = 0.2 
+const DASH_RECOVER =  70.0
 
 var swap_lock_timer = 0.0
 var swap_cooldown_timer = 0.0
@@ -91,7 +92,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and not is_dashing and direction and cooldown_timer <=0 and swap_lock_timer <= 0:
 		is_dashing = true
 		anim.play(ANIM_DASH, -1.0, 3.0)
-		action_timer = DASH_TIME
+		action_timer = get_dash_time()
 		cooldown_timer = DASH_COOLDOWN
 		dash_started.emit()
 		if can_parry() and  try_parry():
@@ -99,7 +100,7 @@ func _physics_process(delta: float) -> void:
 			cooldown_timer = 0.0
 			hit_stop(0.15)
 			Events.camera_shake_requested.emit(0.5)
-		dash_timer = DASH_TIME
+		dash_timer = action_timer
 		dash_direction = direction
 		
 	if Input.is_action_pressed("run"):
@@ -115,12 +116,15 @@ func _physics_process(delta: float) -> void:
 			is_dashing = false
 			dash_ended.emit()
 	else:
+		var overspeed = Vector2(velocity.x, velocity.z).length() > current_speed + 0.5
+		var accel = DASH_RECOVER if overspeed else ACCEL
+		var friction = DASH_RECOVER if overspeed else FRICTION
 		if direction:
-			velocity.x = move_toward(velocity.x, direction.x * current_speed, ACCEL * delta)
-			velocity.z = move_toward(velocity.z, direction.z * current_speed, ACCEL * delta)
+			velocity.x = move_toward(velocity.x, direction.x * current_speed, accel * delta)
+			velocity.z = move_toward(velocity.z, direction.z * current_speed, accel * delta)
 		else:
-			velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
-			velocity.z = move_toward(velocity.z, 0, FRICTION * delta)
+			velocity.x = move_toward(velocity.x, 0, friction * delta)
+			velocity.z = move_toward(velocity.z, 0, friction * delta)
 	move_and_slide()
 	update_animation()
 
@@ -266,6 +270,14 @@ func can_parry() -> bool:
 		if child.has_method("enables_parry") and child.enables_parry():
 			return true
 	return false
+
+func get_dash_time() -> float:
+	var time = DASH_TIME
+	for child in get_children():
+		if child.has_method("dash_time_bonus"):
+			time += child.dash_time_bonus()
+	return time
+
 func is_jump_replaced() -> bool:
 	for child in get_children():
 		if child.has_method("replaces_jump") and child.replaces_jump():

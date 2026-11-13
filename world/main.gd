@@ -6,6 +6,8 @@ const CasterScene = preload("res://enemies/caster.tscn")
 const SPAWN_RADIUS = 12.0
 const FIRST_SPAWN_DELAY = 1.5
 const WAVE_BREAK = 4.0
+const MIN_SPAWN_DISTANCE = 7.0
+const SPAWN_ATTEMPTS = 10
 const WAVES = [
 	{"basic": 5, "heavy": 0, "interval": 1.2},
 	{"basic": 12, "heavy": 0, "interval": 0.6},
@@ -47,8 +49,7 @@ func _process(delta: float) -> void:
 func spawn_enemy(scene: PackedScene) -> void:
 	var enemy = scene.instantiate()
 	add_child(enemy)
-	var angle = randf() * TAU
-	enemy.position = Vector3(cos(angle) * SPAWN_RADIUS, 2.5, sin(angle) * SPAWN_RADIUS)
+	enemy.position = pick_spawn_position()
 	enemies_alive += 1
 func _on_enemy_died(_enemy: Node3D) -> void:
 	enemies_alive -= 1
@@ -60,3 +61,15 @@ func wave_cleared() -> void:
 		return
 	await get_tree().create_timer(WAVE_BREAK).timeout
 	start_wave()
+
+func pick_spawn_position() -> Vector3:
+	var player = get_tree().get_first_node_in_group("player")
+	var pos = Vector3.ZERO
+	for attempt in SPAWN_ATTEMPTS:
+		var angle = randf() * TAU
+		pos = Vector3(cos(angle) * SPAWN_RADIUS, 2.5, sin(angle) * SPAWN_RADIUS)
+		var offset = pos - player.global_position
+		offset.y = 0
+		if offset.length() >= MIN_SPAWN_DISTANCE:
+			return pos
+	return pos
