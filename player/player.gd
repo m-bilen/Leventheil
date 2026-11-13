@@ -238,6 +238,9 @@ func try_parry() -> bool:
 		if global_position.distance_to(node.global_position) > PARRY_RANGE:
 			continue
 		var is_final = node.on_parried()
+		var point = (global_position + node.global_position) / 2.0
+		point.y = global_position.y + 1.2
+		Events.parry_landed.emit(point)
 		if is_final:
 			finisher(node)
 		return true

@@ -13,6 +13,7 @@
 [ext_resource type="Material" uid="uid://dqfw8tkvevdpa" path="res://world/vine_material.tres" id="9_tp5tb"]
 [ext_resource type="ArrayMesh" uid="uid://b8ttlj4sl6k8g" path="res://world/mushroom_mesh.tres" id="10_qnd6n"]
 [ext_resource type="QuadMesh" uid="uid://drivjp5rf0ls1" path="res://world/glow_particle.tres" id="12_vid1e"]
+[ext_resource type="Script" uid="uid://b1l5kmjgy6wb7" path="res://effects/effects.gd" id="14_8q2wj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(80, 0.5, 80)
@@ -316,3 +317,6 @@ collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaWall/StaticBody3D" unique_id=937308121]
 shape = SubResource("ConcavePolygonShape3D_vid1e")
+
+[node name="Effects" type="Node3D" parent="." unique_id=1476645773]
+script = ExtResource("14_8q2wj")

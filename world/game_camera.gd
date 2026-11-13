@@ -2,7 +2,10 @@ extends Camera3D
 @export var target: Node3D
 const FOLLOW_SPEED = 5.0
 const FOCUS_FOV_DROP = 25.0
+const ZOOM_IN_TIME = 0.12
+const ZOOM_OUT_TIME = 0.35
 
+var fov_tween: Tween
 var base_fov = 75.0
 var shake_amount = 0.0
 var offset = Vector3.ZERO
@@ -36,7 +39,15 @@ func shake(amount: float) -> void:
 func focus_zoom(point: Vector3, duration: float) -> void:
 	focus_point = point
 	is_focusing = true
-	fov = base_fov - FOCUS_FOV_DROP
+	tween_fov(base_fov - FOCUS_FOV_DROP, ZOOM_IN_TIME)
 	await get_tree().create_timer(duration, true, false, true).timeout
 	is_focusing = false
-	fov = base_fov
+	tween_fov(base_fov, ZOOM_OUT_TIME)
+
+func tween_fov(target_fov: float, time: float) -> void:
+	if fov_tween:
+		fov_tween.kill()
+	fov_tween = create_tween()
+	fov_tween.set_ignore_time_scale(true)
+	fov_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	fov_tween.tween_property(self, "fov", target_fov, time)
