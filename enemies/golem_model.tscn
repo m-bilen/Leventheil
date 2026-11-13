@@ -7,9 +7,27 @@
 [ext_resource type="Material" uid="uid://cqh41yauuv1oi" path="res://enemies/eye_material.tres" id="3_1qjbr"]
 [ext_resource type="Material" uid="uid://cdc7mih5nbtp8" path="res://assets/textures/bark/bark_material.tres" id="3_rdkaa"]
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_xoppa"]
+top_radius = 0.25
+bottom_radius = 0.16
+height = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xoppa"]
+albedo_color = Color(0.18039216, 0.49019608, 0.19607843, 1)
+emission_enabled = true
+emission = Color(0.23529412, 0.6901961, 0.2627451, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_rdkaa"]
+inner_radius = 0.38
+outer_radius = 0.5
+
 [sub_resource type="SphereMesh" id="SphereMesh_xoppa"]
 radius = 1.0
 height = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_1oope"]
+radius = 0.13
+height = 0.26
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_rdkaa"]
 top_radius = 0.95
@@ -31,73 +49,20 @@ height = 0.05
 radius = 0.2
 height = 0.4
 
-[sub_resource type="SphereMesh" id="SphereMesh_1oope"]
-radius = 0.13
-height = 0.26
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_1qjbr"]
 top_radius = 0.38
 bottom_radius = 0.22
 height = 1.5
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_xoppa"]
-top_radius = 0.25
-bottom_radius = 0.16
-height = 0.9
 
 [node name="GolemModel" type="Node3D" unique_id=975855048]
 script = ExtResource("1_phsdi")
 tooth_material = ExtResource("2_xoppa")
 plate_material = ExtResource("3_rdkaa")
 
-[node name="Body" type="MeshInstance3D" parent="." unique_id=954681470]
-transform = Transform3D(1.3, 0, 0, 0, 0.9516231, 0.6127965, 0, -0.44374916, 1.3141463, 0, 1.25, -0.3)
-material_override = ExtResource("1_07mim")
-mesh = SubResource("SphereMesh_xoppa")
-
-[node name="Maw" type="Node3D" parent="." unique_id=502017858]
-transform = Transform3D(1, 0, 0, 0, 0.64278764, -0.76604444, 0, 0.76604444, 0.64278764, 0, 2.3, 0.65)
-
-[node name="Collar" type="MeshInstance3D" parent="Maw" unique_id=67341435]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.35, 0)
-material_override = ExtResource("1_07mim")
-mesh = SubResource("CylinderMesh_rdkaa")
-
-[node name="Inner" type="MeshInstance3D" parent="Maw" unique_id=1526619615]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-material_override = SubResource("StandardMaterial3D_tchlw")
-mesh = SubResource("CylinderMesh_lw8ey")
-
-[node name="Core" type="MeshInstance3D" parent="Maw" unique_id=1353754412]
-transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 0.13, 0)
-material_override = ExtResource("2_phsdi")
-mesh = SubResource("SphereMesh_fcjbt")
-
-[node name="Eye" type="MeshInstance3D" parent="." unique_id=1627075210]
-transform = Transform3D(1.6, 0, 0, 0, 0.6, 0, 0, 0, 1, 0, 1, 1.15)
-material_override = ExtResource("3_1qjbr")
-mesh = SubResource("SphereMesh_1oope")
-
-[node name="ArmR" type="Node3D" parent="." unique_id=1695012606]
-transform = Transform3D(0.9396926, -0.34202012, 0, 0.33682406, 0.9254165, 0.17364818, -0.05939117, -0.16317591, 0.9848077, 0.9, 1.4, 0.7)
-
-[node name="Mesh" type="MeshInstance3D" parent="ArmR" unique_id=649552973]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, 0)
-material_override = ExtResource("1_07mim")
-mesh = SubResource("CylinderMesh_1qjbr")
-
-[node name="ArmL" type="Node3D" parent="." unique_id=1026046571]
-transform = Transform3D(0.93969256, 0.3420201, 0, -0.33682403, 0.92541647, 0.17364816, 0.059391167, -0.1631759, 0.98480767, -0.9, 1.4, 0.7)
-
-[node name="Mesh" type="MeshInstance3D" parent="ArmL" unique_id=1221490718]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, 0)
-material_override = ExtResource("1_07mim")
-mesh = SubResource("CylinderMesh_1qjbr")
-
 [node name="LegR" type="Node3D" parent="." unique_id=615594848]
 transform = Transform3D(0.9781476, -0.2079117, 0, 0.20082727, 0.944818, -0.25881904, 0.05381151, 0.25316322, 0.9659258, 0.65, 0.85, -1)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="LegR" unique_id=2084653634]
+[node name="Mesh" type="MeshInstance3D" parent="LegR" unique_id=2084653634]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
 material_override = ExtResource("1_07mim")
 mesh = SubResource("CylinderMesh_xoppa")
@@ -105,7 +70,60 @@ mesh = SubResource("CylinderMesh_xoppa")
 [node name="LegL" type="Node3D" parent="." unique_id=1233284871]
 transform = Transform3D(0.9781476, 0.20791169, 0, -0.20082727, 0.94481796, -0.258819, -0.05381151, 0.2531632, 0.96592575, -0.65, 0.85, -1)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="LegL" unique_id=974417271]
+[node name="Mesh" type="MeshInstance3D" parent="LegL" unique_id=974417271]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
 material_override = ExtResource("1_07mim")
 mesh = SubResource("CylinderMesh_xoppa")
+
+[node name="RootVines" type="MeshInstance3D" parent="." unique_id=392599977]
+transform = Transform3D(3.2, 0, 0, 0, 2, 0, 0, 0, 3.2, 0, 0.4, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_xoppa")
+mesh = SubResource("TorusMesh_rdkaa")
+
+[node name="Rig" type="Node3D" parent="." unique_id=1731586793]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -1)
+
+[node name="Body" type="MeshInstance3D" parent="Rig" unique_id=954681470]
+transform = Transform3D(1.3, 0, 0, 0, 0.9516231, 0.6127965, 0, -0.44374916, 1.3141463, 0, 0.39999998, 0.7)
+material_override = ExtResource("1_07mim")
+mesh = SubResource("SphereMesh_xoppa")
+
+[node name="Eye" type="MeshInstance3D" parent="Rig" unique_id=1627075210]
+transform = Transform3D(1.6, 0, 0, 0, 0.6, 0, 0, 0, 1, 0, 0.14999998, 2.15)
+material_override = ExtResource("3_1qjbr")
+mesh = SubResource("SphereMesh_1oope")
+
+[node name="Maw" type="Node3D" parent="Rig" unique_id=502017858]
+transform = Transform3D(1, 0, 0, 0, 0.64278764, -0.76604444, 0, 0.76604444, 0.64278764, 0, 1.4499999, 1.65)
+
+[node name="Collar" type="MeshInstance3D" parent="Rig/Maw" unique_id=67341435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.35, 0)
+material_override = ExtResource("1_07mim")
+mesh = SubResource("CylinderMesh_rdkaa")
+
+[node name="Inner" type="MeshInstance3D" parent="Rig/Maw" unique_id=1526619615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+material_override = SubResource("StandardMaterial3D_tchlw")
+mesh = SubResource("CylinderMesh_lw8ey")
+
+[node name="Core" type="MeshInstance3D" parent="Rig/Maw" unique_id=1353754412]
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 0.13, 0)
+material_override = ExtResource("2_phsdi")
+mesh = SubResource("SphereMesh_fcjbt")
+
+[node name="ArmR" type="Node3D" parent="Rig" unique_id=1695012606]
+transform = Transform3D(0.9396926, -0.34202012, 0, 0.33682406, 0.9254165, 0.17364818, -0.05939117, -0.16317591, 0.9848077, 0.9, 0.54999995, 1.7)
+
+[node name="Mesh" type="MeshInstance3D" parent="Rig/ArmR" unique_id=649552973]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, 0)
+material_override = ExtResource("1_07mim")
+mesh = SubResource("CylinderMesh_1qjbr")
+
+[node name="ArmL" type="Node3D" parent="Rig" unique_id=1026046571]
+transform = Transform3D(0.93969256, 0.3420201, 0, -0.33682403, 0.92541647, 0.17364816, 0.059391167, -0.1631759, 0.98480767, -0.9, 0.54999995, 1.7)
+
+[node name="Mesh" type="MeshInstance3D" parent="Rig/ArmL" unique_id=1221490718]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, 0)
+material_override = ExtResource("1_07mim")
+mesh = SubResource("CylinderMesh_1qjbr")
