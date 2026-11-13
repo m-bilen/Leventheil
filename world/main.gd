@@ -11,7 +11,7 @@ const SPAWN_ATTEMPTS = 10
 const WAVES = [
 	{"basic": 5, "heavy": 0, "interval": 1.2},
 	{"basic": 12, "heavy": 0, "interval": 0.6},
-	{"basic": 0, "heavy": 1, "interval": 0.0},
+	{"basic": 3, "heavy": 1, "interval": 0.0},
 	{"basic": 14, "heavy": 2, "caster": 2, "interval": 0.5},
 	{"basic": 4, "heavy": 0, "boss": 1, "caster": 2, "interval": 1.5},
 ]

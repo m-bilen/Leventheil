@@ -109,7 +109,13 @@ func pose_idle() -> void:
 	set_targets(0.0, 0.0, TOOTH_CLOSED, 2.0, 5.0)
 
 func pose_windup() -> void:
-	set_targets(-0.55, -1.0, -10.0, 6.0, 6.0)
+	set_targets(-0.55, -1.0, 45.0, 3.0, 6.0)
+
+func pose_slam() -> void:
+	set_targets(-0.4, -2.2, 60.0, 1.0, 5.0)
+
+func pose_open() -> void:
+	set_targets(target_pitch, target_arm, -10.0, 8.0, 18.0)
 
 func pose_strike() -> void:
 	set_targets(0.2, 0.15, 70.0, 9.0, 12.0)

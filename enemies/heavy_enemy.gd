@@ -1,5 +1,7 @@
 extends EnemyBase
+const GroundBurstScene = preload("res://enemies/ground_burst.tscn")
 enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
+@export var slam_chance: float = 0.0
 @export var speed: float = 1.5
 @export var windup_time: float = 0.8
 @export var attack_damage: int = 2
@@ -7,8 +9,13 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
 @export var parry_only: bool = false
 @export var enrage_windup_multiplier: float = 1.0
 @export var display_name: String = ""
+@export var parry_window: float = 0.3
 var is_enraged = false 
 @onready var parry_pips : Label3D = $ParryPips
+const SLAM_COLOR = Color(0.8, 0.2, 1.0)
+const SLAM_RADIUS = 4.5
+const SLAM_DAMAGE = 2
+const WINDOW_COLOR = Color(1.0, 0.5, 1.0)
 const ATTACK_RANGE = 2.5
 const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
@@ -18,6 +25,8 @@ const TURN_SPEED = 4.0
 var parry_count = 0
 var state: State = State.CHASE
 var state_timer = 0.0
+var window_open = false
+var is_slam = false
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -51,8 +60,16 @@ func do_chase() -> void:
 func do_windup() -> void:
 	velocity.x = 0
 	velocity.z = 0
-	if state_timer <=0.0:
+	if not is_slam and not window_open and state_timer <= parry_window:
+		open_parry_window()
+	if state_timer <= 0.0:
 		enter_state(State.ATTACK)
+
+func open_parry_window() -> void:
+	window_open = true
+	set_color(WINDOW_COLOR)
+	if model:
+		model.pose_open()
 func do_attack() -> void:
 	if state_timer <= 0.0:
 		enter_state(State.RECOVER)
@@ -64,12 +81,19 @@ func enter_state(new_state: State) -> void:
 	match new_state:
 		State.WINDUP:
 			state_timer = windup_time
-			set_color(Color.YELLOW)
+			window_open = false
+			is_slam = randf() < slam_chance
+			if is_slam:
+				set_color(SLAM_COLOR)
+				spawn_slam_wave()
+			else:
+				set_color(Color.YELLOW)
 		State.ATTACK:
 			state_timer = ATTACK_TIME
 			set_color(Color.RED)
-			hit_player()
-			Events.camera_shake_requested.emit(0.3)
+			if not is_slam:
+				hit_player()
+			Events.camera_shake_requested.emit(0.6 if is_slam else 0.3)
 		State.RECOVER:
 			state_timer = RECOVER_TIME
 			set_color(Color.GRAY)
@@ -85,7 +109,7 @@ func hit_player() -> void:
 		player.take_damage(attack_damage)
 
 func can_be_parried() -> bool:
-	return state == State.WINDUP
+	return state == State.WINDUP and window_open
 func on_parried() -> bool:
 	parry_count += 1
 	update_parry_pips()
@@ -149,10 +173,21 @@ func update_model_pose() -> void:
 		State.CHASE:
 			model.pose_idle()
 		State.WINDUP:
-			model.pose_windup()
+			if is_slam:
+				model.pose_slam()
+			else:
+				model.pose_windup()
 		State.ATTACK:
 			model.pose_strike()
 		State.RECOVER:
 			model.pose_recover()
 		State.STUNNED:
 			model.pose_stunned()
+
+func spawn_slam_wave() -> void:
+	var wave = GroundBurstScene.instantiate()
+	wave.delay = windup_time
+	wave.radius = SLAM_RADIUS
+	wave.damage = SLAM_DAMAGE
+	get_tree().current_scene.add_child(wave)
+	wave.global_position = Vector3(global_position.x, 0.25, global_position.z)
