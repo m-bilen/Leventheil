@@ -13,7 +13,7 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
 var is_enraged = false 
 @onready var parry_pips : Label3D = $ParryPips
 const SLAM_COLOR = Color(0.8, 0.2, 1.0)
-const SLAM_RADIUS = 4.5
+const SLAM_RADIUS = 3
 const SLAM_DAMAGE = 2
 const WINDOW_COLOR = Color(1.0, 0.5, 1.0)
 const ATTACK_RANGE = 2.5

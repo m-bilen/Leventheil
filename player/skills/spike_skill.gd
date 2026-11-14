@@ -10,7 +10,11 @@ const WEIGHT_PER_SPIKE = 0.5
 const DASH_RADIUS = 1.5
 const SHIELD_COST_PER_DAMAGE = 3
 const SHIELD_MIN_SPIKES = 4
-const SPIN_DASH_BONUS = 0.15
+const CHAIN_RANGE = 4.0
+const CHAIN_HOP_STOP = 0.03
+const FINAL_STOP_BASE = 0.1
+const FINAL_STOP_PER_HIT = 0.03
+const FINAL_STOP_MAX = 0.3
 var is_spinning = false
 var current_spikes = 0
 const DASH_HIT_RADIUS = 1.9
@@ -48,8 +52,7 @@ func _on_dash_ended() -> void:
 	is_spinning = false
 	spike_material.emission_energy_multiplier = GLOW_IDLE
 	position_spikes(SPIKE_RADIUS)
-	if not enemies_hit.is_empty():
-		lose_spikes(2)
+	lose_spikes(enemies_hit.size())
 func _on_stance_toggled() -> void:
 	is_active = not is_active
 	visible = is_active
@@ -114,6 +117,8 @@ func _on_enemy_died(_enemy: Node3D) -> void:
 func _physics_process(_delta: float) -> void:
 	if not is_spinning:
 		return
+	var hit_this_frame = false
+	var chain_stopped = false
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if enemy in enemies_hit:
 			continue
@@ -122,8 +127,22 @@ func _physics_process(_delta: float) -> void:
 		if offset.length() <= DASH_HIT_RADIUS:
 			enemies_hit.append(enemy)
 			enemy.take_damage(dash_damage)
-			Events.camera_shake_requested.emit(0.4)
-			get_parent().hit_stop(0.2)
+			hit_this_frame = true
+			if enemy.has_method("stops_dash_chain") and enemy.stops_dash_chain():
+				chain_stopped = true
+	if not hit_this_frame:
+		return
+	Events.camera_shake_requested.emit(0.4)
+	if chain_stopped:
+		finish_chain()
+		get_parent().end_dash()
+		return
+	var next = find_chain_target()
+	if next:
+		get_parent().hit_stop(CHAIN_HOP_STOP)
+		get_parent().redirect_dash(next.global_position)
+	else:
+		finish_chain()
 func _on_finisher_landed() -> void:
 # Light stance already got +1 from the kill itself in _on_enemy_died.
 	if is_active:
@@ -136,10 +155,24 @@ func absorb_damage(amount: int) -> bool:
 func enables_parry() -> bool:
 	return is_active and current_spikes > 0
 
-func dash_time_bonus() -> float:
-	if is_active and current_spikes > 0:
-		return SPIN_DASH_BONUS
-	return 0.0
 
 func _on_wave_started(_number: int) -> void:
 	gain_spikes(SPIKE_COUNT)
+
+func find_chain_target() -> Node3D:
+	var best = null
+	var best_distance = CHAIN_RANGE
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if enemy in enemies_hit:
+			continue
+		var offset = enemy.global_position - global_position
+		offset.y = 0
+		var distance = offset.length()
+		if distance < best_distance:
+			best_distance = distance
+			best = enemy
+	return best
+
+func finish_chain() -> void:
+	var stop = FINAL_STOP_BASE + FINAL_STOP_PER_HIT * enemies_hit.size()
+	get_parent().hit_stop(min(stop, FINAL_STOP_MAX))

@@ -27,6 +27,7 @@ const SWAP_LOCK_TIME = 0.5
 const SWAP_COOLDOWN = 1.0
 const ATTACK_MOVE_HEAVY = 0.2 
 const DASH_RECOVER =  70.0
+const DASH_CHAIN_MARGIN = 0.05
 
 var swap_lock_timer = 0.0
 var swap_cooldown_timer = 0.0
@@ -92,7 +93,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and not is_dashing and direction and cooldown_timer <=0 and swap_lock_timer <= 0:
 		is_dashing = true
 		anim.play(ANIM_DASH, -1.0, 3.0)
-		action_timer = get_dash_time()
+		action_timer = DASH_TIME
 		cooldown_timer = DASH_COOLDOWN
 		dash_started.emit()
 		if can_parry() and  try_parry():
@@ -108,7 +109,7 @@ func _physics_process(delta: float) -> void:
 	if action_timer > 0.0 and not is_dashing:
 		current_speed *= lerp(1.0, ATTACK_MOVE_HEAVY, t)
 	if is_dashing:
-		var dash_speed = DASH_SPEED - weight
+		var dash_speed = get_dash_speed()
 		velocity.x = dash_direction.x * dash_speed
 		velocity.z = dash_direction.z * dash_speed
 		dash_timer -= delta
@@ -274,15 +275,25 @@ func can_parry() -> bool:
 			return true
 	return false
 
-func get_dash_time() -> float:
-	var time = DASH_TIME
-	for child in get_children():
-		if child.has_method("dash_time_bonus"):
-			time += child.dash_time_bonus()
-	return time
 
 func is_jump_replaced() -> bool:
 	for child in get_children():
 		if child.has_method("replaces_jump") and child.replaces_jump():
 			return true
 	return false
+
+func get_dash_speed() -> float:
+	return DASH_SPEED - weight
+
+func redirect_dash(target: Vector3) -> void:
+	var to_target = target - global_position
+	to_target.y = 0
+	dash_direction = to_target.normalized()
+	dash_timer = to_target.length() / get_dash_speed() + DASH_CHAIN_MARGIN
+	action_timer = dash_timer
+
+func end_dash() -> void:
+	dash_timer = 0.0
+
+func stop_dash_chain() -> bool:
+	return true
