@@ -10,6 +10,8 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
 @export var enrage_windup_multiplier: float = 1.0
 @export var display_name: String = ""
 @export var parry_window: float = 0.3
+@export var harvestable: bool = false
+const HARVEST_ANGLE = 60.0
 var is_enraged = false 
 @onready var parry_pips : Label3D = $ParryPips
 const SLAM_COLOR = Color(0.8, 0.2, 1.0)
@@ -191,3 +193,11 @@ func spawn_slam_wave() -> void:
 	wave.damage = SLAM_DAMAGE
 	get_tree().current_scene.add_child(wave)
 	wave.global_position = Vector3(global_position.x, 0.25, global_position.z)
+
+func is_harvestable_from(point: Vector3) -> bool:
+	if not harvestable or not model:
+		return false
+	var facing = Vector3(sin(model.rotation.y), 0.0, cos(model.rotation.y))
+	var to_point = point - global_position
+	to_point.y = 0
+	return facing.angle_to(to_point) >  deg_to_rad(HARVEST_ANGLE)

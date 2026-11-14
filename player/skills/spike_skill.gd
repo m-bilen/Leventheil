@@ -19,6 +19,7 @@ var is_spinning = false
 var current_spikes = 0
 const DASH_HIT_RADIUS = 1.9
 const SPIKES_PER_DAMAGE = 6.0
+const HARVEST_PER_HIT = 1
 var dash_damage = 0
 var enemies_hit: Array = []
 var is_active = true
@@ -37,6 +38,7 @@ func _ready() -> void:
 	get_parent().jump_pressed.connect(_on_jump_pressed)
 	Events.enemy_died.connect(_on_enemy_died)
 	get_parent().finisher_landed.connect(_on_finisher_landed)
+	get_parent().attack_landed.connect(_on_attack_landed)
 	spike_material.emission_energy_multiplier = GLOW_IDLE
 func _on_dash_started() -> void:
 	if not is_active or current_spikes <= 0:
@@ -176,3 +178,7 @@ func find_chain_target() -> Node3D:
 func finish_chain() -> void:
 	var stop = FINAL_STOP_BASE + FINAL_STOP_PER_HIT * enemies_hit.size()
 	get_parent().hit_stop(min(stop, FINAL_STOP_MAX))
+
+func _on_attack_landed(target: Node3D) -> void:
+	if target.has_method("is_harvestable_from") and target.is_harvestable_from(get_parent().global_position):
+		gain_spikes(HARVEST_PER_HIT)
