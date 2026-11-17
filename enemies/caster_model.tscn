@@ -1,3 +1,68 @@
 [gd_scene format=3 uid="uid://83clelpf8w5n"]
 
+[ext_resource type="Material" uid="uid://ykh8trudlejg" path="res://enemies/caster_stalk.tres" id="1_17eab"]
+[ext_resource type="Material" uid="uid://cnuo2v22xmmua" path="res://enemies/rootling_bark.tres" id="2_vddxm"]
+[ext_resource type="Material" uid="uid://xgint6iv3t13" path="res://enemies/caster_gills.tres" id="3_yotkf"]
+[ext_resource type="Material" uid="uid://cqh41yauuv1oi" path="res://enemies/eye_material.tres" id="4_o7wb5"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vlbye"]
+top_radius = 0.09
+bottom_radius = 0.16
+height = 1.3
+
+[sub_resource type="SphereMesh" id="SphereMesh_wtgql"]
+radius = 0.8
+height = 1.6
+is_hemisphere = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ffflf"]
+top_radius = 0.78
+bottom_radius = 0.1
+height = 0.12
+
+[sub_resource type="SphereMesh" id="SphereMesh_3uxse"]
+radius = 0.05
+height = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_f8f60"]
+radius = 0.05
+height = 0.1
+
 [node name="CasterModel" type="Node3D" unique_id=742725201]
+
+[node name="Body" type="Node3D" parent="." unique_id=1372376383]
+
+[node name="Stalk" type="MeshInstance3D" parent="Body" unique_id=1322893725]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+material_override = ExtResource("1_17eab")
+mesh = SubResource("CylinderMesh_vlbye")
+
+[node name="Neck" type="Node3D" parent="Body" unique_id=946136436]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 1.3, 0)
+
+[node name="Cap" type="Node3D" parent="Body/Neck" unique_id=669930701]
+transform = Transform3D(1, 0, 0, 0, 0.95105654, -0.309017, 0, 0.309017, 0.95105654, 0, 0.25, 0)
+
+[node name="CapDome" type="MeshInstance3D" parent="Body/Neck/Cap" unique_id=716522890]
+transform = Transform3D(1, 0, 0, 0, 0.42, 0, 0, 0, 1, 0, -0.05, 0)
+material_override = ExtResource("2_vddxm")
+mesh = SubResource("SphereMesh_wtgql")
+
+[node name="Gills" type="MeshInstance3D" parent="Body/Neck/Cap" unique_id=1909418615]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, -0.2, 0)
+material_override = ExtResource("3_yotkf")
+mesh = SubResource("CylinderMesh_ffflf")
+
+[node name="EyeL" type="MeshInstance3D" parent="Body/Neck/Cap" unique_id=499374538]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, -0.22, 0.32)
+material_override = ExtResource("4_o7wb5")
+mesh = SubResource("SphereMesh_3uxse")
+
+[node name="EyeR" type="MeshInstance3D" parent="Body/Neck/Cap" unique_id=1261605431]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, -0.22, 0.32)
+material_override = ExtResource("4_o7wb5")
+mesh = SubResource("SphereMesh_f8f60")
+
+[node name="ArmR" type="Node3D" parent="Body" unique_id=965764494]
+
+[node name="ArmL" type="Node3D" parent="Body" unique_id=392954153]

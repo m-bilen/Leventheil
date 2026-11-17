@@ -1,3 +1,8 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://ykh8trudlejg"]
 
+[ext_resource type="Texture2D" uid="uid://d0n45pajxlvv8" path="res://assets/textures/bark/bark_brown_02_diff_1k.jpg" id="1_2lo4i"]
+
 [resource]
+albedo_color = Color(0.2901961, 0.25882354, 0.3137255, 1)
+albedo_texture = ExtResource("1_2lo4i")
+uv1_scale = Vector3(1, 3, 1)
