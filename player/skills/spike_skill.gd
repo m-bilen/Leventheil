@@ -173,6 +173,8 @@ func find_chain_target() -> Node3D:
 		if distance < best_distance:
 			best_distance = distance
 			best = enemy
+		if enemy.has_method("stops_dash_chain") and enemy.stops_dash_chain():
+			continue
 	return best
 
 func finish_chain() -> void:
