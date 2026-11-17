@@ -54,10 +54,12 @@ top_radius = 0.38
 bottom_radius = 0.22
 height = 1.5
 
-[node name="GolemModel" type="Node3D" unique_id=975855048]
+[node name="GolemModel" type="Node3D" unique_id=975855048 node_paths=PackedStringArray("eyes", "root_vines")]
 script = ExtResource("1_phsdi")
 tooth_material = ExtResource("2_xoppa")
 plate_material = ExtResource("3_rdkaa")
+eyes = [NodePath("Rig/Eye")]
+root_vines = NodePath("RootVines")
 
 [node name="LegR" type="Node3D" parent="." unique_id=615594848]
 transform = Transform3D(0.9781476, -0.2079117, 0, 0.20082727, 0.944818, -0.25881904, 0.05381151, 0.25316322, 0.9659258, 0.65, 0.85, -1)

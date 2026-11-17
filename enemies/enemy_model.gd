@@ -1,5 +1,5 @@
 class_name EnemyModel
-extends Node
+extends Node3D
 
 const FlashMaterial = preload("res://enemies/flash_material.tres")
 @export var eyes: Array[MeshInstance3D] = []

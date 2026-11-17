@@ -23,7 +23,6 @@ const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
 const STUN_TIME = 2.0
 const TURN_SPEED = 4.0
-@onready var model: Node3D = get_node_or_null("Model")
 var parry_count = 0
 var state: State = State.CHASE
 var state_timer = 0.0
@@ -46,10 +45,8 @@ func _physics_process(delta: float) -> void:
 		State.STUNNED:
 			do_stunned()
 	if model and (state == State.CHASE or state == State.WINDUP):
-		face_player(delta)
+		face_model_to_player(delta, TURN_SPEED)
 	apply_status_effects()
-	if model:
-		model.set_moving(Vector2(velocity.x, velocity.z).length() > 0.3)
 	move_and_slide()
 func do_chase() -> void:
 	var dist = distance_to_player()
@@ -71,7 +68,7 @@ func open_parry_window() -> void:
 	window_open = true
 	set_color(WINDOW_COLOR)
 	if model:
-		model.pose_open()
+		model.set_pose(EnemyModel.Pose.OPEN)
 func do_attack() -> void:
 	if state_timer <= 0.0:
 		enter_state(State.RECOVER)
@@ -145,46 +142,21 @@ func _ready() -> void:
 		Events.camera_focus_requested.emit(global_position, 1.0)
 		Events.camera_shake_requested.emit(0.8)
 
-func face_player(delta: float) -> void:
-	var to_player = player.global_position - global_position
-	var target = atan2(to_player.x, to_player.z)
-	model.rotation.y = lerp_angle(model.rotation.y, target, TURN_SPEED * delta)
-
-func _apply_color(color: Color) -> void:
-	if model:
-		model.set_color(color)
-	else:
-		super(color)
-
-func _apply_flash(on: bool) -> void:
-	if model:
-		model.set_flash(on)
-	else:
-		super(on)
-
-func _apply_rooted(on: bool) -> void:
-	if model:
-		model.set_rooted(on)
-	else:
-		super(on)
-
 func update_model_pose() -> void:
 	if not model:
 		return
 	match state:
 		State.CHASE:
-			model.pose_idle()
+			model.set_pose(EnemyModel.Pose.IDLE)
 		State.WINDUP:
-			if is_slam:
-				model.pose_slam()
-			else:
-				model.pose_windup()
+			model.set_pose(EnemyModel.Pose.SLAM if is_slam else EnemyModel.Pose.WINDUP)
 		State.ATTACK:
-			model.pose_strike()
+			model.set_pose(EnemyModel.Pose.STRIKE)
 		State.RECOVER:
-			model.pose_recover()
+			model.set_pose(EnemyModel.Pose.RECOVER)
 		State.STUNNED:
-			model.pose_stunned()
+			model.set_pose(EnemyModel.Pose.STUNNED)
+
 
 func spawn_slam_wave() -> void:
 	var wave = GroundBurstScene.instantiate()

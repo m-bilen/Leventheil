@@ -16,6 +16,7 @@ var current_color = Color.WHITE
 var flash_timer = 0.0
 
 @onready var mesh: MeshInstance3D = get_node_or_null("MeshInstance3D")
+@onready var model: EnemyModel = get_node_or_null("Model")
 
 func _ready() -> void:
 	add_to_group("enemies")
@@ -25,6 +26,8 @@ func _ready() -> void:
 		mesh.mesh = mesh.mesh.duplicate()
 		mesh.mesh.material = mesh.mesh.material.duplicate()
 		base_color = mesh.mesh.material.albedo_color
+	if model:
+		base_color = model.get_base_color()
 	current_color = base_color
 
 func take_damage(amount: int) -> void:
@@ -97,19 +100,38 @@ func apply_status_effects() -> void:
 		velocity.z = 0
 
 func _apply_color(color: Color) -> void:
+	if model:
+		model.set_color(color)
+		return 
+	mesh.mesh.material.albedo_color = color
 	if flash_timer > 0.0:
 		return
 	mesh.mesh.material.albedo_color = color
 
 func _apply_rooted(on: bool) -> void:
+	if model:
+		model.set_rooted(on)
+		return
+	mesh.mesh.material_emission_enabled = on 
+	if on:
+		mesh.mesh.material.albedo_color = Color(0.1, 0.7, 0.2)
 	mesh.mesh.material.emission_enabled = on
 	if on:
 		mesh.mesh.material.emission = Color(0.1, 0.7, 0.2)
 
 func _apply_flash(on: bool) -> void:
+	if model:
+		model.set_flash(on)
+		return
+	mesh.mesh.material.albedo_color = Color.WHITE if on else current_color
 	mesh.mesh.material.albedo_color = Color.WHITE if on else current_color
 
 func distance_to_player() -> float:
 	var offset = player.global_position - global_position
 	offset.y = 0
 	return offset.length()
+
+func face_model_to_player(delta: float, turn_speed: float) -> void:
+	var to_player = player.global_position - global_position
+	var target = atan2(to_player.x, to_player.z)
+	model.rotation.y = lerp_angle(model.rotation.y, target, turn_speed * delta)

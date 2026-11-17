@@ -14,7 +14,6 @@
 [ext_resource type="ArrayMesh" uid="uid://b8ttlj4sl6k8g" path="res://world/mushroom_mesh.tres" id="10_qnd6n"]
 [ext_resource type="QuadMesh" uid="uid://drivjp5rf0ls1" path="res://world/glow_particle.tres" id="12_vid1e"]
 [ext_resource type="Script" uid="uid://b1l5kmjgy6wb7" path="res://effects/effects.gd" id="14_8q2wj"]
-[ext_resource type="PackedScene" uid="uid://83clelpf8w5n" path="res://enemies/caster_model.tscn" id="15_60vd7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(80, 0.5, 80)
@@ -321,6 +320,3 @@ shape = SubResource("ConcavePolygonShape3D_vid1e")
 
 [node name="Effects" type="Node3D" parent="." unique_id=1476645773]
 script = ExtResource("14_8q2wj")
-
-[node name="CasterModel" parent="." unique_id=742725201 instance=ExtResource("15_60vd7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.420455, 0.25000024, 10.729699)

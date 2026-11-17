@@ -1,9 +1,8 @@
-extends Node3D
+extends EnemyModel
 
 @export var tooth_material: Material
 @export var plate_material: Material
 
-const FlashMaterial = preload("res://enemies/flash_material.tres")
 const TOOTH_CLOSED = 55.0
 const WALK_SPEED = 5.0
 const WALK_SWING = 0.25
@@ -12,7 +11,6 @@ const WALK_BOB = 0.06
 @onready var arms: Array[Node3D] = [$Rig/ArmR, $Rig/ArmL]
 @onready var legs: Array[Node3D] = [$LegR, $LegL]
 var core_material: StandardMaterial3D
-var moving = false
 var walk_time = 0.0
 var arm_rest: Array[float] = []
 var leg_rest: Array[float] = []
@@ -24,9 +22,6 @@ var target_tooth = TOOTH_CLOSED
 var target_glow = 2.0
 var pose_speed = 5.0
 @onready var eye: MeshInstance3D = $Rig/Eye
-@onready var root_vines: Node3D = $RootVines
-var eye_material : StandardMaterial3D
-var parts: Array[Node] = []
  
 
 
@@ -38,9 +33,7 @@ func _ready() -> void:
 	rng.seed = 3
 	build_teeth(rng)
 	build_plates(rng)
-	eye_material = eye.material_override.duplicate()
-	eye.material_override = eye_material
-	parts = find_children( "*", "MeshInstance3D", true, false)
+	super()
 	var core: MeshInstance3D = $Rig/Maw/Core
 	core_material = core.material_override.duplicate()
 	core.material_override = core_material
@@ -87,44 +80,6 @@ func build_plates(rng: RandomNumberGenerator) -> void:
 		plate.rotation = Vector3(0.0, -a, deg_to_rad(20))
 		plate.scale = Vector3(0.7, 0.45, 0.55) * rng.randf_range(0.85, 1.15)
 
-func get_base_color() -> Color:
-	return eye_material.emission
-
-func set_color(color: Color) -> void:
-	eye_material.albedo_color = color
-	eye_material.emission = color 
-
-func set_flash(on: bool) -> void:
-	var overlay = FlashMaterial if on else null
-	for part in parts:
-		part.material_overlay = overlay
-
-func set_rooted(on: bool) -> void:
-	root_vines.visible = on
-
-func set_moving(on: bool) -> void:
-	moving = on
-
-func pose_idle() -> void:
-	set_targets(0.0, 0.0, TOOTH_CLOSED, 2.0, 5.0)
-
-func pose_windup() -> void:
-	set_targets(-0.55, -1.0, 45.0, 3.0, 6.0)
-
-func pose_slam() -> void:
-	set_targets(-0.4, -2.2, 60.0, 1.0, 5.0)
-
-func pose_open() -> void:
-	set_targets(target_pitch, target_arm, -10.0, 8.0, 18.0)
-
-func pose_strike() -> void:
-	set_targets(0.2, 0.15, 70.0, 9.0, 12.0)
-
-func pose_recover() -> void:
-	set_targets(0.1, 0.2, 40.0, 1.0, 3.0)
-
-func pose_stunned() -> void:
-	set_targets(0.3, 0.5, 25.0, 0.3, 4.0)
 
 func set_targets(pitch: float, arm: float, tooth: float, glow: float, speed: float) -> void:
 	target_pitch = pitch
@@ -151,3 +106,20 @@ func _process(delta: float) -> void:
 	for socket in tooth_sockets:
 		socket.rotation.z = tooth_angle
 	core_material.emission_energy_multiplier = lerp(core_material.emission_energy_multiplier, target_glow, blend)
+
+func _on_pose_changed(new_pose: Pose) -> void:
+	match new_pose:
+		Pose.IDLE:
+			set_targets(0.0, 0.0, TOOTH_CLOSED, 2.0, 5.0)
+		Pose.WINDUP:
+			set_targets(-0.55, -1.0, 45.0, 3.0, 6.0 )
+		Pose.OPEN:
+			set_targets(target_pitch, target_arm, -10.0, 8.0, 18.0)
+		Pose.SLAM:
+			set_targets(-0.4, -2.2, 60.0, 1.0, 5.0)
+		Pose.STRIKE:
+			set_targets(0.2, 0.15, 70.0, 9.0, 12.0)
+		Pose.RECOVER:
+			set_targets(0.1, 0.2, 40.0, 1.0, 3.0)
+		Pose.STUNNED:
+			set_targets(0.3, 0.5, 25.0, 0.3, 4.0,)
