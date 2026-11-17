@@ -1,13 +1,7 @@
 [gd_scene format=3 uid="uid://crppambdbq5hl"]
 
 [ext_resource type="Script" uid="uid://sonmvy4k4gk8" path="res://enemies/caster.gd" id="1_rll85"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k104"]
-albedo_color = Color(0.16862746, 0.22745098, 0.54901963, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_7k104"]
-material = SubResource("StandardMaterial3D_7k104")
-size = Vector3(0.6, 2.2, 0.6)
+[ext_resource type="PackedScene" uid="uid://83clelpf8w5n" path="res://enemies/caster_model.tscn" id="2_bonsj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
 size = Vector3(0.6, 2.2, 0.6)
@@ -18,8 +12,8 @@ collision_mask = 5
 script = ExtResource("1_rll85")
 max_health = 5
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1548163718]
-mesh = SubResource("BoxMesh_7k104")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=216324921]
 shape = SubResource("BoxShape3D_4gyqm")
+
+[node name="Model" parent="." unique_id=742725201 instance=ExtResource("2_bonsj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)

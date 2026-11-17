@@ -13,6 +13,7 @@ const MAX_LEAD = 3.0
 
 var windup_timer = 0.0
 var attack_timer = 1.5
+const TURN_SPEED = 6.0
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -32,6 +33,9 @@ func _physics_process(delta: float) -> void:
 	velocity.x = move.x * SPEED
 	velocity.z = move.z * SPEED
 	apply_status_effects()
+	if model:
+		face_model_to_player(delta, TURN_SPEED)
+		model.set_moving(Vector2(velocity.x, velocity.z).length() > 0.3)
 	move_and_slide()
 	attack_timer = max(attack_timer - delta, 0.0)
 	if windup_timer > 0.0:
@@ -44,6 +48,8 @@ func _physics_process(delta: float) -> void:
 func start_windup() -> void:
 	windup_timer = WINDUP_TIME
 	set_color(WINDUP_COLOR)
+	if model:
+		model.set_pose(EnemyModel.Pose.WINDUP)
 
 func cast() -> void:
 	set_color(base_color)
@@ -55,6 +61,8 @@ func cast() -> void:
 	lead = lead.limit_length(MAX_LEAD)
 	var target = player.global_position + lead
 	burst.global_position = Vector3(target.x, 0.25, target.z)
+	if model:
+		model.set_pose(EnemyModel.Pose.STRIKE)
 
 func interrupt() -> void:
 	if windup_timer <= 0.0:
@@ -62,6 +70,8 @@ func interrupt() -> void:
 	windup_timer = 0.0
 	attack_timer = ATTACK_COOLDOWN 
 	set_color(base_color)
+	if model:
+		model.set_pose(EnemyModel.Pose.STUNNED)
 
 func _on_damaged() -> void:
 	interrupt()
