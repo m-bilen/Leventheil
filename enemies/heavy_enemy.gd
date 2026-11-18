@@ -127,6 +127,8 @@ func escalate() -> void:
 	if not escalation_windup.is_empty():
 		var t = clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)
 		base_color = start_color.lerp(escalation_color, t)
+		if model and model.has_method("set_rage"):
+			model.set_rage(t)
 
 func do_stunned() -> void:
 	velocity.x = 0

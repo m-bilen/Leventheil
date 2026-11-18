@@ -1,16 +1,10 @@
 [gd_scene format=3 uid="uid://7dqshnncdadx"]
 
 [ext_resource type="Script" uid="uid://80cruu7qtrv2" path="res://enemies/heavy_enemy.gd" id="1_0bnu1"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k104"]
-albedo_color = Color(1, 0, 0.9607843, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_7k104"]
-material = SubResource("StandardMaterial3D_7k104")
-size = Vector3(1.9, 4, 1.9)
+[ext_resource type="PackedScene" uid="uid://c5g2oh1hvui25" path="res://enemies/boss_model.tscn" id="2_a60ye"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
-size = Vector3(1.9, 4, 1.9)
+size = Vector3(2.4, 2.6, 2.4)
 
 [node name="Zimbrok" type="CharacterBody3D" unique_id=220612844]
 collision_layer = 2
@@ -27,14 +21,14 @@ escalation_slam = Array[float]([0.0, 0.0, 0.25, 0.35, 0.45])
 max_health = 30
 pullable = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1548163718]
-mesh = SubResource("BoxMesh_7k104")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=216324921]
 shape = SubResource("BoxShape3D_4gyqm")
 
 [node name="ParryPips" type="Label3D" parent="." unique_id=347780787]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
 billboard = 1
 no_depth_test = true
 font_size = 64
+
+[node name="Model" parent="." unique_id=975855048 instance=ExtResource("2_a60ye")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, -1.3, 0)
