@@ -7,17 +7,18 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
 @export var attack_damage: int = 2
 @export var parries_to_kill: int = 3
 @export var parry_only: bool = false
-@export var enrage_windup_multiplier: float = 1.0
 @export var display_name: String = ""
 @export var parry_window: float = 0.3
 @export var harvestable: bool = false
+@export var escalation_windup: Array[float] = []
+@export var escalation_slam: Array[float] = []
+@export var escalation_color: Color = Color(0.55, 0.0, 0.1)
 const HARVEST_ANGLE = 60.0
-var is_enraged = false 
 @onready var parry_pips : Label3D = $ParryPips
 const SLAM_COLOR = Color(0.8, 0.2, 1.0)
 const SLAM_RADIUS = 3
 const SLAM_DAMAGE = 2
-const WINDOW_COLOR = Color(1.0, 0.5, 1.0)
+const WINDOW_COLOR = Color(1.0, 0.5, 0.1)
 const ATTACK_RANGE = 2.5
 const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
@@ -28,6 +29,8 @@ var state: State = State.CHASE
 var state_timer = 0.0
 var window_open = false
 var is_slam = false
+var start_windup_time = 0.0
+var start_color = Color.WHITE
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -112,12 +115,19 @@ func can_be_parried() -> bool:
 func on_parried() -> bool:
 	parry_count += 1
 	update_parry_pips()
-	if not is_enraged and enrage_windup_multiplier < 1.0 and parry_count * 2 >= parries_to_kill:
-		is_enraged = true
-		windup_time *= enrage_windup_multiplier
-		base_color = Color(0.55, 0.0, 0.1)
+	escalate()
 	enter_state(State.STUNNED)
 	return parry_count >= parries_to_kill
+
+func escalate() -> void:
+	if parry_count < escalation_windup.size():
+		windup_time = start_windup_time * escalation_windup[parry_count]
+	if parry_count < escalation_slam.size():
+		slam_chance = escalation_slam[parry_count]
+	if not escalation_windup.is_empty():
+		var t = clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)
+		base_color = start_color.lerp(escalation_color, t)
+
 func do_stunned() -> void:
 	velocity.x = 0
 	velocity.z = 0
@@ -133,9 +143,9 @@ func update_parry_pips() -> void:
 	parry_pips.text = "• ".repeat(remaining).strip_edges()
 func _ready() -> void:
 	super()
-	if model:
-		base_color = model.get_base_color()
-		current_color = base_color
+	start_windup_time = windup_time
+	start_color = base_color
+	escalate()
 	update_parry_pips()
 	if display_name != "":
 		Events.boss_spawned.emit(display_name)
