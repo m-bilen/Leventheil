@@ -50,6 +50,8 @@ func _physics_process(delta: float) -> void:
 	if model and (state == State.CHASE or state == State.WINDUP):
 		face_model_to_player(delta, TURN_SPEED)
 	apply_status_effects()
+	if model:
+		model.set_moving(Vector2(velocity.x, velocity.z).length() > 0.3)
 	move_and_slide()
 func do_chase() -> void:
 	var dist = distance_to_player()
