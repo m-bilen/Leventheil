@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://c66yng4u0hmdb"]
+
+[ext_resource type="Material" uid="uid://cnuo2v22xmmua" path="res://enemies/rootling_bark.tres" id="1_7mb3g"]
+[ext_resource type="Script" uid="uid://cptxvycqdriug" path="res://effects/death_burst.gd" id="1_x36dr"]
+[ext_resource type="QuadMesh" uid="uid://drivjp5rf0ls1" path="res://world/glow_particle.tres" id="2_mxato"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_mxato"]
+material = ExtResource("1_7mb3g")
+size = Vector3(0.1, 0.1, 0.03)
+
+[sub_resource type="Gradient" id="Gradient_x36dr"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_mxato"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="DeathBurst" type="Node3D" unique_id=687470390]
+script = ExtResource("1_x36dr")
+
+[node name="Shards" type="CPUParticles3D" parent="." unique_id=353543296]
+cast_shadow = 0
+emitting = false
+amount = 10
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("BoxMesh_mxato")
+direction = Vector3(0, 0, 0)
+spread = 180.0
+gravity = Vector3(0, -9, 0)
+initial_velocity_min = 3.0
+initial_velocity_max = 6.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+scale_amount_min = 0.6
+scale_amount_max = 1.4
+
+[node name="Motes" type="CPUParticles3D" parent="." unique_id=977770793]
+emitting = false
+lifetime = 1.2
+one_shot = true
+explosiveness = 0.6
+mesh = ExtResource("2_mxato")
+direction = Vector3(0, 1, 0)
+spread = 35.0
+gravity = Vector3(0, 0.5, 0)
+initial_velocity_min = 0.4
+initial_velocity_max = 1.0
+tangential_accel_min = -0.5
+tangential_accel_max = 0.5
+scale_amount_min = 1.5
+scale_amount_max = 2.5
+color_ramp = SubResource("Gradient_x36dr")
+
+[node name="Wisp" type="CPUParticles3D" parent="." unique_id=2015726060]
+emitting = false
+amount = 1
+lifetime = 1.4000000000000001
+one_shot = true
+mesh = ExtResource("2_mxato")
+direction = Vector3(0, 1, 0)
+spread = 10.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 1.2
+initial_velocity_max = 1.2
+scale_amount_min = 6.0
+scale_amount_max = 6.0
+color_ramp = SubResource("Gradient_mxato")
+
+[node name="Flash" type="OmniLight3D" parent="." unique_id=1116014827]
+light_energy = 2.0
+omni_range = 3.0

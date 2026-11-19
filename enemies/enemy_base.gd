@@ -5,6 +5,8 @@ const FLASH_TIME = 0.1
 
 @export var max_health: int = 3
 @export var pullable: bool = true
+@export var spirit_color: Color = Color(0.75, 0.91, 1.0)
+@export var death_scale: float = 1.0
 
 var pull_timer = 0.0
 var pull_velocity = Vector3.ZERO
