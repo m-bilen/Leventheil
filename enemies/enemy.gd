@@ -130,7 +130,7 @@ func _apply_flash(on: bool) -> void:
 			part.material_overlay = overlay
 
 func _apply_rooted(on: bool) -> void:
-	root_vines.visible = on
+	root_vines.bind(on)
 
 func animate_body(delta: float) -> void:
 	var lean = REST_LEAN

@@ -44,3 +44,10 @@ static func build(length: float, bend: float, thickness: float, taper: float, wi
 			st.add_index(d)
 			st.add_index(c)
 	return st.commit()
+
+static func append_oriented(st: SurfaceTool, mesh: ArrayMesh, start: Vector3, dir: Vector3, length: float) -> void:
+	var up = Vector3.UP if abs(dir.dot(Vector3.UP)) < 0.95 else Vector3.FORWARD
+	var axis_z = dir.cross(up).normalized()
+	var axis_y = axis_z.cross(dir)
+	st.append_from(mesh, 0, Transform3D(Basis(dir, axis_y, axis_z), start + dir * length / 2.0))
+	

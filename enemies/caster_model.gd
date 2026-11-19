@@ -64,11 +64,7 @@ func build_arm(pivot: Node3D, side: float, rng: RandomNumberGenerator) -> void:
 func add_branch(st: SurfaceTool, start: Vector3, dir: Vector3, length: float, thickness: float, rng: RandomNumberGenerator) -> void:
 	var bend = rng.randf_range(-0.15, 0.15) * length
 	var mesh = VineBuilder.build(length, bend, thickness, 0.15, 0.04 * length, rng.randf() * TAU)
-	var up = Vector3.UP if abs(dir.dot(Vector3.UP)) < 0.95 else Vector3.FORWARD
-	var axis_z = dir.cross(up).normalized()
-	var axis_y = axis_z.cross(dir)
-	var branch_basis = Basis(dir, axis_y, axis_z)
-	st.append_from(mesh, 0, Transform3D(branch_basis, start + dir * length / 2.0))
+	VineBuilder.append_oriented(st, mesh, start, dir, length)
 
 func _on_pose_changed(new_pose: Pose) -> void:
 	hold_timer = 0.0

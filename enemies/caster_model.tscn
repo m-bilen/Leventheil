@@ -5,6 +5,8 @@
 [ext_resource type="Material" uid="uid://cnuo2v22xmmua" path="res://enemies/rootling_bark.tres" id="2_vddxm"]
 [ext_resource type="Material" uid="uid://xgint6iv3t13" path="res://enemies/caster_gills.tres" id="3_yotkf"]
 [ext_resource type="Material" uid="uid://cqh41yauuv1oi" path="res://enemies/eye_material.tres" id="4_o7wb5"]
+[ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="6_o7wb5"]
+[ext_resource type="Material" uid="uid://dhyqube0n8py0" path="res://effects/root_bind_material.tres" id="7_vlbye"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_vlbye"]
 top_radius = 0.09
@@ -29,20 +31,11 @@ height = 0.1
 radius = 0.05
 height = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vddxm"]
-albedo_color = Color(0.18039216, 0.49019608, 0.19607843, 1)
-emission_enabled = true
-emission = Color(0.23529412, 0.6901961, 0.2627451, 1)
-
-[sub_resource type="TorusMesh" id="TorusMesh_yotkf"]
-inner_radius = 0.38
-outer_radius = 0.5
-
 [node name="CasterModel" type="Node3D" unique_id=742725201 node_paths=PackedStringArray("eyes", "root_vines")]
 script = ExtResource("1_vddxm")
 arm_material = ExtResource("1_17eab")
 eyes = [NodePath("Body/Neck/Cap/EyeL"), NodePath("Body/Neck/Cap/EyeR")]
-root_vines = NodePath("RootVines")
+root_vines = NodePath("Body/RootVines")
 
 [node name="Body" type="Node3D" parent="." unique_id=1372376383]
 
@@ -83,8 +76,8 @@ transform = Transform3D(0.64278764, 0.76604444, 0, -0.76604444, 0.64278764, 0, 0
 [node name="ArmL" type="Node3D" parent="Body" unique_id=392954153]
 transform = Transform3D(0.64278764, -0.76604444, 0, 0.76604444, 0.64278764, 0, 0, 0, 1, -0.1, 1.15, 0.03)
 
-[node name="RootVines" type="MeshInstance3D" parent="." unique_id=1426955536]
-transform = Transform3D(1.6, 0, 0, 0, 1.2, 0, 0, 0, 1.6, 0, 0.2, 0)
-visible = false
-material_override = SubResource("StandardMaterial3D_vddxm")
-mesh = SubResource("TorusMesh_yotkf")
+[node name="RootVines" type="Node3D" parent="Body" unique_id=1856224979]
+script = ExtResource("6_o7wb5")
+radius = 0.4
+height = 1.4
+material = ExtResource("7_vlbye")

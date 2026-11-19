@@ -4,6 +4,8 @@
 [ext_resource type="Material" uid="uid://cqh41yauuv1oi" path="res://enemies/eye_material.tres" id="2_a6vjd"]
 [ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://enemies/thorn_material.tres" id="3_07tka"]
 [ext_resource type="Material" uid="uid://cnuo2v22xmmua" path="res://enemies/rootling_bark.tres" id="4_a6vjd"]
+[ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="5_3t1x0"]
+[ext_resource type="Material" uid="uid://dhyqube0n8py0" path="res://effects/root_bind_material.tres" id="6_epsnb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
 size = Vector3(0.8, 2.5, 0.8)
@@ -48,15 +50,6 @@ top_radius = 0.18
 bottom_radius = 0.42
 height = 1.0
 radial_segments = 10
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a6vjd"]
-albedo_color = Color(0.18039216, 0.49019608, 0.19607843, 1)
-emission_enabled = true
-emission = Color(0.23529412, 0.6901961, 0.2627451, 1)
-
-[sub_resource type="TorusMesh" id="TorusMesh_07tka"]
-inner_radius = 0.38
-outer_radius = 0.5
 
 [node name="Enemy" type="CharacterBody3D" unique_id=220612844]
 collision_layer = 2
@@ -107,8 +100,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 material_override = ExtResource("4_a6vjd")
 mesh = SubResource("CylinderMesh_cjbay")
 
-[node name="RootVines" type="MeshInstance3D" parent="Body" unique_id=1244307957]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
-visible = false
-material_override = SubResource("StandardMaterial3D_a6vjd")
-mesh = SubResource("TorusMesh_07tka")
+[node name="RootVines" type="Node3D" parent="Body" unique_id=1297763937]
+script = ExtResource("5_3t1x0")
+radius = 0.35
+height = 0.9
+material = ExtResource("6_epsnb")

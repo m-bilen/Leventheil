@@ -44,12 +44,12 @@ func _process(delta: float) -> void:
 		return
 	spawn_timer -= delta
 	if spawn_timer <= 0.0:
-		spawn_enemy(spawn_queue.pop_back())
+		spawn_enemy(spawn_queue.pop_front())
 		spawn_timer = WAVES[wave_index]["interval"]
 func spawn_enemy(scene: PackedScene) -> void:
 	var enemy = scene.instantiate()
-	add_child(enemy)
 	enemy.position = pick_spawn_position()
+	add_child(enemy)
 	enemies_alive += 1
 func _on_enemy_died(_enemy: Node3D) -> void:
 	enemies_alive -= 1

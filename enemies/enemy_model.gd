@@ -29,7 +29,9 @@ func set_flash(on: bool) -> void:
 		part.material_overlay = overplay
 
 func set_rooted(on: bool) -> void:
-	if root_vines:
+	if root_vines and root_vines.has_method("bind"):
+		root_vines.bind(on)
+	elif root_vines:
 		root_vines.visible = on
 
 func set_moving(on: bool) -> void:
