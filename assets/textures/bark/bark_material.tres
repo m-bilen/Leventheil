@@ -10,3 +10,5 @@ roughness_texture = ExtResource("3_7gtm7")
 normal_enabled = true
 normal_texture = ExtResource("2_w6odi")
 uv1_scale = Vector3(3, 4, 1)
+distance_fade_min_distance = 2.5
+distance_fade_max_distance = 4.5

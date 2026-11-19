@@ -13,3 +13,5 @@ normal_texture = ExtResource("2_vw1jd")
 rim_enabled = true
 rim = 0.5
 uv1_scale = Vector3(1, 2, 1)
+distance_fade_min_distance = 2.5
+distance_fade_max_distance = 4.5

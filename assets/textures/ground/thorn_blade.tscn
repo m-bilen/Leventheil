@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d2gehvh78h7te"]
 
-[ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://assets/textures/bark/thorn_material.tres" id="1_obcjb"]
+[ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://enemies/thorn_material.tres" id="1_obcjb"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_eydl1"]
 top_radius = 0.035

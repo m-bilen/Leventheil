@@ -3,7 +3,7 @@
 [ext_resource type="Material" uid="uid://cnuo2v22xmmua" path="res://enemies/rootling_bark.tres" id="1_07mim"]
 [ext_resource type="Script" uid="uid://cwqfntu1mebe5" path="res://enemies/golem_model.gd" id="1_phsdi"]
 [ext_resource type="Material" uid="uid://bqmx4mtv8c8jv" path="res://enemies/maw_core_material.tres" id="2_phsdi"]
-[ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://assets/textures/bark/thorn_material.tres" id="2_xoppa"]
+[ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://enemies/thorn_material.tres" id="2_xoppa"]
 [ext_resource type="Material" uid="uid://cqh41yauuv1oi" path="res://enemies/eye_material.tres" id="3_1qjbr"]
 [ext_resource type="Material" uid="uid://cdc7mih5nbtp8" path="res://assets/textures/bark/bark_material.tres" id="3_rdkaa"]
 
@@ -39,6 +39,8 @@ cap_bottom = false
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tchlw"]
 albedo_color = Color(0.07058824, 0.050980393, 0.039215688, 1)
+distance_fade_min_distance = 2.5
+distance_fade_max_distance = 4.5
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_lw8ey"]
 top_radius = 0.92
