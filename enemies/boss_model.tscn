@@ -4,10 +4,21 @@
 [ext_resource type="Material" uid="uid://cdc7mih5nbtp8" path="res://assets/textures/bark/bark_material.tres" id="2_1espu"]
 [ext_resource type="Script" uid="uid://cti6e0887bmj5" path="res://enemies/boss_model.gd" id="2_du1ni"]
 [ext_resource type="Material" uid="uid://c8sjwn0v0uvha" path="res://enemies/crown_material.tres" id="3_cswhp"]
+[ext_resource type="Material" uid="uid://dfwhcfinxv7dh" path="res://assets/textures/bark/boss_thorn_material.tres" id="4_lvuu7"]
+[ext_resource type="Material" uid="uid://dmhwepde65jaa" path="res://enemies/boss_bark_material.tres" id="5_wtmuk"]
+[ext_resource type="Material" uid="uid://bplemywt7msyc" path="res://enemies/boss_maw_core_material.tres" id="6_pjxee"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pjxee"]
+albedo_color = Color(0.07058824, 0.050980393, 0.039215688, 1)
+distance_fade_mode = 2
+distance_fade_min_distance = 2.5
+distance_fade_max_distance = 4.5
 
 [node name="BossModel" unique_id=975855048 instance=ExtResource("1_kr2kt")]
 script = ExtResource("2_du1ni")
 crown_material = ExtResource("3_cswhp")
+tooth_material = ExtResource("4_lvuu7")
+plate_material = ExtResource("5_wtmuk")
 
 [node name="Mesh" parent="LegR" parent_id_path=PackedInt32Array(615594848) index="0" unique_id=2084653634]
 material_override = ExtResource("2_1espu")
@@ -16,13 +27,19 @@ material_override = ExtResource("2_1espu")
 material_override = ExtResource("2_1espu")
 
 [node name="Body" parent="Rig" parent_id_path=PackedInt32Array(1731586793) index="0" unique_id=954681470]
-material_override = ExtResource("2_1espu")
+material_override = ExtResource("5_wtmuk")
 
 [node name="Collar" parent="Rig/Maw" parent_id_path=PackedInt32Array(502017858) index="0" unique_id=67341435]
-material_override = ExtResource("2_1espu")
+material_override = ExtResource("5_wtmuk")
+
+[node name="Inner" parent="Rig/Maw" parent_id_path=PackedInt32Array(502017858) index="1" unique_id=1526619615]
+material_override = SubResource("StandardMaterial3D_pjxee")
+
+[node name="Core" parent="Rig/Maw" parent_id_path=PackedInt32Array(502017858) index="2" unique_id=1353754412]
+material_override = ExtResource("6_pjxee")
 
 [node name="Mesh" parent="Rig/ArmR" parent_id_path=PackedInt32Array(1695012606) index="0" unique_id=649552973]
-material_override = ExtResource("2_1espu")
+material_override = ExtResource("5_wtmuk")
 
 [node name="Mesh" parent="Rig/ArmL" parent_id_path=PackedInt32Array(1026046571) index="0" unique_id=1221490718]
-material_override = ExtResource("2_1espu")
+material_override = ExtResource("5_wtmuk")
