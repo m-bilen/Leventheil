@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://c5g2oh1hvui25"]
 
 [ext_resource type="PackedScene" uid="uid://b7i104umb38i5" path="res://enemies/golem_model.tscn" id="1_kr2kt"]
-[ext_resource type="Material" uid="uid://cdc7mih5nbtp8" path="res://assets/textures/bark/bark_material.tres" id="2_1espu"]
 [ext_resource type="Script" uid="uid://cti6e0887bmj5" path="res://enemies/boss_model.gd" id="2_du1ni"]
 [ext_resource type="Material" uid="uid://c8sjwn0v0uvha" path="res://enemies/crown_material.tres" id="3_cswhp"]
 [ext_resource type="Material" uid="uid://dfwhcfinxv7dh" path="res://assets/textures/bark/boss_thorn_material.tres" id="4_lvuu7"]
@@ -21,10 +20,10 @@ tooth_material = ExtResource("4_lvuu7")
 plate_material = ExtResource("5_wtmuk")
 
 [node name="Mesh" parent="LegR" parent_id_path=PackedInt32Array(615594848) index="0" unique_id=2084653634]
-material_override = ExtResource("2_1espu")
+material_override = ExtResource("5_wtmuk")
 
 [node name="Mesh" parent="LegL" parent_id_path=PackedInt32Array(1233284871) index="0" unique_id=974417271]
-material_override = ExtResource("2_1espu")
+material_override = ExtResource("5_wtmuk")
 
 [node name="Body" parent="Rig" parent_id_path=PackedInt32Array(1731586793) index="0" unique_id=954681470]
 material_override = ExtResource("5_wtmuk")

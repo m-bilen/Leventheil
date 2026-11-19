@@ -4,24 +4,24 @@ extends Area3D
 @export var radius: float = 1.8
 @export var damage: int = 1
 
+var warning_material = ShaderMaterial
 var timer = 0.0
 
 @onready var mesh: MeshInstance3D = $MeshInstance3D
 
 func _ready() -> void:
 	timer = delay
-	var shape: CylinderShape3D = $CollisionShape3D.shape.duplicate()
-	shape.radius = radius
-	$CollisionShape3D.shape = shape
-	var cylinder: CylinderMesh = mesh.mesh.duplicate()
-	cylinder.top_radius = radius
-	cylinder.bottom_radius = radius
-	mesh.mesh = cylinder
-	Events.wave_started.connect(_on_wave_started)
+	var plane: PlaneMesh = mesh.mesh.duplicate()
+	plane.size = Vector2(radius * 2.0, radius * 2.0)
+	plane.subdivide_width = 24
+	plane.subdivide_depth = 24
+	mesh.mesh = plane
+	warning_material = mesh.material_override.duplicate()
+	mesh.material_override = warning_material
 
 func _physics_process(delta: float) -> void:
 	timer -= delta
-	mesh.transparency = lerp(0.85, 0.1, 1.0 - timer / delay)
+	warning_material.set_shader_parameter("progress", 1.0 - timer / delay)
 	if timer <= 0.0:
 		erupt()
 
