@@ -182,6 +182,11 @@ func attack() -> void:
 		if body == self:
 			continue
 		if body.has_method("take_damage"):
+			var away = body.global_position - global_position
+			away.y = 0
+			var point = body.global_position
+			point.y = global_position.y + 1.0
+			Events.hit_landed.emit(point, away.normalized())
 			body.take_damage(damage)
 			attack_landed.emit(body)
 			hit_stop(0.15)
