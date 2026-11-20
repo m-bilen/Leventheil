@@ -1,8 +1,6 @@
 extends Node3D
 
 const VineTrapScene = preload("res://player/skills/vine_trap.tscn")
-const HITS_TO_ROOT = 3
-const ROOT_DURATION = 2.0
 const PULL_RANGE = 8.0
 const PULL_TIME = 0.2
 const TETHER_TIME = 1.0
@@ -13,36 +11,18 @@ var light_stance = false
 var unlocked = false
 
 var is_active = false
-var charges = {}
 
 func _ready() -> void:
 	get_parent().stance_toggled.connect(_on_stance_toggled)
-	get_parent().attack_landed.connect(_on_attack_landed)
 	get_parent().jump_pressed.connect(_on_jump_pressed)
-	Events.enemy_died.connect(_on_enemy_died)
 	Events.wave_started.connect(_on_wave_started)
 
 func _on_stance_toggled() -> void:
 	light_stance = not light_stance
-	charges.clear()
 	refresh_active()
 	if is_active:
 		sprout_seeds()
 
-func _on_attack_landed(target: Node3D) -> void:
-	if not is_active:
-		return
-	if target.is_queued_for_deletion() or not target.has_method("root"):
-		return
-	var count = charges.get(target, 0) + 1
-	if count >= HITS_TO_ROOT:
-		target.root(ROOT_DURATION)
-		charges.erase(target)
-	else:
-		charges[target] = count
-
-func _on_enemy_died(enemy: Node3D) -> void:
-	charges.erase(enemy)
 
 func _on_jump_pressed(aim_dir: Vector3) -> void:
 	if not is_active or aim_dir == Vector3.ZERO:
