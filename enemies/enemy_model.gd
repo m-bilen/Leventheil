@@ -9,6 +9,7 @@ var eye_material: StandardMaterial3D
 var parts: Array[Node] = []
 var moving = false
 
+
 func _ready() -> void:
 	if not eyes.is_empty():
 		eye_material = eyes[0].material_override.duplicate()
@@ -37,7 +38,7 @@ func set_rooted(on: bool) -> void:
 func set_moving(on: bool) -> void:
 	moving = on
 
-enum Pose { IDLE, WINDUP, OPEN, SLAM, STRIKE, RECOVER, STUNNED}
+enum Pose { IDLE, WINDUP, OPEN, SLAM, STRIKE, RECOVER, STUNNED, PUSH, SHOVE}
 var pose: Pose = Pose.IDLE
 
 func set_pose(new_pose: Pose) -> void:

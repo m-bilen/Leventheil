@@ -28,7 +28,10 @@ const SWAP_COOLDOWN = 1.0
 const ATTACK_MOVE_HEAVY = 0.2 
 const DASH_RECOVER =  70.0
 const DASH_CHAIN_MARGIN = 0.05
+const KNOCKBACK_DECEL = 30.0
+const KNOCKBACK_TIME = 0.4
 
+var knockback_timer = 0.0
 var swap_lock_timer = 0.0
 var swap_cooldown_timer = 0.0
 var hit_stop_count = 0
@@ -116,6 +119,10 @@ func _physics_process(delta: float) -> void:
 		if dash_timer <=0:
 			is_dashing = false
 			dash_ended.emit()
+	elif knockback_timer > 0.0:
+		knockback_timer -= delta
+		velocity.x = move_toward(velocity.x, 0, KNOCKBACK_DECEL * delta)
+		velocity.z = move_toward(velocity.z, 0, KNOCKBACK_DECEL * delta)
 	else:
 		var overspeed = Vector2(velocity.x, velocity.z).length() > current_speed + 0.5
 		var accel = DASH_RECOVER if overspeed else ACCEL
@@ -302,3 +309,9 @@ func end_dash() -> void:
 
 func stop_dash_chain() -> bool:
 	return true
+
+func knockback(impulse: Vector3) -> void:
+	velocity.x = impulse.x
+	velocity.z = impulse.z
+	velocity.y = 3.0
+	knockback_timer = KNOCKBACK_TIME

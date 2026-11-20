@@ -120,6 +120,10 @@ func _on_pose_changed(new_pose: Pose) -> void:
 		Pose.STRIKE:
 			set_targets(0.2, 0.15, 70.0, 9.0, 12.0)
 		Pose.RECOVER:
-			set_targets(0.1, 0.2, 40.0, 1.0, 3.0)
+			set_targets(0.0, 0.2, 40.0, 1.0, 3.0)
 		Pose.STUNNED:
 			set_targets(0.3, 0.5, 25.0, 0.3, 4.0,)
+		Pose.PUSH:
+			set_targets(-0.1, 0.7, TOOTH_CLOSED, 2.0, 12.0)
+		Pose.SHOVE:
+			set_targets(-0.1, -0.9, TOOTH_CLOSED, 2.0, 20.0)

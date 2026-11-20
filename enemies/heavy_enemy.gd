@@ -1,6 +1,6 @@
 extends EnemyBase
 const GroundBurstScene = preload("res://enemies/ground_burst.tscn")
-enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
+enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED, PUSH}
 @export var slam_chance: float = 0.0
 @export var speed: float = 1.5
 @export var windup_time: float = 0.8
@@ -13,8 +13,14 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED}
 @export var escalation_windup: Array[float] = []
 @export var escalation_slam: Array[float] = []
 @export var escalation_color: Color = Color(0.55, 0.0, 0.1)
-const HARVEST_ANGLE = 60.0
+@export var can_push: bool = false
 @onready var parry_pips : Label3D = $ParryPips
+const FRONT_ANGLE = 60.0
+const PUSH_RANGE = 2.2
+const PUSH_WINDUP = 0.3
+const PUSH_SWING = 0.15
+const PUSH_COOLDOWN = 3.0
+const PUSH_FORCE = 12.0
 const SLAM_COLOR = Color(0.8, 0.2, 1.0)
 const SLAM_RADIUS = 3
 const SLAM_DAMAGE = 2
@@ -24,6 +30,9 @@ const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
 const STUN_TIME = 2.0
 const TURN_SPEED = 4.0
+var just_pushed = false
+var push_ready = false
+var push_done = false
 var parry_count = 0
 var state: State = State.CHASE
 var state_timer = 0.0
@@ -47,6 +56,8 @@ func _physics_process(delta: float) -> void:
 			do_recover()
 		State.STUNNED:
 			do_stunned()
+		State.PUSH:
+			do_push()
 	if model and (state == State.CHASE or state == State.WINDUP):
 		face_model_to_player(delta, TURN_SPEED)
 	apply_status_effects()
@@ -55,6 +66,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 func do_chase() -> void:
 	var dist = distance_to_player()
+	if dist >= PUSH_RANGE:
+		push_ready = false
+	if can_push and push_ready and is_in_front(player.global_position):
+		enter_state(State.PUSH)
+		return
 	if dist < ATTACK_RANGE:
 		enter_state(State.WINDUP)
 		return
@@ -68,6 +84,22 @@ func do_windup() -> void:
 		open_parry_window()
 	if state_timer <= 0.0:
 		enter_state(State.ATTACK)
+
+func do_push() -> void:
+	velocity.x = 0
+	velocity.z = 0
+	if not push_done and state_timer <= PUSH_SWING:
+		push_done = true
+		just_pushed = true
+	if model:
+		model.set_pose(EnemyModel.Pose.SHOVE)
+	if distance_to_player() < PUSH_RANGE + 0.5 and is_in_front(player.global_position):
+		var away = player.global_position - global_position
+		away.y = 0
+		player.knockback(away.normalized() * PUSH_FORCE)
+		Events.camera_shake_requested.emit(0.3)
+	if state_timer <= 0.0:
+		enter_state(State.RECOVER)
 
 func open_parry_window() -> void:
 	window_open = true
@@ -103,9 +135,14 @@ func enter_state(new_state: State) -> void:
 			set_color(Color.GRAY)
 		State.CHASE:
 			set_color(base_color)
+			push_ready = not just_pushed and distance_to_player() < PUSH_RANGE
+			just_pushed = false
 		State.STUNNED:
 			state_timer = STUN_TIME
 			set_color(Color.CYAN)
+		State.PUSH:
+			state_timer = PUSH_WINDUP + PUSH_SWING
+			push_done = false
 	update_model_pose()
 func hit_player() -> void:
 	var dist = distance_to_player()
@@ -170,6 +207,8 @@ func update_model_pose() -> void:
 			model.set_pose(EnemyModel.Pose.RECOVER)
 		State.STUNNED:
 			model.set_pose(EnemyModel.Pose.STUNNED)
+		State.PUSH:
+			model.set_pose(EnemyModel.Pose.PUSH)
 
 
 func spawn_slam_wave() -> void:
@@ -180,10 +219,13 @@ func spawn_slam_wave() -> void:
 	get_tree().current_scene.add_child(wave)
 	wave.global_position = Vector3(global_position.x, 0.25, global_position.z)
 
-func is_harvestable_from(point: Vector3) -> bool:
-	if not harvestable or not model:
-		return false
+func is_in_front(point: Vector3) -> bool:
+	if not model:
+		return true
 	var facing = Vector3(sin(model.rotation.y), 0.0, cos(model.rotation.y))
 	var to_point = point - global_position
 	to_point.y = 0
-	return facing.angle_to(to_point) >  deg_to_rad(HARVEST_ANGLE)
+	return facing.angle_to(to_point) <= deg_to_rad(FRONT_ANGLE)
+
+func is_harvestable_from(point: Vector3) -> bool:
+	return harvestable and model != null and not is_in_front(point)
