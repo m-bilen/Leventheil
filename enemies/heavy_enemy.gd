@@ -14,7 +14,10 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED, PUSH}
 @export var escalation_slam: Array[float] = []
 @export var escalation_color: Color = Color(0.55, 0.0, 0.1)
 @export var can_push: bool = false
+@export var escalation_double: Array[float] = []
 @onready var parry_pips : Label3D = $ParryPips
+const FOLLOWUP_WINDUP_SCALE = 0.6
+const FOLLOWUP_MIN_WINDUP = 0.5
 const FRONT_ANGLE = 60.0
 const PUSH_RANGE = 2.2
 const PUSH_WINDUP = 0.3
@@ -30,6 +33,8 @@ const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
 const STUN_TIME = 2.0
 const TURN_SPEED = 4.0
+var double_chance = 0.0
+var is_followup = false
 var just_pushed = false
 var push_ready = false
 var push_done = false
@@ -116,9 +121,9 @@ func enter_state(new_state: State) -> void:
 	state = new_state 
 	match new_state:
 		State.WINDUP:
-			state_timer = windup_time
+			state_timer = max(windup_time * FOLLOWUP_WINDUP_SCALE, FOLLOWUP_MIN_WINDUP) if is_followup else windup_time
 			window_open = false
-			is_slam = randf() < slam_chance
+			is_slam = not is_followup and randf() < slam_chance
 			if is_slam:
 				set_color(SLAM_COLOR)
 				spawn_slam_wave()
@@ -137,6 +142,7 @@ func enter_state(new_state: State) -> void:
 			set_color(base_color)
 			push_ready = not just_pushed and distance_to_player() < PUSH_RANGE
 			just_pushed = false
+			is_followup = false
 		State.STUNNED:
 			state_timer = STUN_TIME
 			set_color(Color.CYAN)
@@ -155,14 +161,22 @@ func on_parried() -> bool:
 	parry_count += 1
 	update_parry_pips()
 	escalate()
-	enter_state(State.STUNNED)
-	return parry_count >= parries_to_kill
+	var killed = parry_count >= parries_to_kill
+	if not killed and not is_followup and randf() < double_chance:
+		is_followup = true
+		enter_state(State.WINDUP)
+	else:
+		is_followup = false
+		enter_state(State.STUNNED)
+	return killed
 
 func escalate() -> void:
 	if parry_count < escalation_windup.size():
 		windup_time = start_windup_time * escalation_windup[parry_count]
 	if parry_count < escalation_slam.size():
 		slam_chance = escalation_slam[parry_count]
+	if parry_count < escalation_double.size():
+		double_chance = escalation_double[parry_count]
 	if not escalation_windup.is_empty():
 		var t = clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)
 		base_color = start_color.lerp(escalation_color, t)
