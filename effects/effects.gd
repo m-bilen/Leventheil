@@ -34,8 +34,8 @@ func _on_hit_landed(point: Vector3, direction: Vector3) -> void:
 	chips.position = point
 	add_child(chips)
 
-func _on_vine_lashed(origin: Vector3, target: Vector3, _hit: bool) -> void:
+func _on_vine_lashed(source: Node3D, origin: Vector3, target: Vector3, _hit: bool) -> void:
 	var lash = VineLashScene.instantiate()
-	lash.target = target
-	lash.position = origin
-	add_child(lash)
+	lash.target = source.to_local(target)
+	lash.position = source.to_local(origin)
+	source.add_child(lash)
