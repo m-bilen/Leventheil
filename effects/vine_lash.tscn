@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bvegh3qa62x81"]
+
+[ext_resource type="Script" uid="uid://cwaoxuvfat6op" path="res://effects/vine_lash.gd" id="1_bc4f7"]
+[ext_resource type="Material" uid="uid://dh8ljrymclfx7" path="res://effects/vine_lash_material.tres" id="2_lar2u"]
+
+[node name="VineLash" type="Node3D" unique_id=1383236239]
+script = ExtResource("1_bc4f7")
+material = ExtResource("2_lar2u")

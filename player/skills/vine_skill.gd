@@ -28,8 +28,11 @@ func _on_jump_pressed(aim_dir: Vector3) -> void:
 	if not is_active or aim_dir == Vector3.ZERO:
 		return
 	var target = find_aimed_enemy(aim_dir)
+	var origin = get_parent().global_position + Vector3.UP * 1.0
 	if target == null:
+		Events.vine_lashed.emit(origin, origin + aim_dir * PULL_RANGE * 0.8, false)
 		return
+	Events.vine_lashed.emit(origin, target.global_position + Vector3.UP * 0.3, true)
 	var player_pos = get_parent().global_position
 	var away = target.global_position - player_pos
 	away.y = 0

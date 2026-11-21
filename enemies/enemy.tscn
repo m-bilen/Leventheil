@@ -5,7 +5,7 @@
 [ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://enemies/thorn_material.tres" id="3_07tka"]
 [ext_resource type="Material" uid="uid://cnuo2v22xmmua" path="res://enemies/rootling_bark.tres" id="4_a6vjd"]
 [ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="5_3t1x0"]
-[ext_resource type="Material" uid="uid://dhyqube0n8py0" path="res://effects/root_bind_material.tres" id="6_epsnb"]
+[ext_resource type="Material" uid="uid://dh8ljrymclfx7" path="res://effects/vine_lash_material.tres" id="6_3t1x0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
 size = Vector3(0.8, 2.5, 0.8)
@@ -105,4 +105,4 @@ mesh = SubResource("CylinderMesh_cjbay")
 script = ExtResource("5_3t1x0")
 radius = 0.35
 height = 0.9
-material = ExtResource("6_epsnb")
+material = ExtResource("6_3t1x0")

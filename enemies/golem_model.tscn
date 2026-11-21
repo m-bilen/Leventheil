@@ -7,7 +7,7 @@
 [ext_resource type="Material" uid="uid://b2ghl0m3tmi7v" path="res://enemies/golem_bark_material.tres" id="4_tchlw"]
 [ext_resource type="Material" uid="uid://d14db4fy15scs" path="res://enemies/golem_eye_material.tres" id="5_fcjbt"]
 [ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="7_tchlw"]
-[ext_resource type="Material" uid="uid://dhyqube0n8py0" path="res://effects/root_bind_material.tres" id="8_lw8ey"]
+[ext_resource type="Material" uid="uid://dh8ljrymclfx7" path="res://effects/vine_lash_material.tres" id="8_tchlw"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_xoppa"]
 top_radius = 0.25
@@ -124,4 +124,4 @@ mesh = SubResource("CylinderMesh_1qjbr")
 script = ExtResource("7_tchlw")
 radius = 1.3
 height = 1.6
-material = ExtResource("8_lw8ey")
+material = ExtResource("8_tchlw")

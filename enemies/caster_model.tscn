@@ -6,7 +6,7 @@
 [ext_resource type="Material" uid="uid://xgint6iv3t13" path="res://enemies/caster_gills.tres" id="3_yotkf"]
 [ext_resource type="Material" uid="uid://cqh41yauuv1oi" path="res://enemies/eye_material.tres" id="4_o7wb5"]
 [ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="6_o7wb5"]
-[ext_resource type="Material" uid="uid://dhyqube0n8py0" path="res://effects/root_bind_material.tres" id="7_vlbye"]
+[ext_resource type="Material" uid="uid://dh8ljrymclfx7" path="res://effects/vine_lash_material.tres" id="7_o7wb5"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_vlbye"]
 top_radius = 0.09
@@ -80,4 +80,4 @@ transform = Transform3D(0.64278764, -0.76604444, 0, 0.76604444, 0.64278764, 0, 0
 script = ExtResource("6_o7wb5")
 radius = 0.4
 height = 1.4
-material = ExtResource("7_vlbye")
+material = ExtResource("7_o7wb5")
