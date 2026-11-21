@@ -31,6 +31,7 @@ var tooth_sockets: Array[Node3D] = []
 func _ready() -> void:
 	var rng = RandomNumberGenerator.new()
 	rng.seed = 3
+	organicize(rng)
 	build_teeth(rng)
 	build_plates(rng)
 	super()
@@ -127,3 +128,59 @@ func _on_pose_changed(new_pose: Pose) -> void:
 			set_targets(-0.1, 0.7, TOOTH_CLOSED, 2.0, 12.0)
 		Pose.SHOVE:
 			set_targets(-0.1, -0.9, TOOTH_CLOSED, 2.0, 20.0)
+
+func organicize(rng: RandomNumberGenerator) -> void:
+	var noise = FastNoiseLite.new()
+	noise.seed = 4
+	noise.frequency = 1.1
+	var body :  MeshInstance3D = $Rig/Body
+	var sphere: SphereMesh = body.mesh.duplicate()
+	sphere.radial_segments = 40
+	sphere.rings = 20
+	body.mesh = lumpy(sphere, noise, 0.22)
+	var collar: MeshInstance3D = $Rig/Maw/Collar
+	var tube: CylinderMesh = collar.mesh.duplicate()
+	tube.radial_segments = 28
+	tube.rings = 6
+	collar.mesh = lumpy(tube, noise, 0.08)
+	for pivot in [$Rig/ArmR, $Rig/ArmL]:
+		replace_limb(pivot.get_node("Mesh"), 1.6, 0.36, 0.5, rng)
+	for pivot in [$LegR, $LegL]:
+		replace_limb(pivot.get_node("Mesh"), 1.0, 0.24, 0.6, rng)
+	add_twigs(rng)
+
+func lumpy(src: PrimitiveMesh, noise: FastNoiseLite, amount: float) -> ArrayMesh:
+	var arrays = src.get_mesh_arrays()
+	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	for i in verts.size():
+		verts[i] += normals[i] * noise.get_noise_3dv(verts[i]) * amount
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	var am = ArrayMesh.new()
+	am.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var st = SurfaceTool.new()
+	st.create_from(am, 0)
+	st.generate_normals()
+	return st.commit()
+
+func replace_limb(mesh_node: MeshInstance3D, length: float, thickness: float, taper: float, rng: RandomNumberGenerator) -> void:
+	var st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var limb = VineBuilder.build(length, rng.randf_range(-0.12, 0.12), thickness, taper, 0.05, rng.randf() * TAU)
+	VineBuilder.append_oriented(st, limb, Vector3(0, length * 0.5 - 0.05, 0), Vector3.DOWN, length)
+	mesh_node.mesh = st.commit()
+
+func add_twigs(rng: RandomNumberGenerator) -> void:
+	var st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in 5:
+		var a = rng.randf_range(-1.2, 1.2)
+		var start = Vector3(sin(a) * 0.9, 0.85 + rng.randf_range(-0.1, 0.2), -0.3 + cos(a) * 0.2)
+		var dir = Vector3(sin(a) * 0.6, 1.0, rng.randf_range(-0.8, -0.2)).normalized()
+		var length = rng.randf_range(0.5, 0.9)
+		var twig = VineBuilder.build(length, rng.randf_range(-0.15, 0.15), 0.05, 0.15, 0.05, rng.randf() * TAU)
+		VineBuilder.append_oriented(st, twig, start, dir, length)
+		var twigs = MeshInstance3D.new()
+		twigs.mesh = st.commit()
+		twigs.material_override = $Rig/Body.material_override
+		$Rig.add_child(twigs) 

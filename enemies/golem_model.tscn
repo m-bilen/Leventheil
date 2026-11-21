@@ -6,7 +6,6 @@
 [ext_resource type="Material" uid="uid://demgedms5dkag" path="res://assets/textures/bark/golem_plate_material.tres" id="3_lw8ey"]
 [ext_resource type="Material" uid="uid://b2ghl0m3tmi7v" path="res://enemies/golem_bark_material.tres" id="4_tchlw"]
 [ext_resource type="Material" uid="uid://d14db4fy15scs" path="res://enemies/golem_eye_material.tres" id="5_fcjbt"]
-[ext_resource type="Material" uid="uid://bv3kfvxrc7er" path="res://enemies/golem_collar_material.tres" id="6_lw8ey"]
 [ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="7_tchlw"]
 [ext_resource type="Material" uid="uid://dhyqube0n8py0" path="res://effects/root_bind_material.tres" id="8_lw8ey"]
 
@@ -92,7 +91,7 @@ transform = Transform3D(1, 0, 0, 0, 0.64278764, -0.76604444, 0, 0.76604444, 0.64
 
 [node name="Collar" type="MeshInstance3D" parent="Rig/Maw" unique_id=67341435]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.35, 0)
-material_override = ExtResource("6_lw8ey")
+material_override = ExtResource("4_tchlw")
 mesh = SubResource("CylinderMesh_rdkaa")
 
 [node name="Inner" type="MeshInstance3D" parent="Rig/Maw" unique_id=1526619615]

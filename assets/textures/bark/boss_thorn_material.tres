@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dhekwxvn6w2c6" path="res://assets/textures/bark/bark_brown_02_rough_1k.jpg" id="3_aqb0c"]
 
 [resource]
-albedo_color = Color(0.41960785, 0.35686275, 0.2901961, 1)
+albedo_color = Color(0.84705883, 0.8, 0.72156864, 1)
 albedo_texture = ExtResource("1_nstd8")
 roughness_texture = ExtResource("3_aqb0c")
 normal_enabled = true
