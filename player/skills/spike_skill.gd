@@ -32,6 +32,7 @@ func _ready() -> void:
 	update_weight()
 	broadcast_spikes.call_deferred()
 	Events.wave_started.connect(_on_wave_started)
+	Events.vine_trap_sprung.connect(_on_vine_trap_sprung)
 	get_parent().dash_started.connect(_on_dash_started)
 	get_parent().dash_ended.connect(_on_dash_ended)
 	get_parent().stance_toggled.connect(_on_stance_toggled)
@@ -146,7 +147,6 @@ func _physics_process(_delta: float) -> void:
 	else:
 		finish_chain()
 func _on_finisher_landed() -> void:
-# Light stance already got +1 from the kill itself in _on_enemy_died.
 	if is_active:
 		gain_spikes(1)
 func absorb_damage(amount: int) -> bool:
@@ -184,3 +184,6 @@ func finish_chain() -> void:
 func _on_attack_landed(target: Node3D) -> void:
 	if target.has_method("is_harvestable_from") and target.is_harvestable_from(get_parent().global_position):
 		gain_spikes(HARVEST_PER_HIT)
+
+func _on_vine_trap_sprung(_point: Vector3, _caught: int) -> void:
+	gain_spikes(1)
