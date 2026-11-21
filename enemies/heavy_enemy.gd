@@ -243,3 +243,6 @@ func is_in_front(point: Vector3) -> bool:
 
 func is_harvestable_from(point: Vector3) -> bool:
 	return harvestable and model != null and not is_in_front(point)
+
+func can_be_pushed() -> bool:
+	return state == State.CHASE

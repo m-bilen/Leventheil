@@ -2,11 +2,14 @@ class_name EnemyBase
 extends CharacterBody3D
 
 const FLASH_TIME = 0.1
+const SEPARATION_STRENGTH = 4.0
 
 @export var max_health: int = 3
 @export var pullable: bool = true
 @export var spirit_color: Color = Color(0.75, 0.91, 1.0)
 @export var death_scale: float = 1.0
+@export var body_radius: float = 0.4
+
 
 var pull_timer = 0.0
 var pull_velocity = Vector3.ZERO
@@ -100,12 +103,15 @@ func apply_status_effects() -> void:
 	elif is_rooted():
 		velocity.x = 0
 		velocity.z = 0
+	elif can_be_pushed():
+		var push = get_separation()
+		velocity.x += push.x
+		velocity.z += push.z
 
 func _apply_color(color: Color) -> void:
 	if model:
 		model.set_color(color)
 		return 
-	mesh.mesh.material.albedo_color = color
 	if flash_timer > 0.0:
 		return
 	mesh.mesh.material.albedo_color = color
@@ -137,3 +143,24 @@ func face_model_to_player(delta: float, turn_speed: float) -> void:
 	var to_player = player.global_position - global_position
 	var target = atan2(to_player.x, to_player.z)
 	model.rotation.y = lerp_angle(model.rotation.y, target, turn_speed * delta)
+
+func get_separation() -> Vector3:
+	var push = Vector3.ZERO
+	for other in get_tree().get_nodes_in_group("enemies"):
+		if other == self:
+			continue
+		var offset = global_position - other.global_position
+		offset.y = 0
+		var d = offset.length()
+		var min_dist = body_radius + other.body_radius
+		if other.body_radius < body_radius:
+			continue
+		if d >= min_dist or d < 0.001:
+			continue
+		var overlap = (min_dist - d) / min_dist
+		var share = 1.0 if other.body_radius > body_radius or not other.can_be_pushed() else 0.5
+		push += offset / d * overlap * share * SEPARATION_STRENGTH
+	return push
+
+func can_be_pushed() -> bool:
+	return true

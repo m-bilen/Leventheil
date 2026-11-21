@@ -17,6 +17,7 @@ can_push = true
 max_health = 30
 spirit_color = Color(1, 0.47843137, 0.16470589, 1)
 death_scale = 1.8
+body_radius = 1.2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=216324921]
 shape = SubResource("BoxShape3D_4gyqm")
