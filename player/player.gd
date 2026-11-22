@@ -157,6 +157,7 @@ func take_damage(amount: int) -> void:
 	for child in get_children():
 		if child.has_method("absorb_damage") and child.absorb_damage(amount):
 			Events.camera_shake_requested.emit(0.3)
+			Events.player_shielded.emit()
 			return
 	health -= amount
 	Events.player_health_changed.emit(health, MAX_HEALTH)

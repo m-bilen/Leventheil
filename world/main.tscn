@@ -16,6 +16,8 @@
 [ext_resource type="Script" uid="uid://b1l5kmjgy6wb7" path="res://effects/effects.gd" id="14_8q2wj"]
 [ext_resource type="Shader" uid="uid://dxpiupdgpbfdr" path="res://world/vignette.gdshader" id="15_60vd7"]
 [ext_resource type="Shader" uid="uid://bi6pyutm16syo" path="res://world/leaf.gdshader" id="16_e63cu"]
+[ext_resource type="Shader" uid="uid://b4okrawt36njl" path="res://world/damage_vignette.gdshader" id="16_h1iki"]
+[ext_resource type="Script" uid="uid://dgqsyyswujtia" path="res://world/damage_vignette.gd" id="17_nikgi"]
 [ext_resource type="Shader" uid="uid://dik0s44cdsna1" path="res://world/ground_moss.gdshader" id="17_s8tpt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
@@ -113,6 +115,14 @@ shader = ExtResource("15_60vd7")
 shader_parameter/strength = 0.3
 shader_parameter/inner = 0.55
 shader_parameter/outer = 1.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d6btn"]
+shader = ExtResource("16_h1iki")
+shader_parameter/color = Color(0.55, 0.02, 0.02, 1)
+shader_parameter/flash = 0.0
+shader_parameter/low_health = 0.0
+shader_parameter/shield_color = Color(0.85, 0.8, 0.72, 1)
+shader_parameter/shield_flash = 0.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_s8tpt"]
 render_priority = 0
@@ -395,6 +405,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="DamageVignette" type="ColorRect" parent="Vignette" unique_id=1800912994]
+material = SubResource("ShaderMaterial_d6btn")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("17_nikgi")
 
 [node name="Leaves" type="MultiMeshInstance3D" parent="." unique_id=302454709]
 material_override = SubResource("ShaderMaterial_s8tpt")

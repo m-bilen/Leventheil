@@ -23,3 +23,5 @@ signal hit_landed(point: Vector3, direction: Vector3)
 signal vine_lashed(source: Node3D, origin: Vector3, target: Vector3, hit: bool)
 @warning_ignore("unused_signal")
 signal vine_trap_sprung(point: Vector3, caught: int)
+@warning_ignore("unused_signal")
+signal player_shielded
