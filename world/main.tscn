@@ -15,6 +15,7 @@
 [ext_resource type="QuadMesh" uid="uid://drivjp5rf0ls1" path="res://world/glow_particle.tres" id="12_vid1e"]
 [ext_resource type="Script" uid="uid://b1l5kmjgy6wb7" path="res://effects/effects.gd" id="14_8q2wj"]
 [ext_resource type="Shader" uid="uid://dxpiupdgpbfdr" path="res://world/vignette.gdshader" id="15_60vd7"]
+[ext_resource type="Shader" uid="uid://bi6pyutm16syo" path="res://world/leaf.gdshader" id="16_e63cu"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(80, 0.5, 80)
@@ -111,6 +112,43 @@ shader = ExtResource("15_60vd7")
 shader_parameter/strength = 0.3
 shader_parameter/inner = 0.55
 shader_parameter/outer = 1.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s8tpt"]
+render_priority = 0
+shader = ExtResource("16_e63cu")
+shader_parameter/color_a = Color(0.29, 0.26, 0.2, 1)
+shader_parameter/color_b = Color(0.21, 0.19, 0.15, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r4j7u"]
+size = Vector2(0.22, 0.4)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r4j7u"]
+render_priority = 0
+shader = ExtResource("16_e63cu")
+shader_parameter/color_a = Color(0.2509804, 0.23137255, 0.18039216, 1)
+shader_parameter/color_b = Color(0.2, 0.18039216, 0.14117648, 1)
+
+[sub_resource type="Gradient" id="Gradient_h1iki"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_nikgi"]
+gradient = SubResource("Gradient_h1iki")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d6btn"]
+transparency = 1
+albedo_color = Color(0.2509804, 0.36078432, 0.16862746, 0.54901963)
+albedo_texture = SubResource("GradientTexture2D_nikgi")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wc2es"]
+size = Vector2(1.6, 1.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e63cu"]
+transparency = 1
+albedo_color = Color(0.2509804, 0.36078432, 0.16862746, 0.2509804)
+albedo_texture = SubResource("GradientTexture2D_nikgi")
 
 [node name="Node3D" type="Node3D" unique_id=301908995]
 script = ExtResource("1_spvjk")
@@ -344,3 +382,57 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="Leaves" type="MultiMeshInstance3D" parent="." unique_id=302454709]
+material_override = SubResource("ShaderMaterial_s8tpt")
+cast_shadow = 0
+script = ExtResource("8_04q08")
+source_mesh = SubResource("PlaneMesh_r4j7u")
+count = 2600
+min_radius = 9.0
+max_radius = 23.0
+min_scale = 0.7
+max_tilt = 0.15
+y_offset = 0.265
+scatter_seed = 11.0
+
+[node name="LeavesInner" type="MultiMeshInstance3D" parent="." unique_id=633657397]
+material_override = SubResource("ShaderMaterial_r4j7u")
+cast_shadow = 0
+script = ExtResource("8_04q08")
+source_mesh = SubResource("PlaneMesh_r4j7u")
+count = 350
+min_radius = 0.0
+max_radius = 11.0
+max_scale = 1.2
+max_tilt = 0.15
+y_offset = 0.265
+scatter_seed = 13.0
+
+[node name="Moss" type="MultiMeshInstance3D" parent="." unique_id=1775781818]
+material_override = SubResource("StandardMaterial3D_d6btn")
+cast_shadow = 0
+script = ExtResource("8_04q08")
+source_mesh = SubResource("PlaneMesh_wc2es")
+count = 70
+min_radius = 8.0
+max_radius = 23.0
+min_scale = 0.8
+max_scale = 2.0
+max_tilt = 0.15
+y_offset = 0.255
+scatter_seed = 14.0
+
+[node name="MossInner" type="MultiMeshInstance3D" parent="." unique_id=515541904]
+material_override = SubResource("StandardMaterial3D_e63cu")
+cast_shadow = 0
+script = ExtResource("8_04q08")
+source_mesh = SubResource("PlaneMesh_wc2es")
+count = 20
+min_radius = 8.0
+max_radius = 9.0
+min_scale = 0.8
+max_scale = 1.6
+max_tilt = 0.15
+y_offset = 0.255
+scatter_seed = 15.0
