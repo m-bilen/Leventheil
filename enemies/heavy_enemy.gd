@@ -45,6 +45,7 @@ var window_open = false
 var is_slam = false
 var start_windup_time = 0.0
 var start_color = Color.WHITE
+var turn_speed = TURN_SPEED
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -64,7 +65,7 @@ func _physics_process(delta: float) -> void:
 		State.PUSH:
 			do_push()
 	if model and (state == State.CHASE or state == State.WINDUP):
-		face_model_to_player(delta, TURN_SPEED)
+		face_model_to_player(delta, turn_speed)
 	apply_status_effects()
 	if model:
 		model.set_moving(Vector2(velocity.x, velocity.z).length() > 0.3)
@@ -198,6 +199,8 @@ func update_parry_pips() -> void:
 	parry_pips.text = "• ".repeat(remaining).strip_edges()
 func _ready() -> void:
 	super()
+	speed *= randf_range(0.9, 1.1)
+	turn_speed = TURN_SPEED * randf_range(0.8, 1.2)
 	start_windup_time = windup_time
 	start_color = base_color
 	escalate()

@@ -43,6 +43,7 @@ func _ready() -> void:
 		arm_rest.append(arm.rotation.x)
 	for leg in legs: 
 		leg_rest.append(leg.rotation.x)
+	walk_time = randf() * TAU
 
 
 func build_teeth(rng: RandomNumberGenerator) -> void:

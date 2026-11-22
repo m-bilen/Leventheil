@@ -8,8 +8,6 @@ var eye_material: StandardMaterial3D
 const KNOCKBACK_FORCE = 8.0
 const KNOCKBACK_TIME = 0.2
 const FLANK_DISTANCE = 4.0
-const SEPARATION_RADIUS = 1.6
-const SEPARATION_FORCE = 1.5
 const ENGAGE_RADIUS = 1.2
 const HOP_HEIGHT = 0.18
 const HOP_SPEED = 9.0
@@ -25,6 +23,8 @@ var hop_time = 0.0
 var strike_pose_timer = 0.0
 var base_body_y = 0.0
 var base_body_scale = Vector3.ONE
+var speed = SPEED
+var hop_phase = 0.0
 const ATTACK_DAMAGE = 1
 const ATTACK_COOLDOWN = 1.0
 const ATTACK_RANGE = 1.5
@@ -44,6 +44,8 @@ func _ready()-> void:
 	flank_dir = Vector3(cos(angle), 0, sin(angle))
 	base_body_y = body.position.y
 	base_body_scale = body.scale 
+	speed = SPEED * randf_range(0.85, 1.15)
+	hop_phase = randf() * PI
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -53,8 +55,8 @@ func _physics_process(delta: float) -> void:
 		velocity.z = knockback_dir.z * KNOCKBACK_FORCE
 	else :
 		var direction = get_chase_direction()
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
+		velocity.x = direction.x * speed
+		velocity.z = direction.z * speed
 	if windup_timer > 0.0:
 		velocity.x = 0
 		velocity.z = 0
@@ -76,19 +78,9 @@ func get_chase_direction() -> Vector3:
 	var target = player.global_position + flank
 	var dir = target - global_position
 	dir.y = 0
-	dir = dir.normalized() + get_separation() * SEPARATION_FORCE
+	dir.y = 0
 	return dir.normalized()
-func get_separation() -> Vector3:
-	var push = Vector3.ZERO
-	for other in get_tree().get_nodes_in_group("enemies"):
-		if other == self:
-			continue
-		var away = global_position - other.global_position
-		away.y = 0
-		var d = away.length()
-		if d > 0.0 and d < SEPARATION_RADIUS:	
-			push += away.normalized() * (1.0 -d / SEPARATION_RADIUS)
-	return push
+
 func _on_damaged() -> void:
 	body.scale = base_body_scale * Vector3(1.25, 0.75, 1.25)
 	knockback_dir = (global_position - player.global_position).normalized()
@@ -146,7 +138,7 @@ func animate_body(delta: float) -> void:
 	var moving = Vector2(velocity.x, velocity.z).length() > 0.3
 	if moving and windup_timer <= 0.0:
 		hop_time += delta * HOP_SPEED
-		hop = abs(sin(hop_time)) * HOP_HEIGHT 
+		hop = abs(sin(hop_time + hop_phase)) * HOP_HEIGHT
 	else:
 		hop_time = 0.0
 	body.position.y = base_body_y + hop
