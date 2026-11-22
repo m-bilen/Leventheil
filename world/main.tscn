@@ -6,8 +6,10 @@
 [ext_resource type="Material" uid="uid://b37rkig1d377" path="res://assets/textures/ground/ground_material.tres" id="4_04q08"]
 [ext_resource type="Script" uid="uid://cupane50xenw0" path="res://ui/hud.gd" id="4_gu74f"]
 [ext_resource type="Material" uid="uid://blk3uu4vwhwex" path="res://world/light_shaft_material.tres" id="5_cmo1i"]
+[ext_resource type="Texture2D" uid="uid://xxxvvjqulu3m" path="res://ui/icons/spike.svg" id="6_d6btn"]
 [ext_resource type="Script" uid="uid://du7idj6bnunkl" path="res://world/tree_ring.gd" id="6_i1eo7"]
 [ext_resource type="PackedScene" uid="uid://b35vsv3fx4cen" path="res://world/shaft_dust.tscn" id="7_op3e8"]
+[ext_resource type="Texture2D" uid="uid://dyraihkorjpew" path="res://ui/icons/vine.svg" id="7_wc2es"]
 [ext_resource type="Script" uid="uid://dnov2tri1cv8x" path="res://world/scatter.gd" id="8_04q08"]
 [ext_resource type="Texture2D" uid="uid://blc4rbcebboh3" path="res://assets/textures/ground/forest_ground_06_diff_1k.jpg" id="8_vrojb"]
 [ext_resource type="Material" uid="uid://dqfw8tkvevdpa" path="res://world/vine_material.tres" id="9_tp5tb"]
@@ -205,21 +207,6 @@ mesh = SubResource("BoxMesh_0xm2m")
 [node name="HUD" type="CanvasLayer" parent="." unique_id=446614191]
 script = ExtResource("4_gu74f")
 
-[node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=10520525]
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 220.0
-offset_bottom = 44.0
-max_value = 5.0
-show_percentage = false
-
-[node name="SpikeLabel" type="Label" parent="HUD" unique_id=1224576832]
-offset_left = 20.0
-offset_top = 55.0
-offset_right = 60.0
-offset_bottom = 78.0
-text = "Spike : 16"
-
 [node name="WaveLabel" type="Label" parent="HUD" unique_id=1330718086]
 anchors_preset = 5
 anchor_left = 0.5
@@ -228,7 +215,43 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 56
+
+[node name="TopLeft" type="VBoxContainer" parent="HUD" unique_id=1431568878]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 64.0
+offset_bottom = 60.0
+theme_override_constants/separation = 10
+
+[node name="HealthRow" type="HBoxContainer" parent="HUD/TopLeft" unique_id=349148144]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StanceRow" type="HBoxContainer" parent="HUD/TopLeft" unique_id=1896629413]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SpikeIcon" type="TextureRect" parent="HUD/TopLeft/StanceRow" unique_id=1777499865]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = ExtResource("6_d6btn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SpikeCount" type="Label" parent="HUD/TopLeft/StanceRow" unique_id=578174761]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "16
+"
+vertical_alignment = 1
+
+[node name="VineIcon" type="TextureRect" parent="HUD/TopLeft/StanceRow" unique_id=2127135137]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = ExtResource("7_wc2es")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=826577118]
 environment = SubResource("Environment_lquwl")

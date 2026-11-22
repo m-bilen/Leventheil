@@ -22,7 +22,7 @@ func _on_shielded() -> void:
 
 func set_shield_flash(value: float) -> void:
 	shader_material.set_shader_parameter("shield_flash", value)
-
+ 
 func _on_health_changed(health: int, max_health: int) -> void:
 	if last_health >= 0 and health < last_health:
 		flash()

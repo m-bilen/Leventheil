@@ -10,7 +10,7 @@ void fragment() {
 	vec2 p = (UV - 0.5) * vec2(1.0, 0.6);
 	float d = length(p) * 2.0;
 	float edge = smoothstep(0.45, 1.05, d);
-	float red = edge * (flash * 0.6 + low_health * 0.35);
+	float red = edge * (flash * 0.5 + low_health * 0.35);
 	float bone = edge * shield_flash * 0.3;
 	float a = red + bone;
 	vec3 rgb = mix(shield_color.rgb, color.rgb, red / max(a, 0.001));

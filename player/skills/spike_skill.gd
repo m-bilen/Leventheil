@@ -41,6 +41,7 @@ func _ready() -> void:
 	get_parent().finisher_landed.connect(_on_finisher_landed)
 	get_parent().attack_landed.connect(_on_attack_landed)
 	spike_material.emission_energy_multiplier = GLOW_IDLE
+	Events.stance_changed.emit.call_deferred(is_active)
 func _on_dash_started() -> void:
 	if not is_active or current_spikes <= 0:
 		return
@@ -58,6 +59,7 @@ func _on_dash_ended() -> void:
 	lose_spikes(enemies_hit.size())
 func _on_stance_toggled() -> void:
 	is_active = not is_active
+	Events.stance_changed.emit(is_active)
 	visible = is_active
 	update_weight()
 	broadcast_spikes()

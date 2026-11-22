@@ -25,3 +25,5 @@ signal vine_lashed(source: Node3D, origin: Vector3, target: Vector3, hit: bool)
 signal vine_trap_sprung(point: Vector3, caught: int)
 @warning_ignore("unused_signal")
 signal player_shielded
+@warning_ignore("unused_signal")
+signal stance_changed(spikes_active: bool)

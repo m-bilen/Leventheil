@@ -20,6 +20,10 @@ config/icon="res://icon.svg"
 Events="*uid://cb3ivuo4gldfn"
 GameState="*uid://b22tjms6wg0do"
 
+[gui]
+
+theme/custom_font="uid://cm1q8fcp7okux"
+
 [input]
 
 run={
