@@ -47,3 +47,6 @@ func set_pose(new_pose: Pose) -> void:
 
 func _on_pose_changed(_new_pose: Pose) -> void:
 	pass
+
+func get_head_point() -> Vector3:
+	return global_position + Vector3.UP * 2.0

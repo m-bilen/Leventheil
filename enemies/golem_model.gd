@@ -185,3 +185,6 @@ func add_twigs(rng: RandomNumberGenerator) -> void:
 		twigs.mesh = st.commit()
 		twigs.material_override = $Rig/Body.material_override
 		$Rig.add_child(twigs) 
+
+func get_head_point() -> Vector3:
+	return maw.global_position

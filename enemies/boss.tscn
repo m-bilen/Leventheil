@@ -28,11 +28,8 @@ body_radius = 1.2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=216324921]
 shape = SubResource("BoxShape3D_4gyqm")
 
-[node name="ParryPips" type="Label3D" parent="." unique_id=347780787]
+[node name="ParryPips" type="Node3D" parent="." unique_id=260356509]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
-billboard = 1
-no_depth_test = true
-font_size = 64
 
 [node name="Model" parent="." unique_id=975855048 instance=ExtResource("2_a60ye")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3, 0)

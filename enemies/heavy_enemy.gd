@@ -15,7 +15,10 @@ enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED, PUSH}
 @export var escalation_color: Color = Color(0.55, 0.0, 0.1)
 @export var can_push: bool = false
 @export var escalation_double: Array[float] = []
-@onready var parry_pips : Label3D = $ParryPips
+const SpikeIcon = preload("res://ui/icons/spike.svg")
+const PIP_SPACING = 0.32
+const PIP_DIM = Color(1, 1, 1, 0.25)
+@onready var parry_pips: Node3D = $ParryPips
 const FOLLOWUP_WINDUP_SCALE = 0.6
 const FOLLOWUP_MIN_WINDUP = 0.5
 const FRONT_ANGLE = 60.0
@@ -33,6 +36,7 @@ const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
 const STUN_TIME = 2.0
 const TURN_SPEED = 4.0
+const PIP_HEIGHT = 1.0
 var double_chance = 0.0
 var is_followup = false
 var just_pushed = false
@@ -70,6 +74,8 @@ func _physics_process(delta: float) -> void:
 	if model:
 		model.set_moving(Vector2(velocity.x, velocity.z).length() > 0.3)
 	move_and_slide()
+	if model and parry_pips.visible:
+		parry_pips.global_position = model.get_head_point() + Vector3.UP * PIP_HEIGHT
 func do_chase() -> void:
 	var dist = distance_to_player()
 	if dist >= PUSH_RANGE:
@@ -196,7 +202,23 @@ func take_damage(amount: int) -> void:
 	super(amount)
 func update_parry_pips() -> void:
 	var remaining = parries_to_kill - parry_count
-	parry_pips.text = "• ".repeat(remaining).strip_edges()
+	if display_name != "":
+		parry_pips.visible = false
+		var rage = clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)
+		Events.boss_state_changed.emit(remaining, parries_to_kill, rage)
+		return
+	while parry_pips.get_child_count() < parries_to_kill:
+		var pip = Sprite3D.new()
+		pip.texture = SpikeIcon
+		pip.pixel_size = 0.005
+		pip.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		pip.no_depth_test = true
+		parry_pips.add_child(pip)
+	for i in parries_to_kill:
+		var pip: Sprite3D = parry_pips.get_child(i)
+		pip.position.x = (i - (parries_to_kill - 1) / 2.0) * PIP_SPACING
+		pip.modulate = Color.WHITE if i < remaining else PIP_DIM
+
 func _ready() -> void:
 	super()
 	speed *= randf_range(0.9, 1.1)

@@ -27,3 +27,5 @@ signal vine_trap_sprung(point: Vector3, caught: int)
 signal player_shielded
 @warning_ignore("unused_signal")
 signal stance_changed(spikes_active: bool)
+@warning_ignore("unused_signal")
+signal boss_state_changed(remaining: int, total: int, rage: float)
