@@ -1,6 +1,24 @@
 [gd_scene format=3 uid="uid://8j1acdv1erol"]
 
 [ext_resource type="Material" uid="uid://cdc7mih5nbtp8" path="res://assets/textures/bark/bark_material.tres" id="1_pn3x1"]
+[ext_resource type="Shader" uid="uid://bw0gyuctvelb2" path="res://world/trunk_moss.gdshader" id="2_lg8bh"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ghw01"]
+frequency = 0.03
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_87r7k"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_ghw01")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uma2y"]
+render_priority = 0
+shader = ExtResource("2_lg8bh")
+shader_parameter/moss_color = Color(0.27, 0.4, 0.16, 1)
+shader_parameter/moss_height = 3.2
+shader_parameter/strength = 0.85
+shader_parameter/noise = SubResource("NoiseTexture2D_87r7k")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_sf3k7"]
 top_radius = 1.6
@@ -19,6 +37,7 @@ collision_mask = 0
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=852280962]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
 material_override = ExtResource("1_pn3x1")
+material_overlay = SubResource("ShaderMaterial_uma2y")
 mesh = SubResource("CylinderMesh_sf3k7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=120750865]

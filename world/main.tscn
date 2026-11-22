@@ -16,6 +16,7 @@
 [ext_resource type="Script" uid="uid://b1l5kmjgy6wb7" path="res://effects/effects.gd" id="14_8q2wj"]
 [ext_resource type="Shader" uid="uid://dxpiupdgpbfdr" path="res://world/vignette.gdshader" id="15_60vd7"]
 [ext_resource type="Shader" uid="uid://bi6pyutm16syo" path="res://world/leaf.gdshader" id="16_e63cu"]
+[ext_resource type="Shader" uid="uid://dik0s44cdsna1" path="res://world/ground_moss.gdshader" id="17_s8tpt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(80, 0.5, 80)
@@ -128,6 +129,26 @@ shader = ExtResource("16_e63cu")
 shader_parameter/color_a = Color(0.2509804, 0.23137255, 0.18039216, 1)
 shader_parameter/color_b = Color(0.2, 0.18039216, 0.14117648, 1)
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_r4j7u"]
+frequency = 0.03
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h1iki"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_r4j7u")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nikgi"]
+render_priority = 0
+shader = ExtResource("17_s8tpt")
+shader_parameter/dark_color = Color(0.13, 0.2, 0.08, 1)
+shader_parameter/light_color = Color(0.3, 0.42, 0.16, 1)
+shader_parameter/strength = 0.45
+shader_parameter/noise = SubResource("NoiseTexture2D_h1iki")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wc2es"]
+size = Vector2(1.7, 1.7)
+
 [sub_resource type="Gradient" id="Gradient_h1iki"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
@@ -136,14 +157,6 @@ gradient = SubResource("Gradient_h1iki")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d6btn"]
-transparency = 1
-albedo_color = Color(0.2509804, 0.36078432, 0.16862746, 0.54901963)
-albedo_texture = SubResource("GradientTexture2D_nikgi")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_wc2es"]
-size = Vector2(1.6, 1.6)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e63cu"]
 transparency = 1
@@ -410,15 +423,15 @@ y_offset = 0.265
 scatter_seed = 13.0
 
 [node name="Moss" type="MultiMeshInstance3D" parent="." unique_id=1775781818]
-material_override = SubResource("StandardMaterial3D_d6btn")
+material_override = SubResource("ShaderMaterial_nikgi")
 cast_shadow = 0
 script = ExtResource("8_04q08")
 source_mesh = SubResource("PlaneMesh_wc2es")
-count = 70
+count = 45
 min_radius = 8.0
 max_radius = 23.0
 min_scale = 0.8
-max_scale = 2.0
+max_scale = 1.5
 max_tilt = 0.15
 y_offset = 0.255
 scatter_seed = 14.0
