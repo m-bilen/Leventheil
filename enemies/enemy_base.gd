@@ -120,7 +120,6 @@ func _apply_rooted(on: bool) -> void:
 	if model:
 		model.set_rooted(on)
 		return
-	mesh.mesh.material_emission_enabled = on 
 	if on:
 		mesh.mesh.material.albedo_color = Color(0.1, 0.7, 0.2)
 	mesh.mesh.material.emission_enabled = on
@@ -131,7 +130,6 @@ func _apply_flash(on: bool) -> void:
 	if model:
 		model.set_flash(on)
 		return
-	mesh.mesh.material.albedo_color = Color.WHITE if on else current_color
 	mesh.mesh.material.albedo_color = Color.WHITE if on else current_color
 
 func distance_to_player() -> float:

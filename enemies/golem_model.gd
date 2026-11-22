@@ -181,10 +181,10 @@ func add_twigs(rng: RandomNumberGenerator) -> void:
 		var length = rng.randf_range(0.5, 0.9)
 		var twig = VineBuilder.build(length, rng.randf_range(-0.15, 0.15), 0.05, 0.15, 0.05, rng.randf() * TAU)
 		VineBuilder.append_oriented(st, twig, start, dir, length)
-		var twigs = MeshInstance3D.new()
-		twigs.mesh = st.commit()
-		twigs.material_override = $Rig/Body.material_override
-		$Rig.add_child(twigs) 
+	var twigs = MeshInstance3D.new()
+	twigs.mesh = st.commit()
+	twigs.material_override = $Rig/Body.material_override
+	$Rig.add_child(twigs)
 
 func get_head_point() -> Vector3:
 	return maw.global_position

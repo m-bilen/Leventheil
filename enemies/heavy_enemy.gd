@@ -103,13 +103,13 @@ func do_push() -> void:
 	if not push_done and state_timer <= PUSH_SWING:
 		push_done = true
 		just_pushed = true
-	if model:
-		model.set_pose(EnemyModel.Pose.SHOVE)
-	if distance_to_player() < PUSH_RANGE + 0.5 and is_in_front(player.global_position):
-		var away = player.global_position - global_position
-		away.y = 0
-		player.knockback(away.normalized() * PUSH_FORCE)
-		Events.camera_shake_requested.emit(0.3)
+		if model:
+			model.set_pose(EnemyModel.Pose.SHOVE)
+		if distance_to_player() < PUSH_RANGE + 0.5 and is_in_front(player.global_position):
+			var away = player.global_position - global_position
+			away.y = 0
+			player.knockback(away.normalized() * PUSH_FORCE)
+			Events.camera_shake_requested.emit(0.3)
 	if state_timer <= 0.0:
 		enter_state(State.RECOVER)
 
@@ -271,3 +271,6 @@ func is_harvestable_from(point: Vector3) -> bool:
 
 func can_be_pushed() -> bool:
 	return state == State.CHASE
+
+func stops_dash_chain() -> bool:
+	return true

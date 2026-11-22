@@ -308,8 +308,7 @@ func redirect_dash(target: Vector3) -> void:
 func end_dash() -> void:
 	dash_timer = 0.0
 
-func stop_dash_chain() -> bool:
-	return true
+
 
 func knockback(impulse: Vector3) -> void:
 	velocity.x = impulse.x

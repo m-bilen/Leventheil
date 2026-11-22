@@ -169,6 +169,8 @@ func find_chain_target() -> Node3D:
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if enemy in enemies_hit:
 			continue
+		if enemy.has_method("stops_dash_chain") and enemy.stops_dash_chain():
+			continue
 		var offset = enemy.global_position - global_position
 		offset.y = 0
 		var distance = offset.length()

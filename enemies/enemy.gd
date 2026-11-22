@@ -78,7 +78,6 @@ func get_chase_direction() -> Vector3:
 	var target = player.global_position + flank
 	var dir = target - global_position
 	dir.y = 0
-	dir.y = 0
 	return dir.normalized()
 
 func _on_damaged() -> void:

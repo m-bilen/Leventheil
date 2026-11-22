@@ -4,7 +4,7 @@ extends Area3D
 @export var radius: float = 1.8
 @export var damage: int = 1
 
-var warning_material = ShaderMaterial
+var warning_material : ShaderMaterial
 var timer = 0.0
 
 @onready var mesh: MeshInstance3D = $MeshInstance3D
@@ -32,7 +32,4 @@ func erupt() -> void:
 		if body.has_method("take_damage") and body.is_on_floor():
 			body.take_damage(damage)
 	Events.camera_shake_requested.emit(0.2)
-	queue_free()
-
-func _on_wave_started(_number: int) -> void:
 	queue_free()
