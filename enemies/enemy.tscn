@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://be1t0gjhpgh62" path="res://enemies/enemy.gd" id="1_7k104"]
 [ext_resource type="Material" uid="uid://cqh41yauuv1oi" path="res://enemies/eye_material.tres" id="2_a6vjd"]
+[ext_resource type="Texture2D" uid="uid://b0evk21d0evek" path="res://player/overgrown_noise.tres" id="2_epsnb"]
 [ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://enemies/thorn_material.tres" id="3_07tka"]
 [ext_resource type="Material" uid="uid://cnuo2v22xmmua" path="res://enemies/rootling_bark.tres" id="4_a6vjd"]
 [ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="5_3t1x0"]
@@ -55,7 +56,7 @@ radial_segments = 10
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_7k104")
-spirit_color = Color(0.7490196, 0.9098039, 1, 1)
+glow_noise = ExtResource("2_epsnb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=216324921]
 shape = SubResource("BoxShape3D_4gyqm")

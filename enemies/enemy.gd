@@ -5,6 +5,14 @@ const TURN_SPEED = 10.0
 @onready var eyes = [$Body/EyeL, $Body/EyeR]
 @onready var root_vines: Node3D = $Body/RootVines
 var eye_material: StandardMaterial3D
+const FoxfireCracks = preload("res://enemies/foxfire_cracks.gdshader")
+const MUSHROOM_COUNT = 3
+const WINDUP_EYE_BOOST = 1.4
+const WINDUP_CRACK_BOOST = 2.0
+@export var glow_noise: Texture2D
+@onready var trunk: MeshInstance3D = $Body/Trunk
+var crack_material: ShaderMaterial
+var eye_energy = 1.0
 const KNOCKBACK_FORCE = 8.0
 const KNOCKBACK_TIME = 0.2
 const FLANK_DISTANCE = 4.0
@@ -38,9 +46,13 @@ func _ready()-> void:
 	for eye in eyes:
 		eye.material_override = eye_material
 	super()
-	eye_material = $Body/EyeL.material_override.duplicate()
-	for eye in eyes:
-		eye.material_override = eye_material
+	eye_energy = eye_material.emission_energy_multiplier
+	crack_material = ShaderMaterial.new()
+	crack_material.shader = FoxfireCracks
+	crack_material.set_shader_parameter("noise", glow_noise)
+	crack_material.set_shader_parameter("glow_color", spirit_color)
+	trunk.material_overlay = crack_material
+	grow_mushrooms()
 	var angle = randf() * TAU
 	flank_dir = Vector3(cos(angle), 0, sin(angle))
 	base_body_y = body.position.y
@@ -90,11 +102,11 @@ func _on_damaged() -> void:
 
 func start_windup() -> void:
 	windup_timer = WINDUP_TIME
-	set_color(base_color.lerp(Palette.PARRY_HOT, Palette.WINDUP_HEAT))
+	set_charged(true)
 
 func strike() -> void:
 	strike_pose_timer = STRIKE_POSE_TIME 
-	set_color(base_color)
+	set_charged(false)
 	attack_timer = ATTACK_COOLDOWN
 	if distance_to_player() < ATTACK_RANGE and player.is_on_floor():
 		player.take_damage(ATTACK_DAMAGE)
@@ -104,7 +116,7 @@ func interrupt() -> void:
 		return
 	windup_timer = 0.0
 	attack_timer = ATTACK_COOLDOWN
-	set_color(base_color)
+	set_charged(false)
 
 func face_player(delta: float) -> void:
 	var to_player = player.global_position - global_position
@@ -116,10 +128,11 @@ func _apply_color(color: Color) -> void:
 	eye_material.emission = color
 
 func _apply_flash(on: bool) -> void:
-	var overlay = FlashMaterial if on else null
 	for part in body.get_children():
 		if part is MeshInstance3D:
-			part.material_overlay = overlay
+			part.material_overlay = FlashMaterial if on else null
+	if not on:
+		trunk.material_overlay = crack_material
 
 func _apply_rooted(on: bool) -> void:
 	root_vines.bind(on)		
@@ -145,3 +158,36 @@ func animate_body(delta: float) -> void:
 	body.rotation.x = lerp_angle(body.rotation.x, lean, POSE_SPEED * delta)
 	var target_scale = base_body_scale * Vector3(2.0 - squash, squash, 2.0 - squash)
 	body.scale = body.scale.lerp(target_scale, POSE_SPEED * delta)
+
+func set_charged(on: bool) -> void:
+	eye_material.emission_energy_multiplier = eye_energy * (WINDUP_EYE_BOOST if on else 1.0)
+	crack_material.set_shader_parameter("glow_energy", WINDUP_CRACK_BOOST if on else 1.0)
+
+func grow_mushrooms() -> void:
+	var stem_mesh = CylinderMesh.new()
+	stem_mesh.top_radius = 0.016
+	stem_mesh.bottom_radius = 0.024
+	stem_mesh.height = 0.12
+	var cap_mesh = SphereMesh.new()
+	cap_mesh.radius = 0.06
+	cap_mesh.height = 0.06
+	cap_mesh.is_hemisphere = true
+	var stem_material = StandardMaterial3D.new()
+	stem_material.albedo_color = Color(0.7, 0.75, 0.65)
+	for i in MUSHROOM_COUNT:
+		var a = TAU * i / MUSHROOM_COUNT + randf_range(-0.4, 0.4)
+		var r = randf_range(0.06, 0.13)
+		var mushroom = Node3D.new()
+		body.add_child(mushroom)
+		mushroom.position = Vector3(cos(a) * r, 1.0, sin(a) * r)
+		mushroom.basis = Basis(Vector3(-sin(a), 0.0, cos(a)), -0.4) * Basis.from_scale(Vector3.ONE * randf_range(0.7, 1.2))
+		var stem = MeshInstance3D.new()
+		stem.mesh = stem_mesh
+		stem.material_override = stem_material
+		stem.position.y = stem_mesh.height / 2.0
+		mushroom.add_child(stem)
+		var cap = MeshInstance3D.new()
+		cap.mesh = cap_mesh
+		cap.material_override = eye_material
+		cap.position.y = stem_mesh.height
+		mushroom.add_child(cap)
