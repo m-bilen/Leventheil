@@ -6,7 +6,10 @@ extends EnemyModel
 const TOOTH_CLOSED = 55.0
 const BREATH_SPEED = 1.6
 const BREATH_OPEN = 14.0
-const BREATH_GLOW = 0.5
+const TOOTH_SHUT = 70.0
+const TOOTH_WIDE = -10.0
+const GLOW_SHUT = 1.0
+const GLOW_WIDE = 6.0
 const LIGHT_SCALE = 0.35
 const WALK_SPEED = 5.0
 const WALK_SWING = 0.25
@@ -134,7 +137,8 @@ func _process(delta: float) -> void:
 	tooth_angle = lerp(tooth_angle, deg_to_rad(target_tooth - breath * BREATH_OPEN), blend)
 	for socket in tooth_sockets:
 		socket.rotation.z = tooth_angle
-	core_material.emission_energy_multiplier = lerp(core_material.emission_energy_multiplier, target_glow * glow_boost * (1.0 + breath + BREATH_GLOW), blend)
+	var openness = clamp(inverse_lerp(TOOTH_SHUT, TOOTH_WIDE, rad_to_deg(tooth_angle)), 0.0, 1.0)
+	core_material.emission_energy_multiplier = lerp(GLOW_SHUT, GLOW_WIDE, openness) * glow_boost
 	maw_light.light_color = core_material.emission
 	maw_light.light_energy = core_material.emission_energy_multiplier * LIGHT_SCALE
 	teeth_material.set_shader_parameter("maw_center", maw.global_position)

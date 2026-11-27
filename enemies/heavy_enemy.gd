@@ -173,28 +173,21 @@ func enter_state(new_state: State) -> void:
 			state_timer = FOLLOWUP_CROUCH + parry_window if is_followup else windup_time
 			window_open = false
 			is_slam = not is_followup and randf() < slam_chance
-			set_color(base_color.lerp(Palette.PARRY_HOT, Palette.WINDUP_HEAT))
 			if is_slam:
 				spawn_slam_wave()
-			else:
-				set_color(Color.YELLOW)
 		State.ATTACK:
 			state_timer = ATTACK_TIME
 			bite_done = is_slam
-			set_color(base_color)
 			if is_slam:
 				Events.camera_shake_requested.emit(0.6)
 		State.RECOVER:
 			state_timer = RECOVER_TIME
-			set_color(base_color.darkened(Palette.RECOVER_DIM))
 		State.CHASE:
-			set_color(base_color)
 			push_ready = not just_pushed and distance_to_player() < PUSH_RANGE
 			just_pushed = false
 			is_followup = false
 		State.STUNNED:
 			state_timer = STUN_TIME
-			set_color(base_color.darkened(Palette.STUN_DIM))
 		State.PUSH:
 			state_timer = PUSH_WINDUP + PUSH_SWING
 			push_done = false
@@ -226,7 +219,6 @@ func update_model_pose() -> void:
 
 func open_parry_window() -> void:
 	window_open = true
-	set_color(Palette.PARRY_HOT)
 	if is_followup:
 		lunge_dir = player.global_position - global_position
 		lunge_dir.y = 0
