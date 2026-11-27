@@ -39,8 +39,8 @@ distance_fade_max_distance = 4.5
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_lw8ey"]
 top_radius = 0.92
-bottom_radius = 0.2
-height = 0.7
+bottom_radius = 0.3
+height = 0.35
 cap_top = false
 
 [sub_resource type="SphereMesh" id="SphereMesh_fcjbt"]
@@ -98,14 +98,19 @@ material_override = ExtResource("4_tchlw")
 mesh = SubResource("CylinderMesh_rdkaa")
 
 [node name="Inner" type="MeshInstance3D" parent="Rig/Maw" unique_id=1526619615]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.075, 0)
 material_override = SubResource("StandardMaterial3D_tchlw")
 mesh = SubResource("CylinderMesh_lw8ey")
 
 [node name="Core" type="MeshInstance3D" parent="Rig/Maw" unique_id=1353754412]
-transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, -0.55, 0)
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, -0.2, 0)
 material_override = ExtResource("2_phsdi")
 mesh = SubResource("SphereMesh_fcjbt")
+
+[node name="MawLight" type="OmniLight3D" parent="Rig/Maw" unique_id=230346609]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+omni_range = 4.0
+omni_attenuation = 1.5
 
 [node name="ArmR" type="Node3D" parent="Rig" unique_id=1695012606]
 transform = Transform3D(0.9396926, -0.34202012, 0, 0.33682406, 0.9254165, 0.17364818, -0.05939117, -0.16317591, 0.9848077, 0.9, 0.54999995, 1.7)

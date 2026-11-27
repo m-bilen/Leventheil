@@ -4,7 +4,7 @@ render_mode cull_disabled;
 uniform vec3 glow_color : source_color = vec3(1.0, 0.6, 0.15);
 uniform float glow_energy = 2.0;
 uniform vec3 wall_color : source_color = vec3(0.07, 0.05, 0.04);
-uniform float well_height = 0.7;
+uniform float well_height = 0.35;
 uniform float glow_scale = 0.35;
 uniform sampler2D noise : repeat_enable;
 

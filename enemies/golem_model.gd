@@ -4,6 +4,10 @@ extends EnemyModel
 @export var plate_material: Material
 
 const TOOTH_CLOSED = 55.0
+const BREATH_SPEED = 1.6
+const BREATH_OPEN = 14.0
+const BREATH_GLOW = 0.5
+const LIGHT_SCALE = 0.35
 const WALK_SPEED = 5.0
 const WALK_SWING = 0.25
 const WALK_BOB = 0.06
@@ -36,6 +40,8 @@ var pose_speed = 5.0
 
 
 @onready var maw: Node3D = $Rig/Maw
+@onready var maw_light: OmniLight3D = $Rig/Maw/MawLight
+var breath_time = 0.0
 var tooth_sockets: Array[Node3D] = []
 
 func _ready() -> void:
@@ -121,10 +127,16 @@ func _process(delta: float) -> void:
 	for i in legs.size():
 		var side = 1.0 if i == 0 else -1.0
 		legs[i].rotation.x = lerp(legs[i].rotation.x, leg_rest[i] - swing * side, blend)
-	tooth_angle = lerp(tooth_angle, deg_to_rad(target_tooth), blend)
+	var breath = 0.0
+	if pose == Pose.IDLE:
+		breath_time += delta * BREATH_SPEED
+		breath = sin(breath_time) * 0.5 + 0.5
+	tooth_angle = lerp(tooth_angle, deg_to_rad(target_tooth - breath * BREATH_OPEN), blend)
 	for socket in tooth_sockets:
 		socket.rotation.z = tooth_angle
-	core_material.emission_energy_multiplier = lerp(core_material.emission_energy_multiplier, target_glow * glow_boost, blend)
+	core_material.emission_energy_multiplier = lerp(core_material.emission_energy_multiplier, target_glow * glow_boost * (1.0 + breath + BREATH_GLOW), blend)
+	maw_light.light_color = core_material.emission
+	maw_light.light_energy = core_material.emission_energy_multiplier * LIGHT_SCALE
 	teeth_material.set_shader_parameter("maw_center", maw.global_position)
 	for m in [well_material, vein_material, teeth_material]:
 		m.set_shader_parameter("glow_color", core_material.emission)
