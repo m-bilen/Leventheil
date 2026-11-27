@@ -1,57 +1,83 @@
 extends EnemyBase
+
 const GroundBurstScene = preload("res://enemies/ground_burst.tscn")
-enum State { CHASE, WINDUP , ATTACK , RECOVER, STUNNED, PUSH}
-@export var slam_chance: float = 0.0
+const SpikeIcon = preload("res://ui/icons/spike.svg")
+
+enum State { CHASE, WINDUP, ATTACK, RECOVER, STUNNED, PUSH }
+
+@export var is_boss: bool = false
+@export var display_name: String = ""
 @export var speed: float = 1.5
 @export var windup_time: float = 0.8
 @export var attack_damage: int = 2
 @export var parries_to_kill: int = 3
 @export var parry_only: bool = false
-@export var display_name: String = ""
 @export var parry_window: float = 0.3
 @export var harvestable: bool = false
+@export var can_push: bool = false
+@export var slam_chance: float = 0.0
+@export_group("Escalation")
 @export var escalation_windup: Array[float] = []
 @export var escalation_slam: Array[float] = []
-@export var escalation_color: Color = Color(0.55, 0.0, 0.1)
-@export var can_push: bool = false
 @export var escalation_double: Array[float] = []
-const SpikeIcon = preload("res://ui/icons/spike.svg")
-const PIP_SPACING = 0.32
-const PIP_DIM = Color(1, 1, 1, 0.25)
-@onready var parry_pips: Node3D = $ParryPips
-const FOLLOWUP_CROUCH = 0.45
-const FRONT_ANGLE = 60.0
-const PUSH_RANGE = 2.2
-const PUSH_WINDUP = 0.3
-const PUSH_SWING = 0.15
-const PUSH_COOLDOWN = 3.0
-const PUSH_FORCE = 12.0
-const SLAM_COLOR = Color(0.8, 0.2, 1.0)
-const SLAM_RADIUS = 3
-const SLAM_DAMAGE = 2
-const WINDOW_COLOR = Color(1.0, 0.5, 0.1)
+@export var escalation_color: Color = Color(0.55, 0.0, 0.1)
+
+const TURN_SPEED = 4.0
 const ATTACK_RANGE = 2.5
 const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
 const STUN_TIME = 2.0
-const TURN_SPEED = 4.0
-const PIP_HEIGHT = 1.0
+const FRONT_ANGLE = 60.0
+const WINDOW_COLOR = Color(1.0, 0.5, 0.1)
+
+const FOLLOWUP_CROUCH = 0.45
 const LUNGE_SPEED = 5.0
 const LUNGE_STOP = 1.6
-var lunge_dir = Vector3.ZERO
-var double_chance = 0.0
-var is_followup = false
-var just_pushed = false
-var push_ready = false
-var push_done = false
-var parry_count = 0
+
+const PUSH_RANGE = 2.2
+const PUSH_WINDUP = 0.3
+const PUSH_SWING = 0.15
+const PUSH_FORCE = 12.0
+
+const SLAM_COLOR = Color(0.8, 0.2, 1.0)
+const SLAM_RADIUS = 3
+const SLAM_DAMAGE = 2
+
+const PIP_SPACING = 0.32
+const PIP_DIM = Color(1, 1, 1, 0.25)
+const PIP_HEIGHT = 1.0
+
+@onready var parry_pips: Node3D = $ParryPips
+
 var state: State = State.CHASE
 var state_timer = 0.0
+var turn_speed = TURN_SPEED
 var window_open = false
 var is_slam = false
+var is_followup = false
+var lunge_dir = Vector3.ZERO
+var push_ready = false
+var push_done = false
+var just_pushed = false
+var parry_count = 0
+var double_chance = 0.0
 var start_windup_time = 0.0
 var start_color = Color.WHITE
-var turn_speed = TURN_SPEED
+
+
+func _ready() -> void:
+	super()
+	speed *= randf_range(0.9, 1.1)
+	turn_speed = TURN_SPEED * randf_range(0.8, 1.2)
+	start_windup_time = windup_time
+	start_color = base_color
+	escalate()
+	update_parry_pips()
+	if is_boss:
+		Events.boss_spawned.emit(display_name)
+		Events.camera_focus_requested.emit(global_position, 1.0)
+		Events.camera_shake_requested.emit(0.8)
+
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -78,6 +104,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if model and parry_pips.visible:
 		parry_pips.global_position = model.get_head_point() + Vector3.UP * PIP_HEIGHT
+
 func do_chase() -> void:
 	var dist = distance_to_player()
 	if dist >= PUSH_RANGE:
@@ -92,6 +119,7 @@ func do_chase() -> void:
 	velocity.x = dir.x * speed
 	velocity.z = dir.z * speed
 
+
 func do_windup() -> void:
 	velocity.x = 0
 	velocity.z = 0
@@ -102,6 +130,24 @@ func do_windup() -> void:
 		velocity.z = lunge_dir.z * LUNGE_SPEED
 	if state_timer <= 0.0:
 		enter_state(State.ATTACK)
+
+
+func do_attack() -> void:
+	if state_timer <= 0.0:
+		enter_state(State.RECOVER)
+
+
+func do_recover() -> void:
+	if state_timer <= 0.0:
+		enter_state(State.CHASE)
+
+
+func do_stunned() -> void:
+	velocity.x = 0
+	velocity.z = 0
+	if state_timer <= 0.0:
+		enter_state(State.CHASE)
+
 
 func do_push() -> void:
 	velocity.x = 0
@@ -119,23 +165,9 @@ func do_push() -> void:
 	if state_timer <= 0.0:
 		enter_state(State.RECOVER)
 
-func open_parry_window() -> void:
-	window_open = true
-	set_color(WINDOW_COLOR)
-	if is_followup:
-		lunge_dir = player.global_position - global_position
-		lunge_dir.y = 0
-		lunge_dir = lunge_dir.normalized()
-	if model:
-		model.set_pose(EnemyModel.Pose.LUNGE if is_followup else EnemyModel.Pose.OPEN)
-func do_attack() -> void:
-	if state_timer <= 0.0:
-		enter_state(State.RECOVER)
-func do_recover() -> void:
-	if state_timer <= 0.0:
-		enter_state(State.CHASE)
+
 func enter_state(new_state: State) -> void:
-	state = new_state 
+	state = new_state
 	match new_state:
 		State.WINDUP:
 			state_timer = FOLLOWUP_CROUCH + parry_window if is_followup else windup_time
@@ -167,80 +199,7 @@ func enter_state(new_state: State) -> void:
 			state_timer = PUSH_WINDUP + PUSH_SWING
 			push_done = false
 	update_model_pose()
-func hit_player() -> void:
-	var dist = distance_to_player()
-	if dist< ATTACK_RANGE:
-		player.take_damage(attack_damage)
 
-func can_be_parried() -> bool:
-	return state == State.WINDUP and window_open
-func on_parried() -> bool:
-	parry_count += 1
-	update_parry_pips()
-	escalate()
-	var killed = parry_count >= parries_to_kill
-	if not killed and not is_followup and randf() < double_chance:
-		is_followup = true
-		enter_state(State.WINDUP)
-	else:
-		is_followup = false
-		enter_state(State.STUNNED)
-	return killed
-
-func escalate() -> void:
-	if parry_count < escalation_windup.size():
-		windup_time = start_windup_time * escalation_windup[parry_count]
-	if parry_count < escalation_slam.size():
-		slam_chance = escalation_slam[parry_count]
-	if parry_count < escalation_double.size():
-		double_chance = escalation_double[parry_count]
-	if not escalation_windup.is_empty():
-		var t = clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)
-		base_color = start_color.lerp(escalation_color, t)
-		if model and model.has_method("set_rage"):
-			model.set_rage(t)
-
-func do_stunned() -> void:
-	velocity.x = 0
-	velocity.z = 0
-	if state_timer <= 0.0:
-		enter_state(State.CHASE)
-func take_damage(amount: int) -> void:
-	if parry_only:
-		flash()
-		return
-	super(amount)
-func update_parry_pips() -> void:
-	var remaining = parries_to_kill - parry_count
-	if display_name != "":
-		parry_pips.visible = false
-		var rage = clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)
-		Events.boss_state_changed.emit(remaining, parries_to_kill, rage)
-		return
-	while parry_pips.get_child_count() < parries_to_kill:
-		var pip = Sprite3D.new()
-		pip.texture = SpikeIcon
-		pip.pixel_size = 0.005
-		pip.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-		pip.no_depth_test = true
-		parry_pips.add_child(pip)
-	for i in parries_to_kill:
-		var pip: Sprite3D = parry_pips.get_child(i)
-		pip.position.x = (i - (parries_to_kill - 1) / 2.0) * PIP_SPACING
-		pip.modulate = Color.WHITE if i < remaining else PIP_DIM
-
-func _ready() -> void:
-	super()
-	speed *= randf_range(0.9, 1.1)
-	turn_speed = TURN_SPEED * randf_range(0.8, 1.2)
-	start_windup_time = windup_time
-	start_color = base_color
-	escalate()
-	update_parry_pips()
-	if display_name != "":
-		Events.boss_spawned.emit(display_name)
-		Events.camera_focus_requested.emit(global_position, 1.0)
-		Events.camera_shake_requested.emit(0.8)
 
 func update_model_pose() -> void:
 	if not model:
@@ -265,6 +224,22 @@ func update_model_pose() -> void:
 			model.set_pose(EnemyModel.Pose.PUSH)
 
 
+func open_parry_window() -> void:
+	window_open = true
+	set_color(WINDOW_COLOR)
+	if is_followup:
+		lunge_dir = player.global_position - global_position
+		lunge_dir.y = 0
+		lunge_dir = lunge_dir.normalized()
+	if model:
+		model.set_pose(EnemyModel.Pose.LUNGE if is_followup else EnemyModel.Pose.OPEN)
+
+
+func hit_player() -> void:
+	if distance_to_player() < ATTACK_RANGE:
+		player.take_damage(attack_damage)
+
+
 func spawn_slam_wave() -> void:
 	var wave = GroundBurstScene.instantiate()
 	wave.delay = windup_time
@@ -272,6 +247,72 @@ func spawn_slam_wave() -> void:
 	wave.damage = SLAM_DAMAGE
 	get_tree().current_scene.add_child(wave)
 	wave.global_position = Vector3(global_position.x, 0.25, global_position.z)
+
+
+func can_be_parried() -> bool:
+	return state == State.WINDUP and window_open
+
+
+func on_parried() -> bool:
+	parry_count += 1
+	update_parry_pips()
+	escalate()
+	var killed = parry_count >= parries_to_kill
+	if not killed and not is_followup and randf() < double_chance:
+		is_followup = true
+		enter_state(State.WINDUP)
+	else:
+		is_followup = false
+		enter_state(State.STUNNED)
+	return killed
+
+
+func escalate() -> void:
+	if parry_count < escalation_windup.size():
+		windup_time = start_windup_time * escalation_windup[parry_count]
+	if parry_count < escalation_slam.size():
+		slam_chance = escalation_slam[parry_count]
+	if parry_count < escalation_double.size():
+		double_chance = escalation_double[parry_count]
+	if not escalation_windup.is_empty():
+		var rage = get_rage()
+		base_color = start_color.lerp(escalation_color, rage)
+		if model and model.has_method("set_rage"):
+			model.set_rage(rage)
+
+
+func get_rage() -> float:
+	if parries_to_kill <= 1:
+		return 1.0
+	return clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)
+
+
+func update_parry_pips() -> void:
+	var remaining = parries_to_kill - parry_count
+	if is_boss:
+		parry_pips.visible = false
+		Events.boss_state_changed.emit(remaining, parries_to_kill, get_rage())
+		return
+	while parry_pips.get_child_count() < parries_to_kill:
+		var pip = Sprite3D.new()
+		pip.texture = SpikeIcon
+		pip.pixel_size = 0.005
+		pip.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		pip.no_depth_test = true
+		parry_pips.add_child(pip)
+	for i in parries_to_kill:
+		var pip: Sprite3D = parry_pips.get_child(i)
+		pip.position.x = (i - (parries_to_kill - 1) / 2.0) * PIP_SPACING
+		pip.modulate = Color.WHITE if i < remaining else PIP_DIM
+
+
+
+func take_damage(amount: int) -> void:
+	if parry_only:
+		flash()
+		return
+	super(amount)
+
 
 func is_in_front(point: Vector3) -> bool:
 	if not model:
@@ -281,16 +322,14 @@ func is_in_front(point: Vector3) -> bool:
 	to_point.y = 0
 	return facing.angle_to(to_point) <= deg_to_rad(FRONT_ANGLE)
 
+
 func is_harvestable_from(point: Vector3) -> bool:
 	return harvestable and model != null and not is_in_front(point)
+
 
 func can_be_pushed() -> bool:
 	return state == State.CHASE
 
+
 func stops_dash_chain() -> bool:
 	return true
-
-func get_rage() -> float:
-	if parries_to_kill <= 1:
-		return 1.0
-	return clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)
