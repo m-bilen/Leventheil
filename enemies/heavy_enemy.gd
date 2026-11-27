@@ -19,8 +19,7 @@ const SpikeIcon = preload("res://ui/icons/spike.svg")
 const PIP_SPACING = 0.32
 const PIP_DIM = Color(1, 1, 1, 0.25)
 @onready var parry_pips: Node3D = $ParryPips
-const FOLLOWUP_WINDUP_SCALE = 0.6
-const FOLLOWUP_MIN_WINDUP = 0.5
+const FOLLOWUP_CROUCH = 0.45
 const FRONT_ANGLE = 60.0
 const PUSH_RANGE = 2.2
 const PUSH_WINDUP = 0.3
@@ -37,6 +36,9 @@ const RECOVER_TIME = 1.0
 const STUN_TIME = 2.0
 const TURN_SPEED = 4.0
 const PIP_HEIGHT = 1.0
+const LUNGE_SPEED = 5.0
+const LUNGE_STOP = 1.6
+var lunge_dir = Vector3.ZERO
 var double_chance = 0.0
 var is_followup = false
 var just_pushed = false
@@ -89,11 +91,15 @@ func do_chase() -> void:
 	var dir = (player.global_position - global_position).normalized()
 	velocity.x = dir.x * speed
 	velocity.z = dir.z * speed
+
 func do_windup() -> void:
 	velocity.x = 0
 	velocity.z = 0
 	if not is_slam and not window_open and state_timer <= parry_window:
 		open_parry_window()
+	if is_followup and window_open and distance_to_player() > LUNGE_STOP:
+		velocity.x = lunge_dir.x * LUNGE_SPEED
+		velocity.z = lunge_dir.z * LUNGE_SPEED
 	if state_timer <= 0.0:
 		enter_state(State.ATTACK)
 
@@ -116,8 +122,12 @@ func do_push() -> void:
 func open_parry_window() -> void:
 	window_open = true
 	set_color(WINDOW_COLOR)
+	if is_followup:
+		lunge_dir = player.global_position - global_position
+		lunge_dir.y = 0
+		lunge_dir = lunge_dir.normalized()
 	if model:
-		model.set_pose(EnemyModel.Pose.OPEN)
+		model.set_pose(EnemyModel.Pose.LUNGE if is_followup else EnemyModel.Pose.OPEN)
 func do_attack() -> void:
 	if state_timer <= 0.0:
 		enter_state(State.RECOVER)
@@ -128,7 +138,7 @@ func enter_state(new_state: State) -> void:
 	state = new_state 
 	match new_state:
 		State.WINDUP:
-			state_timer = max(windup_time * FOLLOWUP_WINDUP_SCALE, FOLLOWUP_MIN_WINDUP) if is_followup else windup_time
+			state_timer = FOLLOWUP_CROUCH + parry_window if is_followup else windup_time
 			window_open = false
 			is_slam = not is_followup and randf() < slam_chance
 			if is_slam:
@@ -239,7 +249,12 @@ func update_model_pose() -> void:
 		State.CHASE:
 			model.set_pose(EnemyModel.Pose.IDLE)
 		State.WINDUP:
-			model.set_pose(EnemyModel.Pose.SLAM if is_slam else EnemyModel.Pose.WINDUP)
+			if is_slam:
+				model.set_pose(EnemyModel.Pose.SLAM)
+			elif is_followup:
+				model.set_pose(EnemyModel.Pose.CROUCH)
+			else:
+				model.set_pose(EnemyModel.Pose.WINDUP)
 		State.ATTACK:
 			model.set_pose(EnemyModel.Pose.STRIKE)
 		State.RECOVER:
@@ -274,3 +289,8 @@ func can_be_pushed() -> bool:
 
 func stops_dash_chain() -> bool:
 	return true
+
+func get_rage() -> float:
+	if parries_to_kill <= 1:
+		return 1.0
+	return clamp(float(parry_count) / (parries_to_kill - 1), 0.0, 1.0)

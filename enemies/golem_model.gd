@@ -129,6 +129,10 @@ func _on_pose_changed(new_pose: Pose) -> void:
 			set_targets(-0.1, 0.7, TOOTH_CLOSED, 2.0, 12.0)
 		Pose.SHOVE:
 			set_targets(-0.1, -0.9, TOOTH_CLOSED, 2.0, 20.0)
+		Pose.CROUCH:
+			set_targets(0.35, -0.4, 75.0, 4.0, 25.0)
+		Pose.LUNGE:
+			set_targets(0.1, 0.6, -10.0, 8.0, 18.0)
 
 func organicize(rng: RandomNumberGenerator) -> void:
 	var noise = FastNoiseLite.new()
