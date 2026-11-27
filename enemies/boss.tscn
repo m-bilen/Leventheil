@@ -23,7 +23,7 @@ escalation_slam = Array[float]([0.0, 0.0, 0.25, 0.35, 0.45])
 escalation_double = Array[float]([0.0, 0.0, 0.2, 0.35, 0.5])
 max_health = 30
 pullable = false
-spirit_color = Color(1, 0.47843137, 0.16470589, 1)
+spirit = 3
 death_scale = 2.5
 body_radius = 1.2
 

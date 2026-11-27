@@ -10,12 +10,12 @@ size = Vector3(2.4, 2.6, 2.4)
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_f5y7r")
-slam_chance = 0.35
 parry_only = true
 harvestable = true
 can_push = true
+slam_chance = 0.35
 max_health = 30
-spirit_color = Color(1, 0.47843137, 0.16470589, 1)
+spirit = 2
 death_scale = 1.8
 body_radius = 1.2
 

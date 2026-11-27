@@ -6,7 +6,7 @@ const SEPARATION_STRENGTH = 4.0
 
 @export var max_health: int = 3
 @export var pullable: bool = true
-@export var spirit_color: Color = Color(0.75, 0.91, 1.0)
+@export var spirit: Palette.Spirit = Palette.Spirit.FOXFIRE
 @export var death_scale: float = 1.0
 @export var body_radius: float = 0.4
 
@@ -16,6 +16,7 @@ var pull_velocity = Vector3.ZERO
 var root_timer = 0.0
 var health: int
 var player: Node3D
+var spirit_color = Color.WHITE
 var base_color = Color.WHITE
 var current_color = Color.WHITE
 var flash_timer = 0.0
@@ -30,10 +31,9 @@ func _ready() -> void:
 	if mesh:
 		mesh.mesh = mesh.mesh.duplicate()
 		mesh.mesh.material = mesh.mesh.material.duplicate()
-		base_color = mesh.mesh.material.albedo_color
-	if model:
-		base_color = model.get_base_color()
-	current_color = base_color
+	spirit_color = Palette.SPIRIT_COLORS[spirit]
+	base_color = spirit_color
+	set_color(base_color)
 
 func take_damage(amount: int) -> void:
 	if health <= 0:

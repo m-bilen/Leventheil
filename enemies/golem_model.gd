@@ -192,3 +192,8 @@ func add_twigs(rng: RandomNumberGenerator) -> void:
 
 func get_head_point() -> Vector3:
 	return maw.global_position
+
+func set_color(color: Color) -> void:
+	super(color)
+	core_material.albedo_color = color
+	core_material.emission = color

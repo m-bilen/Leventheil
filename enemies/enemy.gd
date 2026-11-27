@@ -33,13 +33,15 @@ const WINDUP_COLOR = Color(1.0, 0.55, 0.0)
 var windup_timer = 0.0
 var attack_timer = 0.0
 const SPEED = 2.0
+
 func _ready()-> void:
+	eye_material = $Body/EyeL.material_override.duplicate()
+	for eye in eyes:
+		eye.material_override = eye_material
 	super()
 	eye_material = $Body/EyeL.material_override.duplicate()
 	for eye in eyes:
 		eye.material_override = eye_material
-	base_color = eye_material.emission
-	current_color = base_color
 	var angle = randf() * TAU
 	flank_dir = Vector3(cos(angle), 0, sin(angle))
 	base_body_y = body.position.y
