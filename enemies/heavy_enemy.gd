@@ -36,6 +36,7 @@ const PUSH_RANGE = 2.2
 const PUSH_WINDUP = 0.3
 const PUSH_SWING = 0.15
 const PUSH_FORCE = 12.0
+const BITE_DELAY = 0.1
 
 const SLAM_RADIUS = 3
 const SLAM_DAMAGE = 2
@@ -59,7 +60,7 @@ var just_pushed = false
 var parry_count = 0
 var double_chance = 0.0
 var start_windup_time = 0.0
-
+var bite_done = false
 
 func _ready() -> void:
 	super()
@@ -128,6 +129,10 @@ func do_windup() -> void:
 
 
 func do_attack() -> void:
+	if not bite_done and state_timer <= ATTACK_TIME - BITE_DELAY:
+		bite_done = true
+		hit_player()
+		Events.camera_shake_requested.emit(0.3)
 	if state_timer <= 0.0:
 		enter_state(State.RECOVER)
 
@@ -175,10 +180,10 @@ func enter_state(new_state: State) -> void:
 				set_color(Color.YELLOW)
 		State.ATTACK:
 			state_timer = ATTACK_TIME
+			bite_done = is_slam
 			set_color(base_color)
-			if not is_slam:
-				hit_player()
-			Events.camera_shake_requested.emit(0.6 if is_slam else 0.3)
+			if is_slam:
+				Events.camera_shake_requested.emit(0.6)
 		State.RECOVER:
 			state_timer = RECOVER_TIME
 			set_color(base_color.darkened(Palette.RECOVER_DIM))
