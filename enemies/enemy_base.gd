@@ -32,6 +32,8 @@ func _ready() -> void:
 		mesh.mesh = mesh.mesh.duplicate()
 		mesh.mesh.material = mesh.mesh.material.duplicate()
 	spirit_color = Palette.SPIRIT_COLORS[spirit]
+	if model:
+		model.set_spirit(spirit_color)
 	base_color = spirit_color
 	set_color(base_color)
 

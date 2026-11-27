@@ -17,6 +17,8 @@ func _ready() -> void:
 			eye.material_override = eye_material
 	parts = find_children("*", "MeshInstance3D", true, false)
 
+func set_spirit(_color: Color) -> void:
+	pass
 
 func set_color(color: Color) -> void:
 	eye_material.albedo_color = color

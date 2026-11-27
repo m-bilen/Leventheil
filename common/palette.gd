@@ -9,3 +9,6 @@ const SPIRIT_COLORS = {
 }
 
 const PARRY_HOT = Color(1.0, 0.95, 0.85)
+const WINDUP_HEAT = 0.3
+const RECOVER_DIM = 0.5
+const STUN_DIM = 0.7

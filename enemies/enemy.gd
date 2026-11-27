@@ -29,7 +29,6 @@ const ATTACK_DAMAGE = 1
 const ATTACK_COOLDOWN = 1.0
 const ATTACK_RANGE = 1.5
 const WINDUP_TIME = 0.4
-const WINDUP_COLOR = Color(1.0, 0.55, 0.0)
 var windup_timer = 0.0
 var attack_timer = 0.0
 const SPEED = 2.0
@@ -91,7 +90,7 @@ func _on_damaged() -> void:
 
 func start_windup() -> void:
 	windup_timer = WINDUP_TIME
-	set_color(WINDUP_COLOR)
+	set_color(base_color.lerp(Palette.PARRY_HOT, Palette.WINDUP_HEAT))
 
 func strike() -> void:
 	strike_pose_timer = STRIKE_POSE_TIME 

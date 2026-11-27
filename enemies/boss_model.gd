@@ -3,6 +3,7 @@ extends "res://enemies/golem_model.gd"
 const CROWN_COUNT = 8
 const CROWN_RADIUS = 1.0
 const RAGE_GLOW = 3.0
+const RAGE_BOOST = 1.8
 
 @export var crown_material: StandardMaterial3D
 
@@ -33,3 +34,7 @@ func build_crown() -> void:
 
 func set_rage(t: float) -> void:
 	crown_material.emission_energy_multiplier = lerp(0.0, RAGE_GLOW, t)
+	glow_boost = lerp(1.0, RAGE_BOOST, t)
+
+func set_spirit(color: Color) -> void:
+	crown_material.emission = color

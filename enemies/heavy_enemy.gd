@@ -20,7 +20,6 @@ enum State { CHASE, WINDUP, ATTACK, RECOVER, STUNNED, PUSH }
 @export var escalation_windup: Array[float] = []
 @export var escalation_slam: Array[float] = []
 @export var escalation_double: Array[float] = []
-@export var escalation_color: Color = Color(0.55, 0.0, 0.1)
 
 const TURN_SPEED = 4.0
 const ATTACK_RANGE = 2.5
@@ -28,7 +27,6 @@ const ATTACK_TIME = 0.2
 const RECOVER_TIME = 1.0
 const STUN_TIME = 2.0
 const FRONT_ANGLE = 60.0
-const WINDOW_COLOR = Color(1.0, 0.5, 0.1)
 
 const FOLLOWUP_CROUCH = 0.45
 const LUNGE_SPEED = 5.0
@@ -39,7 +37,6 @@ const PUSH_WINDUP = 0.3
 const PUSH_SWING = 0.15
 const PUSH_FORCE = 12.0
 
-const SLAM_COLOR = Color(0.8, 0.2, 1.0)
 const SLAM_RADIUS = 3
 const SLAM_DAMAGE = 2
 
@@ -62,7 +59,6 @@ var just_pushed = false
 var parry_count = 0
 var double_chance = 0.0
 var start_windup_time = 0.0
-var start_color = Color.WHITE
 
 
 func _ready() -> void:
@@ -70,7 +66,6 @@ func _ready() -> void:
 	speed *= randf_range(0.9, 1.1)
 	turn_speed = TURN_SPEED * randf_range(0.8, 1.2)
 	start_windup_time = windup_time
-	start_color = base_color
 	escalate()
 	update_parry_pips()
 	if is_boss:
@@ -173,20 +168,20 @@ func enter_state(new_state: State) -> void:
 			state_timer = FOLLOWUP_CROUCH + parry_window if is_followup else windup_time
 			window_open = false
 			is_slam = not is_followup and randf() < slam_chance
+			set_color(base_color.lerp(Palette.PARRY_HOT, Palette.WINDUP_HEAT))
 			if is_slam:
-				set_color(SLAM_COLOR)
 				spawn_slam_wave()
 			else:
 				set_color(Color.YELLOW)
 		State.ATTACK:
 			state_timer = ATTACK_TIME
-			set_color(Color.RED)
+			set_color(base_color)
 			if not is_slam:
 				hit_player()
 			Events.camera_shake_requested.emit(0.6 if is_slam else 0.3)
 		State.RECOVER:
 			state_timer = RECOVER_TIME
-			set_color(Color.GRAY)
+			set_color(base_color.darkened(Palette.RECOVER_DIM))
 		State.CHASE:
 			set_color(base_color)
 			push_ready = not just_pushed and distance_to_player() < PUSH_RANGE
@@ -194,7 +189,7 @@ func enter_state(new_state: State) -> void:
 			is_followup = false
 		State.STUNNED:
 			state_timer = STUN_TIME
-			set_color(Color.CYAN)
+			set_color(base_color.darkened(Palette.STUN_DIM))
 		State.PUSH:
 			state_timer = PUSH_WINDUP + PUSH_SWING
 			push_done = false
@@ -226,7 +221,7 @@ func update_model_pose() -> void:
 
 func open_parry_window() -> void:
 	window_open = true
-	set_color(WINDOW_COLOR)
+	set_color(Palette.PARRY_HOT)
 	if is_followup:
 		lunge_dir = player.global_position - global_position
 		lunge_dir.y = 0
@@ -274,11 +269,8 @@ func escalate() -> void:
 		slam_chance = escalation_slam[parry_count]
 	if parry_count < escalation_double.size():
 		double_chance = escalation_double[parry_count]
-	if not escalation_windup.is_empty():
-		var rage = get_rage()
-		base_color = start_color.lerp(escalation_color, rage)
-		if model and model.has_method("set_rage"):
-			model.set_rage(rage)
+	if model and model.has_method("set_rage"):
+		model.set_rage(get_rage())
 
 
 func get_rage() -> float:

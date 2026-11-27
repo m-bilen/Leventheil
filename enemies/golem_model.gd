@@ -20,6 +20,7 @@ var target_pitch = 0.0
 var target_arm = 0.0
 var target_tooth = TOOTH_CLOSED
 var target_glow = 2.0
+var glow_boost = 1.0
 var pose_speed = 5.0
 @onready var eye: MeshInstance3D = $Rig/Eye
  
@@ -107,7 +108,7 @@ func _process(delta: float) -> void:
 	tooth_angle = lerp(tooth_angle, deg_to_rad(target_tooth), blend)
 	for socket in tooth_sockets:
 		socket.rotation.z = tooth_angle
-	core_material.emission_energy_multiplier = lerp(core_material.emission_energy_multiplier, target_glow, blend)
+	core_material.emission_energy_multiplier = lerp(core_material.emission_energy_multiplier, target_glow * glow_boost, blend)
 
 func _on_pose_changed(new_pose: Pose) -> void:
 	match new_pose:

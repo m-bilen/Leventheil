@@ -7,7 +7,6 @@ const KEEP_MAX = 10.0
 const ARENA_RADIUS = 20.0
 const WINDUP_TIME = 0.8
 const ATTACK_COOLDOWN = 2.5
-const WINDUP_COLOR = Color(0.8, 0.2, 1.0)
 const LEAD_TIME = 0.6
 const MAX_LEAD = 3.0
 
@@ -47,7 +46,7 @@ func _physics_process(delta: float) -> void:
 
 func start_windup() -> void:
 	windup_timer = WINDUP_TIME
-	set_color(WINDUP_COLOR)
+	set_color(base_color.lerp(Palette.PARRY_HOT, Palette.WINDUP_HEAT))
 	if model:
 		model.set_pose(EnemyModel.Pose.WINDUP)
 
