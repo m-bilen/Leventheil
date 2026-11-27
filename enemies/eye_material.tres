@@ -4,6 +4,6 @@
 albedo_color = Color(0.7490196, 0.9098039, 1, 1)
 emission_enabled = true
 emission = Color(0.7490196, 0.9098039, 1, 1)
-emission_energy_multiplier = 1.2
+emission_energy_multiplier = 0.6
 distance_fade_min_distance = 2.5
 distance_fade_max_distance = 4.5

@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode blend_add, unshaded, depth_draw_never, shadows_disabled;
+render_mode blend_add, unshaded, depth_draw_never, shadows_disabled, fog_disabled;
 
 uniform vec3 glow_color : source_color = vec3(1.0, 0.6, 0.15);
 uniform float glow_energy = 2.0;
