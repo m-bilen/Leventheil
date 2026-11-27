@@ -192,9 +192,10 @@ func attack() -> void:
 		if body.has_method("take_damage"):
 			var away = body.global_position - global_position
 			away.y = 0
-			var point = body.global_position
+			var radius = body.body_radius if "body_radius" in body else 0.0
+			var point = body.global_position - away.normalized() * radius
 			point.y = global_position.y + 1.0
-			Events.hit_landed.emit(point, away.normalized())
+			Events.hit_landed.emit(point, away.normalized(), body)
 			body.take_damage(damage)
 			attack_landed.emit(body)
 			hit_stop(0.15)

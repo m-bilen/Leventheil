@@ -28,9 +28,10 @@ func _on_enemy_died(enemy: Node3D) -> void:
 	burst.position = enemy.global_position
 	add_child(burst)
 
-func _on_hit_landed(point: Vector3, direction: Vector3) -> void:
+func _on_hit_landed(point: Vector3, direction: Vector3, target: Node3D) -> void:
 	var chips = HitChipsScene.instantiate()
 	chips.direction = direction
+	chips.color = target.spirit_color if "spirit_color" in target else Color.WHITE
 	chips.position = point
 	add_child(chips)
 
