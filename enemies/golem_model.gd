@@ -10,6 +10,15 @@ const WALK_BOB = 0.06
 @onready var rig: Node3D = $Rig
 @onready var arms: Array[Node3D] = [$Rig/ArmR, $Rig/ArmL]
 @onready var legs: Array[Node3D] = [$LegR, $LegL]
+const MawWell = preload("res://enemies/maw_well.gdshader")
+const ResinVeins = preload("res://enemies/resin_veins.gdshader")
+const TeethGlow = preload("res://enemies/teeth_glow.gdshader")
+
+@export var glow_noise: Texture2D
+
+var well_material: ShaderMaterial
+var vein_material: ShaderMaterial
+var teeth_material: ShaderMaterial
 var core_material: StandardMaterial3D
 var walk_time = 0.0
 var arm_rest: Array[float] = []
@@ -39,6 +48,13 @@ func _ready() -> void:
 	var core: MeshInstance3D = $Rig/Maw/Core
 	core_material = core.material_override.duplicate()
 	core.material_override = core_material
+	well_material = make_glow_material(MawWell)
+	$Rig/Maw/Inner.material_override = well_material
+	vein_material = make_glow_material(ResinVeins)
+	$Rig/Maw/Collar.material_overlay = vein_material
+	teeth_material = make_glow_material(TeethGlow)
+	for socket in tooth_sockets:
+		socket.get_child(0).material_overlay = teeth_material
 	rig_base_y = rig.position.y
 	for arm in arms:
 		arm_rest.append(arm.rotation.x)
@@ -76,7 +92,7 @@ func build_plates(rng: RandomNumberGenerator) -> void:
 	for i in 7:
 		var a = TAU * i / 7 + 0.3
 		var plate = MeshInstance3D.new()
-		plate.mesh = plate.mesh
+		plate_mesh = plate_mesh
 		plate.material_override = plate_material
 		maw.add_child(plate)
 		plate.position = Vector3(cos(a) * 1.1, -0.55, sin(a) * 1.1)
@@ -109,6 +125,10 @@ func _process(delta: float) -> void:
 	for socket in tooth_sockets:
 		socket.rotation.z = tooth_angle
 	core_material.emission_energy_multiplier = lerp(core_material.emission_energy_multiplier, target_glow * glow_boost, blend)
+	teeth_material.set_shader_parameter("maw_center", maw.global_position)
+	for m in [well_material, vein_material, teeth_material]:
+		m.set_shader_parameter("glow_color", core_material.emission)
+		m.set_shader_parameter("glow_energy", core_material.emission_energy_multiplier)
 
 func _on_pose_changed(new_pose: Pose) -> void:
 	match new_pose:
@@ -198,3 +218,9 @@ func set_color(color: Color) -> void:
 	super(color)
 	core_material.albedo_color = color
 	core_material.emission = color
+
+func make_glow_material(shader: Shader) -> ShaderMaterial:
+	var material = ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("noise", glow_noise)
+	return material

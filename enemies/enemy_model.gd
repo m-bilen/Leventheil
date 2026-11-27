@@ -25,9 +25,13 @@ func set_color(color: Color) -> void:
 	eye_material.emission = color
 
 func set_flash(on: bool) -> void:
-	var overplay = FlashMaterial if on else null
 	for part in parts:
-		part.material_overlay = overplay
+		if on:
+			if part.material_overlay != FlashMaterial:
+				part.set_meta("base_overlay", part.material_overlay)
+			part.material_overlay = FlashMaterial
+		else:
+			part.material_overlay = part.get_meta("base_overlay", null)
 
 func set_rooted(on: bool) -> void:
 	if root_vines and root_vines.has_method("bind"):

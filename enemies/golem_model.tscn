@@ -4,6 +4,7 @@
 [ext_resource type="Material" uid="uid://bqmx4mtv8c8jv" path="res://enemies/maw_core_material.tres" id="2_phsdi"]
 [ext_resource type="Material" uid="uid://dwxaowekw1bm4" path="res://enemies/golem_thorn_material.tres" id="2_tchlw"]
 [ext_resource type="Material" uid="uid://demgedms5dkag" path="res://assets/textures/bark/golem_plate_material.tres" id="3_lw8ey"]
+[ext_resource type="Texture2D" uid="uid://b0evk21d0evek" path="res://player/overgrown_noise.tres" id="4_lw8ey"]
 [ext_resource type="Material" uid="uid://b2ghl0m3tmi7v" path="res://enemies/golem_bark_material.tres" id="4_tchlw"]
 [ext_resource type="Material" uid="uid://d14db4fy15scs" path="res://enemies/golem_eye_material.tres" id="5_fcjbt"]
 [ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="7_tchlw"]
@@ -38,8 +39,9 @@ distance_fade_max_distance = 4.5
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_lw8ey"]
 top_radius = 0.92
-bottom_radius = 0.92
-height = 0.05
+bottom_radius = 0.2
+height = 0.7
+cap_top = false
 
 [sub_resource type="SphereMesh" id="SphereMesh_fcjbt"]
 radius = 0.2
@@ -54,6 +56,7 @@ height = 1.5
 script = ExtResource("1_phsdi")
 tooth_material = ExtResource("2_tchlw")
 plate_material = ExtResource("3_lw8ey")
+glow_noise = ExtResource("4_lw8ey")
 eyes = [NodePath("Rig/Eye")]
 root_vines = NodePath("RootVines")
 
@@ -95,12 +98,12 @@ material_override = ExtResource("4_tchlw")
 mesh = SubResource("CylinderMesh_rdkaa")
 
 [node name="Inner" type="MeshInstance3D" parent="Rig/Maw" unique_id=1526619615]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 material_override = SubResource("StandardMaterial3D_tchlw")
 mesh = SubResource("CylinderMesh_lw8ey")
 
 [node name="Core" type="MeshInstance3D" parent="Rig/Maw" unique_id=1353754412]
-transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 0.13, 0)
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, -0.55, 0)
 material_override = ExtResource("2_phsdi")
 mesh = SubResource("SphereMesh_fcjbt")
 
