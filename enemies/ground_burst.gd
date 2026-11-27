@@ -3,6 +3,7 @@ extends Area3D
 @export var delay: float = 0.8
 @export var radius: float = 1.8
 @export var damage: int = 1
+@export var color: Color = Color(0.69, 0.3, 1.0)
 
 var warning_material : ShaderMaterial
 var timer = 0.0
@@ -18,6 +19,7 @@ func _ready() -> void:
 	mesh.mesh = plane
 	warning_material = mesh.material_override.duplicate()
 	mesh.material_override = warning_material
+	warning_material.set_shader_parameter("color", color)
 
 func _physics_process(delta: float) -> void:
 	timer -= delta

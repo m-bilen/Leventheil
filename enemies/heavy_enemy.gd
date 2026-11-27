@@ -245,6 +245,7 @@ func spawn_slam_wave() -> void:
 	wave.delay = windup_time
 	wave.radius = SLAM_RADIUS
 	wave.damage = SLAM_DAMAGE
+	wave.color = spirit_color
 	get_tree().current_scene.add_child(wave)
 	wave.global_position = Vector3(global_position.x, 0.25, global_position.z)
 

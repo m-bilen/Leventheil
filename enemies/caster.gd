@@ -54,6 +54,7 @@ func cast() -> void:
 	set_color(base_color)
 	attack_timer = ATTACK_COOLDOWN
 	var burst = GroundBurstScene.instantiate()
+	burst.color = spirit_color
 	get_tree().current_scene.add_child(burst)
 	var lead = player.velocity * LEAD_TIME
 	lead.y = 0

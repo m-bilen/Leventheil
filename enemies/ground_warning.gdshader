@@ -31,9 +31,10 @@ void fragment() {
 
 	float fill = behind_front * 0.15;
 	float stain = smoothstep(edge_r, edge_r -0.3, r) * n * 0.12;
-	float purple = ring * mix(0.3, 1.0, progress) + stain + fill + vein * behind_front * 0.6 + front * 0.8;
+	float glow = ring * mix(0.3, 1.0, progress) + stain + fill + vein * behind_front * 0.6 + front * 0.8;
 	float pit = smoothstep(edge_r, 0.0, r) * (0.25 + 0.35 * progress);
-	float a = clamp(purple + pit, 0.0, 1.0);
-	ALBEDO = mix(vec3(0.02, 0.0, 0.03), color.rgb, clamp(purple / max(a, 0.001), 0.0, 1.0));
+	float a = clamp(glow + pit, 0.0, 1.0);
+	vec3 dark = color.rgb * 0.04;
+	ALBEDO = mix(dark, color.rgb, clamp(glow / max(a, 0.001), 0.0, 1.0));
 	ALPHA = a * step(r, 1.0);
 }
