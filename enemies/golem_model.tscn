@@ -9,9 +9,6 @@
 [ext_resource type="Material" uid="uid://d14db4fy15scs" path="res://enemies/golem_eye_material.tres" id="5_fcjbt"]
 [ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="7_tchlw"]
 [ext_resource type="Material" uid="uid://dh8ljrymclfx7" path="res://effects/vine_lash_material.tres" id="8_tchlw"]
-[ext_resource type="AudioStream" uid="uid://8tcv6gkuonff" path="res://audio/SFX/golem_step/golem_step_05.wav" id="10_fcjbt"]
-[ext_resource type="AudioStream" uid="uid://2ycri8h0l0rh" path="res://audio/SFX/golem_growl/golem_breath_04.wav" id="11_xbuf6"]
-[ext_resource type="AudioStream" uid="uid://d1ad3qmjiclh7" path="res://audio/SFX/golem_step/golem_growl_B3.wav" id="12_mkmjc"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_xoppa"]
 top_radius = 0.25
@@ -54,21 +51,6 @@ height = 0.4
 top_radius = 0.38
 bottom_radius = 0.22
 height = 1.5
-
-[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_1oope"]
-random_pitch = 1.0625274
-streams_count = 1
-stream_0/stream = ExtResource("10_fcjbt")
-
-[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_08m04"]
-random_pitch = 1.0625274
-streams_count = 1
-stream_0/stream = ExtResource("11_xbuf6")
-
-[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uxlnv"]
-random_pitch = 1.0625274
-streams_count = 1
-stream_0/stream = ExtResource("12_mkmjc")
 
 [node name="GolemModel" type="Node3D" unique_id=975855048 node_paths=PackedStringArray("eyes", "root_vines")]
 script = ExtResource("1_phsdi")
@@ -151,17 +133,3 @@ script = ExtResource("7_tchlw")
 radius = 1.3
 height = 1.6
 material = ExtResource("8_tchlw")
-
-[node name="Stepsound" type="AudioStreamPlayer3D" parent="." unique_id=1575386988]
-stream = SubResource("AudioStreamRandomizer_1oope")
-volume_db = -4.0
-bus = &"SFX"
-
-[node name="BreathSound" type="AudioStreamPlayer3D" parent="." unique_id=777701577]
-stream = SubResource("AudioStreamRandomizer_08m04")
-volume_db = -8.0
-bus = &"SFX"
-
-[node name="GrowlSound" type="AudioStreamPlayer3D" parent="." unique_id=1766101321]
-stream = SubResource("AudioStreamRandomizer_uxlnv")
-bus = &"SFX"

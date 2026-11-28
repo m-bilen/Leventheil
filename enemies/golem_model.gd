@@ -44,11 +44,6 @@ var pose_speed = 5.0
 
 @onready var maw: Node3D = $Rig/Maw
 @onready var maw_light: OmniLight3D = $Rig/Maw/MawLight
-@onready var step_sound: AudioStreamPlayer3D = $StepSound
-@onready var breath_sound: AudioStreamPlayer3D = $BreathSound
-@onready var growl_sound: AudioStreamPlayer3D = $GrowlSound
-var last_step_sign = 1.0
-var last_breath_sign = 1.0
 var breath_time = 0.0
 var tooth_sockets: Array[Node3D] = []
 
@@ -127,10 +122,8 @@ func _process(delta: float) -> void:
 	if moving:
 		walk_time += delta * WALK_SPEED
 		swing = sin(walk_time) * WALK_SWING
-		var step_sign = signf(sin(walk_time))
-		if step_sign != last_step_sign:
-			step_sound.play()
-		last_step_sign = step_sign
+	rig.rotation.x = lerp(rig.rotation.x, target_pitch, blend)
+	rig.position.y = rig_base_y + (abs(sin(walk_time)) * WALK_BOB if moving else 0.0)
 	for i in arms.size():
 		var side = 1.0 if i == 0 else -1.0
 		arms[i].rotation.x = lerp(arms[i].rotation.x, arm_rest[i] + target_arm + swing * side, blend)
@@ -141,10 +134,7 @@ func _process(delta: float) -> void:
 	if pose == Pose.IDLE:
 		breath_time += delta * BREATH_SPEED
 		breath = sin(breath_time) * 0.5 + 0.5
-		var breath_sign = signf(sin(breath_time))
-		if breath_sign > 0.0 and last_breath_sign < 0.0:
-			breath_sound.play()
-		last_breath_sign = breath_sign
+	tooth_angle = lerp(tooth_angle, deg_to_rad(target_tooth - breath * BREATH_OPEN), blend)
 	for socket in tooth_sockets:
 		socket.rotation.z = tooth_angle
 	var openness = clamp(inverse_lerp(TOOTH_SHUT, TOOTH_WIDE, rad_to_deg(tooth_angle)), 0.0, 1.0)
@@ -250,6 +240,3 @@ func make_glow_material(shader: Shader) -> ShaderMaterial:
 	material.shader = shader
 	material.set_shader_parameter("noise", glow_noise)
 	return material
-
-func growl() -> void:
-	growl_sound.play()

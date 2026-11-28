@@ -5,7 +5,6 @@ extends Node
 @export var vine_lash_sound: AudioStream
 @export_group("Boss")
 @export var boss_roar_sound: AudioStream
-@export var vine_trap_sound: AudioStream
 
 
 func _ready() -> void:
@@ -14,7 +13,6 @@ func _ready() -> void:
 	Events.enemy_died.connect(_on_enemy_died)
 	Events.vine_lashed.connect(_on_vine_lashed)
 	Events.boss_spawned.connect(_on_boss_spawned)
-	Events.vine_trap_sprung.connect(_on_vine_trap_sprung)
 
 
 func play_at(stream: AudioStream, point: Vector3, volume_db: float = 0.0) -> void:
@@ -60,6 +58,3 @@ func _on_vine_lashed(_source: Node3D, origin: Vector3, _target: Vector3, _hit: b
 
 func _on_boss_spawned(_boss_name: String) -> void:
 	play_flat(boss_roar_sound)
-
-func _on_vine_trap_sprung(point: Vector3, _caught: int) -> void:
-	play_at(vine_trap_sound, point, -4.0)

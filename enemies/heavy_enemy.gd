@@ -175,8 +175,6 @@ func enter_state(new_state: State) -> void:
 			is_slam = not is_followup and randf() < slam_chance
 			if is_slam:
 				spawn_slam_wave()
-			if model and model.has_method("growl"):
-				model.growl()
 		State.ATTACK:
 			state_timer = ATTACK_TIME
 			bite_done = is_slam
