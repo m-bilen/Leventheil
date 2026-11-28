@@ -1,6 +1,27 @@
 [gd_scene format=3 uid="uid://hgciigulfoup"]
 
 [ext_resource type="Script" uid="uid://cxvror4lgwlgm" path="res://audio/audio.gd" id="1_rqear"]
+[ext_resource type="AudioStream" uid="uid://dx35ajtp43oi7" path="res://audio/SFX/parry/parry_03.wav" id="2_snds3"]
+[ext_resource type="AudioStream" uid="uid://b2st4xrt2xd7i" path="res://audio/SFX/zimbrok_roar/zimbrok_roar_03.wav" id="3_6yp2d"]
+[ext_resource type="AudioStream" uid="uid://bbsvingc28ig8" path="res://audio/SFX/leaves/leaves_rustle_04.wav" id="4_kevv0"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_pgp8t"]
+random_pitch = 1.0625274
+streams_count = 1
+stream_0/stream = ExtResource("2_snds3")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_enka0"]
+random_pitch = 1.0625274
+streams_count = 1
+stream_0/stream = ExtResource("3_6yp2d")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ka77o"]
+random_pitch = 1.0625274
+streams_count = 1
+stream_0/stream = ExtResource("4_kevv0")
 
 [node name="Audio" type="Node" unique_id=1547096466]
 script = ExtResource("1_rqear")
+parry_sound = SubResource("AudioStreamRandomizer_pgp8t")
+boss_roar_sound = SubResource("AudioStreamRandomizer_enka0")
+vine_trap_sound = SubResource("AudioStreamRandomizer_ka77o")

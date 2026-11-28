@@ -1587,3 +1587,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 light_color = Color(1, 0.9019608, 0.78431374, 1)
 light_energy = 0.8
 omni_attenuation = 1.5
+
+[node name="DashSound" type="AudioStreamPlayer3D" parent="." unique_id=1311284765]
+bus = &"SFX"
