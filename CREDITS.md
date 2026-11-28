@@ -1,0 +1,2 @@
+- impactwood14 — Independent.nu, 35 Wooden Cracks/Hits/Destructions (OpenGameArt), CC0
+- Rapid_sword_whoosh_w_scrape_sound — Artninja (Freesound), Atributtion 4.0

@@ -29,3 +29,5 @@ signal player_shielded
 signal stance_changed(spikes_active: bool)
 @warning_ignore("unused_signal")
 signal boss_state_changed(remaining: int, total: int, rage: float)
+@warning_ignore("unused_signal")
+signal dash_hit_landed(target: Node3D)

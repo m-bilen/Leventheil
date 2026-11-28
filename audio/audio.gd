@@ -13,6 +13,7 @@ func _ready() -> void:
 	Events.enemy_died.connect(_on_enemy_died)
 	Events.vine_lashed.connect(_on_vine_lashed)
 	Events.boss_spawned.connect(_on_boss_spawned)
+	Events.dash_hit_landed.connect(_on_dash_hit_landed)
 
 
 func play_at(stream: AudioStream, point: Vector3, volume_db: float = 0.0) -> void:
@@ -58,3 +59,7 @@ func _on_vine_lashed(_source: Node3D, origin: Vector3, _target: Vector3, _hit: b
 
 func _on_boss_spawned(_boss_name: String) -> void:
 	play_flat(boss_roar_sound)
+
+func _on_dash_hit_landed(target: Node3D) -> void:
+	var stream = target.dash_hit_sound if target.dash_hit_sound else target.hit_sound
+	play_at(stream, target.global_position)

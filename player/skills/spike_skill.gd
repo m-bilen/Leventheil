@@ -131,6 +131,8 @@ func _physics_process(_delta: float) -> void:
 		offset.y = 0
 		if offset.length() <= DASH_HIT_RADIUS:
 			enemies_hit.append(enemy)
+			Events.dash_hit_landed.emit(enemy)
+			enemy.take_damage(dash_damage)
 			enemy.take_damage(dash_damage)
 			hit_this_frame = true
 			if enemy.has_method("stops_dash_chain") and enemy.stops_dash_chain():
