@@ -7,6 +7,8 @@ const SEPARATION_STRENGTH = 4.0
 @export var max_health: int = 3
 @export var pullable: bool = true
 @export var spirit: Palette.Spirit = Palette.Spirit.FOXFIRE
+@export var hit_sound: AudioStream
+@export var death_sound: AudioStream
 @export var death_scale: float = 1.0
 @export var body_radius: float = 0.4
 

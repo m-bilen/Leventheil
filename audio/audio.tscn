@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://hgciigulfoup"]
+
+[ext_resource type="Script" uid="uid://cxvror4lgwlgm" path="res://audio/audio.gd" id="1_rqear"]
+
+[node name="Audio" type="Node" unique_id=1547096466]
+script = ExtResource("1_rqear")

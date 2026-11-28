@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Events="*uid://cb3ivuo4gldfn"
 GameState="*uid://b22tjms6wg0do"
+Audio="*uid://hgciigulfoup"
 
 [gui]
 
