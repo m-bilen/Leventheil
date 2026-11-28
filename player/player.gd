@@ -47,6 +47,7 @@ var weight = 0.0
 @onready var model = $Model
 @onready var attack_area = $Model/AttackArea
 @onready var anim = $Model/AnimationPlayer
+@onready var dash_sound: AudioStreamPlayer3D = $DashSound
 var bob_time = 0.0
 var was_on_floor = true 
 const SPEED_LIGHT = 6.0
@@ -99,6 +100,8 @@ func _physics_process(delta: float) -> void:
 		action_timer = DASH_TIME
 		cooldown_timer = DASH_COOLDOWN
 		dash_started.emit()
+		dash_started.emit()
+		dash_sound.play()
 		if can_parry() and  try_parry():
 			parried.emit()
 			cooldown_timer = 0.0

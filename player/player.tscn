@@ -16,6 +16,10 @@
 [ext_resource type="AnimationLibrary" uid="uid://thge4fws3uig" path="res://romero/Standing Dodge Forward.fbx" id="9_nvl01"]
 [ext_resource type="AnimationLibrary" uid="uid://cm3o7vt7yrq0" path="res://romero/falling.fbx" id="11_nvl01"]
 [ext_resource type="Script" uid="uid://chrtwp8ua2r7x" path="res://player/skills/vine_skill.gd" id="12_ivps1"]
+[ext_resource type="AudioStream" uid="uid://by12mk5gtkogj" path="res://audio/SFX/dash/dash_spin_01.wav" id="17_65viv"]
+[ext_resource type="AudioStream" uid="uid://dj45kudyucvwg" path="res://audio/SFX/dash/dash_spin_02.wav" id="18_x7c3f"]
+[ext_resource type="AudioStream" uid="uid://cj5mchf3g16q0" path="res://audio/SFX/dash/dash_spin_03.wav" id="19_bjvpn"]
+[ext_resource type="AudioStream" uid="uid://c2yvkialk4b6l" path="res://audio/SFX/dash/dash_spin_04.wav" id="20_s7qer"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hqtel"]
 
@@ -1077,6 +1081,14 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_i3pqv"]
 size = Vector3(1.5, 1.5, 1.5)
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_e7oew"]
+random_pitch = 1.0656005
+streams_count = 4
+stream_0/stream = ExtResource("17_65viv")
+stream_1/stream = ExtResource("18_x7c3f")
+stream_2/stream = ExtResource("19_bjvpn")
+stream_3/stream = ExtResource("20_s7qer")
+
 [node name="Player" type="CharacterBody3D" unique_id=1820987218]
 collision_mask = 6
 script = ExtResource("1_onrkg")
@@ -1587,3 +1599,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 light_color = Color(1, 0.9019608, 0.78431374, 1)
 light_energy = 0.8
 omni_attenuation = 1.5
+
+[node name="DashSound" type="AudioStreamPlayer3D" parent="." unique_id=1757594868]
+stream = SubResource("AudioStreamRandomizer_e7oew")
+volume_db = -6.0
+bus = &"SFX"

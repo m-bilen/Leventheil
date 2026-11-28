@@ -3,10 +3,16 @@
 [ext_resource type="Script" uid="uid://be1t0gjhpgh62" path="res://enemies/enemy.gd" id="1_7k104"]
 [ext_resource type="Material" uid="uid://cqh41yauuv1oi" path="res://enemies/eye_material.tres" id="2_a6vjd"]
 [ext_resource type="Texture2D" uid="uid://b0evk21d0evek" path="res://player/overgrown_noise.tres" id="2_epsnb"]
+[ext_resource type="AudioStream" uid="uid://cy0s5cqv76xhu" path="res://audio/SFX/kokcuk/kokcuk_hit.wav" id="3_4w5fm"]
 [ext_resource type="Material" uid="uid://ds1tnrt07wuu4" path="res://enemies/thorn_material.tres" id="3_07tka"]
 [ext_resource type="Material" uid="uid://cnuo2v22xmmua" path="res://enemies/rootling_bark.tres" id="4_a6vjd"]
 [ext_resource type="Script" uid="uid://dv0r840fw3sh4" path="res://effects/root_bind.gd" id="5_3t1x0"]
 [ext_resource type="Material" uid="uid://dh8ljrymclfx7" path="res://effects/vine_lash_material.tres" id="6_3t1x0"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uba7a"]
+random_pitch = 1.0656005
+streams_count = 1
+stream_0/stream = ExtResource("3_4w5fm")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
 size = Vector3(0.8, 2.5, 0.8)
@@ -57,6 +63,7 @@ collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_7k104")
 glow_noise = ExtResource("2_epsnb")
+hit_sound = SubResource("AudioStreamRandomizer_uba7a")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=216324921]
 shape = SubResource("BoxShape3D_4gyqm")
